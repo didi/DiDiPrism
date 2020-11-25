@@ -5,6 +5,7 @@
             "cityId": 0,
             "period": 0,
             "effectiveTime": 1603707142,
+            "cycleTrigger": 1,
             "containHistory": 0,
             "triggerMoment": 1,
             "triggerDelay": 1,

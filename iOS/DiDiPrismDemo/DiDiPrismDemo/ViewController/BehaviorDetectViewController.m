@@ -105,7 +105,7 @@
     if (!_operationButton) {
         _operationButton = [self generateButton];
         _operationButton.frame = CGRectMake(20, 110, 100, 40);
-        [_operationButton setTitle:@"初始化配置" forState:UIControlStateNormal];
+        [_operationButton setTitle:@"加载配置" forState:UIControlStateNormal];
         [_operationButton addTarget:self action:@selector(operateAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _operationButton;
@@ -117,7 +117,7 @@
         _titleLabel.font = [UIFont systemFontOfSize:12];
         _titleLabel.textColor = [UIColor blackColor];
         _titleLabel.numberOfLines = 0;
-        _titleLabel.text = @"每次实验前请先点击左侧的初始化按钮！\nDemo默认策略说明见：prism_detect_config_explanation.txt文档。";
+        _titleLabel.text = @"<--请先点击左侧的初始化按钮。\nDemo默认策略说明见：prism_detect_config_explanation.md文档。";
     }
     return _titleLabel;
 }

@@ -107,7 +107,7 @@
         case PrismBehaviorDescTypeNone:
             {
                 self.operationLabel.text = nil;
-                self.contentLabel.text = @"..";
+                self.contentLabel.text = @"[无法翻译]";
                 self.contentLabel.hidden = NO;
                 self.contentImageView.hidden = YES;
             }

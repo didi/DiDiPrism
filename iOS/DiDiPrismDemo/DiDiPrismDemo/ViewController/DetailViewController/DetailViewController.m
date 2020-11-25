@@ -11,7 +11,6 @@
 #import "Masonry.h"
 #import "DetailAViewController.h"
 #import "DetailBViewController.h"
-#import "DetailBViewController.h"
 
 @interface DetailViewController () <UITableViewDelegate,UITableViewDataSource, DetailTableViewCellDelegate>
 @property (nonatomic, strong) UITableView *tableView;
