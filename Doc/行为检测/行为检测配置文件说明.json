@@ -1,0 +1,98 @@
+{
+    "rules": [
+        {
+            "ruleId": 1,
+            "cityId": 0,  // 城市ID 大于0生效。
+            "period":3, // 涵盖天数 0:本次访问 1:当天 2:今天和昨天 依次类推。
+            "effectiveTime": 1603707142, // 策略生效时间 零点时间戳
+            "cycleTrigger": 0, // 是否循环触发 0:不循环 1:循环
+            "containHistory": 0, // 是否包含历史行为 0:不包含 1:包含
+            "triggerMoment": 0, // 触发时机 0:满足条件时触发 1:满足条件后，访问基准商品时触发
+            "triggerDelay": 2, // 触发延时，单位秒
+            "ruleContent": {
+              "relation": "and", // and为且关系，or为或关系。
+              "rules": [{
+                "instruction": [{
+                  "vm": {
+                    "value": ["",""], // 各元素之间是 且 关系。
+                    "operator": "="  // =:等于 %:包含
+                  },
+                  "vp": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vl": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vq": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vr": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vf": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "e": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "h5": {
+                    "value": ["",""],
+                    "operator": "%"
+                  }
+                }],  // 元素之间是 或 关系。
+                "itemName": "",
+                "type": "same_person_number",  // same_person_number:点击次数 same_item_number:任一item的点击次数 same_person_date:访问天数  same_item_date:任一item的访问天数  same_person_category:访问种类数
+                "operator": "gte", // 大于等于 当前版本仅支持这一种。
+                "typeValue": [1],
+                "basePoint": 1  // 是否是基准，0:不是 1:是
+              }, {
+                "instruction": [{
+                  "vm": {
+                    "value": ["",""], // 元素之间是 且 关系。
+                    "operator": "="
+                  },
+                  "vp": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vl": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vq": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vr": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "vf": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "e": {
+                    "value": ["",""],
+                    "operator": "%"
+                  },
+                  "h5": {
+                    "value": ["",""],
+                    "operator": "%"
+                  }
+                }],  // 元素之间是 或 关系。
+                "itemName": "",
+                "type": "same_person_number", // same_person_number:点击次数 same_item_number:任一item的点击次数 same_person_date:访问天数  same_item_date:任一item的访问天数  same_person_category:访问种类数
+                "operator": "gte",
+                "typeValue": [1],
+                "consultBasePoint": 1  // 是否参考基准，0:不参考 1:参考
+              }]
+            }
+        }
+    ]
+}

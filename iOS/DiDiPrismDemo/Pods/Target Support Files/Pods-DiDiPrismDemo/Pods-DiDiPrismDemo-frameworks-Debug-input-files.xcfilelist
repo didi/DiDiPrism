@@ -1,0 +1,6 @@
+${PODS_ROOT}/Target Support Files/Pods-DiDiPrismDemo/Pods-DiDiPrismDemo-frameworks.sh
+${BUILT_PRODUCTS_DIR}/DiDiPrism/DiDiPrism.framework
+${BUILT_PRODUCTS_DIR}/JSONModel/JSONModel.framework
+${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework
+${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework
+${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework

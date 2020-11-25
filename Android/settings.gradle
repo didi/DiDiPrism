@@ -1,0 +1,4 @@
+rootProject.name='prism-open'
+include ':app'
+include ':prism-monitor'
+include ':prism-playback'

@@ -1,0 +1,31 @@
+{
+  "name": "DiDiPrism",
+  "version": "0.0.1",
+  "summary": "移动端用户行为分析工具",
+  "description": "移动端用户行为分析工具",
+  "homepage": "https://github.com/didi",
+  "license": {
+    "type": "Apache-2.0",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Hulk": "ronghao@didichuxing.com"
+  },
+  "source": {
+    "git": "",
+    "tag": "0.0.1"
+  },
+  "source_files": "iOS/DiDiPrism/Src/**/*.{h,m}",
+  "public_header_files": "iOS/DiDiPrism/Src/**/*.h",
+  "dependencies": {
+    "JSONModel": [
+
+    ]
+  },
+  "platforms": {
+    "osx": null,
+    "ios": null,
+    "tvos": null,
+    "watchos": null
+  }
+}

@@ -1,0 +1,142 @@
+{
+    "rules": [
+        {
+            "ruleId": 1,
+            "cityId": 0,
+            "period": 0,
+            "effectiveTime": 1603707142,
+            "containHistory": 0,
+            "triggerMoment": 1,
+            "triggerDelay": 1,
+            "ruleContent": {
+                "relation": "and",
+                "rules": [
+                    {
+                        "instruction": [
+                            {
+                                "vm": {
+                                    "value": [
+                                        "cell"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vp": {
+                                    "value": [
+                                        "UINavigationController_&_BehaviorDetectViewController_&_DetailViewController"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vl": {
+                                    "value": [
+                                        "UITableView_&_DetailTableViewCell"
+                                    ],
+                                    "operator": "%"
+                                },
+                                "vq": {
+                                    "value": [
+                                        "100"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vr": {
+                                    "value": [
+                                        "Cell"
+                                    ],
+                                    "operator": "%"
+                                }
+                            }
+                        ],
+                        "itemName": "2",
+                        "type": "same_item_number",
+                        "operator": "gte",
+                        "typeValue": [
+                            "2"
+                        ],
+                        "basePoint": 1
+                    },
+                    {
+                        "instruction": [
+                            {
+                                "vm": {
+                                    "value": [
+                                        "cell"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vp": {
+                                    "value": [
+                                        "UINavigationController_&_DetailAViewController"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vl": {
+                                    "value": [
+                                        "UITableView_&_DetailBannerATableViewCell",
+                                        "UICollectionView_&_DetailBannerACollectionViewCell"
+                                    ],
+                                    "operator": "%"
+                                },
+                                "vq": {
+                                    "value": [
+                                        "100"
+                                    ],
+                                    "operator": "="
+                                }
+                            }
+                        ],
+                        "itemName": "",
+                        "type": "same_person_number",
+                        "operator": "gte",
+                        "typeValue": [
+                            "1"
+                        ],
+                        "consultBasePoint": 1
+                    },
+                    {
+                        "instruction": [
+                            {
+                                "vm": {
+                                    "value": [
+                                        "control"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vp": {
+                                    "value": [
+                                        "UINavigationController_&_DetailAViewController"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vl": {
+                                    "value": [
+                                        "UITableView_&_DetailBannerBTableViewCell"
+                                    ],
+                                    "operator": "%"
+                                },
+                                "vq": {
+                                    "value": [
+                                        "100"
+                                    ],
+                                    "operator": "="
+                                },
+                                "vf": {
+                                    "value": [
+                                        "展示位"
+                                    ],
+                                    "operator": "%"
+                                }
+                            }
+                        ],
+                        "itemName": "",
+                        "type": "same_person_number",
+                        "operator": "gte",
+                        "typeValue": [
+                            "2"
+                        ],
+                        "consultBasePoint": 1
+                    }
+                ]
+            }
+        }
+    ]
+}

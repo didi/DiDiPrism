@@ -1,0 +1,22 @@
+# Uncomment the next line to define a global platform for your project
+ platform :ios, '9.0'
+
+target 'DiDiPrismDemo' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for DiDiPrismDemo
+  pod 'DiDiPrism', :path => '../../DiDiPrism.podspec'
+  pod 'Masonry'
+  pod 'SDWebImage', '~> 5.0'
+  pod 'MBProgressHUD', '~> 1.2.0'
+end
+
+post_install do |installer_representation|
+    installer_representation.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['CLANG_ENABLE_OBJC_WEAK'] ||= 'YES'
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.3'
+        end
+    end
+end

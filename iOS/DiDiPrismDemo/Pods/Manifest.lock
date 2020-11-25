@@ -1,0 +1,37 @@
+PODS:
+  - DiDiPrism (0.0.1):
+    - JSONModel
+  - JSONModel (1.8.0)
+  - Masonry (1.1.0)
+  - MBProgressHUD (1.2.0)
+  - SDWebImage (5.9.4):
+    - SDWebImage/Core (= 5.9.4)
+  - SDWebImage/Core (5.9.4)
+
+DEPENDENCIES:
+  - DiDiPrism (from `../../DiDiPrism.podspec`)
+  - Masonry
+  - MBProgressHUD (~> 1.2.0)
+  - SDWebImage (~> 5.0)
+
+SPEC REPOS:
+  trunk:
+    - JSONModel
+    - Masonry
+    - MBProgressHUD
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  DiDiPrism:
+    :path: "../../DiDiPrism.podspec"
+
+SPEC CHECKSUMS:
+  DiDiPrism: 8c5df66ac277cd14bc9560d05340ffc668080258
+  JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+
+PODFILE CHECKSUM: 66c5d2827ff78f1ad0cfaae4e81afda93e5042b2
+
+COCOAPODS: 1.8.4

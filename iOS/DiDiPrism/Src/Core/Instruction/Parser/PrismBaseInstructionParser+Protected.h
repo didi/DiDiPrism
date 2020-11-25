@@ -1,0 +1,25 @@
+//
+//  PrismBaseInstructionParser+Protected.h
+//  DiDiPrism
+//
+//  Created by hulk on 2019/7/25.
+//
+
+#import "PrismBaseInstructionParser.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface PrismBaseInstructionParser (Protected)
+- (UIResponder*)searchRootResponderWithClassName:(NSString*)className;
+- (UIView*)searchScrollViewCellWithScrollViewClassName:(NSString*)scrollViewClassName
+                                         cellClassName:(NSString*)cellClassName
+                                  cellSectionOrOriginX:(CGFloat)cellSectionOrOriginX
+                                      cellRowOrOriginY:(CGFloat)cellRowOrOriginY
+                                         fromSuperView:(UIView*)superView;
+- (UIResponder*)searchResponderWithClassName:(NSString*)className superResponder:(UIResponder*)superResponder;
+- (void)scrollToIdealOffsetWithScrollView:(UIScrollView*)scrollView targetElement:(UIView*)targetElement;
+- (void)highlightTheElement:(UIView*)element withCompletion:(void(^)(void))block;
+- (BOOL)isAreaInfoEqualBetween:(NSString*)one withAnother:(NSString*)another allowCompatibleMode:(BOOL)allowCompatibleMode;
+@end
+
+NS_ASSUME_NONNULL_END

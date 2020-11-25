@@ -1,0 +1,6 @@
+framework module DiDiPrism {
+  umbrella header "DiDiPrism-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+framework module Pods_DiDiPrismDemo {
+  umbrella header "Pods-DiDiPrismDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}
