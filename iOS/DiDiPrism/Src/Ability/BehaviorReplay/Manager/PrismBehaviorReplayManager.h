@@ -17,11 +17,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isLastInstructionParseFail;
 @property (nonatomic, assign) NSInteger continuousFailCount; //连续失败计数，不考虑同一指令重试
 
+/*
+ 开始回放
+ */
 - (void)startWithModel:(PrismBehaviorListModel *)model
          progressBlock:(void (^)(NSInteger,NSString*))progressBlock
        completionBlock:(void (^)(void))completionBlock;
+/*
+ 继续回放
+ */
 - (void)goon;
+/*
+ 暂停回放
+ */
 - (void)pause;
+/*
+ 结束回放
+ */
 - (void)stop;
 @end
 
