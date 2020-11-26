@@ -1,29 +1,35 @@
-<div align="center">    
- <img src="https://view.didistatic.com/static/dcms/1jt5q12q9lkgrtelg2_180x180.png" width = "180" height = "180" alt="小桔棱镜" align=left />
- <img src="https://img.shields.io/github/license/didi/DoraemonKit.svg" align=left />
- <img src="https://img.shields.io/badge/iOS-3.0.4-yellow.svg" align=left />
- <img src="https://img.shields.io/badge/Android-3.2.0-blue.svg" align=left />
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<p align="center">
+<img src="https://view.didistatic.com/static/dcms/3pwfxb14rkgrmu55g_288x288.png" alt="小桔棱镜" title="小桔棱镜" width="288"/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/didichuxing/DiDiPrism/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache-blue.svg" />
+  </a>
+  
+  <a href="">
+    <img src="https://img.shields.io/badge/platform-ios%20%7C%20android-green.svg" />
+  </a>
+
+  <a href="">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
+  </a>
+</p>
 
 **DiDiPrism**，中文名：**小桔棱镜**，是一款专注于移动端用户行为分析的工具，涵盖移动端用户`行为回放`、`行为检测`、`数据可视化`，以及PC端的`用户行为分析平台`，意在最大限度的挖掘移动端用户行为数据的价值。
 
 ## 方案亮点
-**零入侵**
+### 零入侵
+业务代码无需任何适配。
 
-**高可用**
+### 高可用
+已在各种生产环境平稳运行一年以上。
 
-**自研行为标识方案**
+### 自研行为标识指令
+支撑棱镜已有功能外，或许可以有更大的舞台。
 
-**功能丰富**
+### 功能丰富
+针对移动端用户行为全方位能力覆盖，期望最大限度挖掘行为数据价值。
 
 ## 为何诞生？
 刷过《神探夏洛克》的同学都会惊叹于Sherlock从对方的一举一动中提取关键信息的画面：
@@ -50,8 +56,8 @@
 汇总用户行为数据并分析计算的平台，包含`用户行为标签系统`、`用户分群`、`高价值行为分析`以及`行为路径`等功能。它的意义在于尝试去**最大限度的挖掘用户行为数据的价值**。
 
 ## 更多详细介绍
-- [小桔棱镜-用户行为分析工具](Doc/小桔棱镜-用户行为分析利器.md)
-- [小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍.md](Doc/小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍.md)
+- [小桔棱镜-用户行为分析工具](Doc/系列文章/小桔棱镜-用户行为分析利器.md)
+- [小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍](Doc/系列文章/小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍.md)
 
 ## 使用手册
 - [iOS集成文档](iOS/README.md)
