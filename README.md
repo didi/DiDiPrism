@@ -49,15 +49,16 @@
 ### 四、行为分析平台（筹备开源中..）
 汇总用户行为数据并分析计算的平台，包含`用户行为标签系统`、`用户分群`、`高价值行为分析`以及`行为路径`等功能。它的意义在于尝试去**最大限度的挖掘用户行为数据的价值**。
 
-## 更多介绍
+## 更多详细介绍
 - [小桔棱镜-用户行为分析工具](Doc/小桔棱镜-用户行为分析利器.md)
+- [小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍.md](Doc/小桔棱镜-针对移动端操作行为标识指令的探讨及棱镜最终方案介绍.md)
 
 ## 使用手册
 - [iOS集成文档](iOS/README.md)
 - [Android集成文档](Android/README.md)
 
 ## 微信交流群
-
+由于群二维码的有效期是7天，故可搜索 HulkRong 加我微信入群，可备注：小桔棱镜社区用户。
 
 ## 项目成员
 
@@ -66,13 +67,13 @@
 
 **内部核心成员**
 [Hulk(荣浩)](https://github.com/ronghaopger)、
-[EastWoodYang(杨成栋)](https://github.com/EastWoodYang)、
-[(赵磊鹏)]()、
+[EastWoodYang](https://github.com/EastWoodYang)、
+[pengpeng(赵磊鹏)](https://github.com/zhaoleipeng)、
 [Kain(孙冬冬)](https://github.com/SunDDong)、
-[(张华)]()、
+[张华](https://github.com/zollero)、
 [朱少颖](https://github.com/zsynuting)、
-[(张熠萌)](https://github.com/zymxxxs)、
-[(戴立慧)]()
+[苍老师(张熠萌)](https://github.com/zymxxxs)、
+[戴立慧](https://github.com/blankdlh)
 
 ## 协议
 
