@@ -52,11 +52,11 @@
 
 当然它还可以有很多应用场景，比如**无需手写脚本的自动化测试**场景，仅单纯的行为标识指令就可以被应用到很多我们还没有想到但已经收到诉求的场景中，因此我们选择把它开源出来造福更多人。
 
-#### Demo Show
+#### [Demo Show]
 <p align="center">
   <img src="https://view.didistatic.com/static/dcms/3pwfx749nki143sb6_872x1753_compress.png" width="218" hegiht="438" alt="回放演示" />
   
-  <img src="https://view.didistatic.com/static/dcms/1jt5qfcgyki143vwx_876x1762_compress.png" width="218" hegiht="438" alt="视频回放" />
+  <img src="https://view.didistatic.com/static/dcms/1jt5q4ncski14uosf_879x1762_compress.png" width="218" hegiht="438" alt="视频回放" />
 
   <img src="https://view.didistatic.com/static/dcms/olv82khg4ki143yz2_876x1763_compress.png" width="218" hegiht="438" alt="文字回放" />
 </p>
@@ -66,7 +66,7 @@
 
 当然我们相信它也有未被发掘的应用潜力，同样开源出来集思广益。
 
-#### Demo Show
+#### [Demo Show]
 <p align="center">
   <img src="https://view.didistatic.com/static/dcms/3pwfx5hv3ki144283_880x1763_compress.png" width="218" hegiht="438" alt="行为检测" />
 </p>
