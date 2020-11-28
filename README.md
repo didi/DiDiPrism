@@ -52,10 +52,24 @@
 
 当然它还可以有很多应用场景，比如**无需手写脚本的自动化测试**场景，仅单纯的行为标识指令就可以被应用到很多我们还没有想到但已经收到诉求的场景中，因此我们选择把它开源出来造福更多人。
 
+#### Demo Show
+<p align="center">
+  <img src="https://view.didistatic.com/static/dcms/3pwfx749nki143sb6_872x1753_compress.png" width="290" hegiht="584" alt="回放演示" />
+  
+  <img src="https://view.didistatic.com/static/dcms/1jt5qfcgyki143vwx_876x1762_compress.png" width="290" hegiht="584" alt="视频回放" />
+
+  <img src="https://view.didistatic.com/static/dcms/olv82khg4ki143yz2_876x1763_compress.png" width="290" hegiht="584" alt="文字回放" />
+</p>
+
 ### 二、行为检测（已开源）
 端侧实时行为检测功能，同样基于`自研的用户操作行为标识指令`以及`语义化的行为策略描述方案（DSL）`，支持丰富的语义和灵活的策略配置。我们用它来实现端侧场景化需求，未来还希望用在客服场景中来提升用户体验，它在**赋予大家观察用户的动态行为之上提供了实时运用行为的能力**，同样给大家带来新视角。
 
 当然我们相信它也有未被发掘的应用潜力，同样开源出来集思广益。
+
+#### Demo Show
+<p align="center">
+  <img src="https://view.didistatic.com/static/dcms/3pwfx5hv3ki144283_880x1763_compress.png" width="290" hegiht="584" alt="行为检测" />
+</p>
 
 ### 三、数据可视化（开源筹备中..）
 覆盖埋点全流程的移动端解决方案，包括埋点数据可视化范畴的`多维度PV/UV`、`热力图`、`转化率漏斗`、`页面停留时长`等功能，以及埋点辅助范畴的`测试`工具。它的意义在于改变了大家日常看数据的方式，**让原本就擅长使用数据的同学可以更便捷的用数据，让原本不擅长使用数据的同学开始喜欢用数据**。
