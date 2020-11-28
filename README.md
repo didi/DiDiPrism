@@ -54,11 +54,11 @@
 
 #### Demo Show
 <p align="center">
-  <img src="https://view.didistatic.com/static/dcms/3pwfx749nki143sb6_872x1753_compress.png" width="290" hegiht="584" alt="回放演示" />
+  <img src="https://view.didistatic.com/static/dcms/3pwfx749nki143sb6_872x1753_compress.png" width="218" hegiht="438" alt="回放演示" />
   
-  <img src="https://view.didistatic.com/static/dcms/1jt5qfcgyki143vwx_876x1762_compress.png" width="290" hegiht="584" alt="视频回放" />
+  <img src="https://view.didistatic.com/static/dcms/1jt5qfcgyki143vwx_876x1762_compress.png" width="218" hegiht="438" alt="视频回放" />
 
-  <img src="https://view.didistatic.com/static/dcms/olv82khg4ki143yz2_876x1763_compress.png" width="290" hegiht="584" alt="文字回放" />
+  <img src="https://view.didistatic.com/static/dcms/olv82khg4ki143yz2_876x1763_compress.png" width="218" hegiht="438" alt="文字回放" />
 </p>
 
 ### 二、行为检测（已开源）
@@ -68,7 +68,7 @@
 
 #### Demo Show
 <p align="center">
-  <img src="https://view.didistatic.com/static/dcms/3pwfx5hv3ki144283_880x1763_compress.png" width="290" hegiht="584" alt="行为检测" />
+  <img src="https://view.didistatic.com/static/dcms/3pwfx5hv3ki144283_880x1763_compress.png" width="218" hegiht="438" alt="行为检测" />
 </p>
 
 ### 三、数据可视化（开源筹备中..）
