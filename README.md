@@ -52,7 +52,7 @@
 
 当然它还可以有很多应用场景，比如**无需手写脚本的自动化测试**场景，仅单纯的行为标识指令就可以被应用到很多我们还没有想到但已经收到诉求的场景中，因此我们选择把它开源出来造福更多人。
 
-#### [Demo Show]
+#### [Demo展示]
 <p align="center">
   <img src="https://view.didistatic.com/static/dcms/3pwfx749nki143sb6_872x1753_compress.png" width="218" hegiht="438" alt="回放演示" />
   
@@ -66,7 +66,7 @@
 
 当然我们相信它也有未被发掘的应用潜力，同样开源出来集思广益。
 
-#### [Demo Show]
+#### [Demo展示]
 <p align="center">
   <img src="https://view.didistatic.com/static/dcms/3pwfx5hv3ki144283_880x1763_compress.png" width="218" hegiht="438" alt="行为检测" />
 </p>
@@ -80,7 +80,8 @@
 ## 使用手册
 - [iOS 代码说明文档](iOS/README.md)
 - [Android 代码说明文档](Android/README.md)
-- [行为检测 配置说明文档](Doc/行为检测/行为检测配置文件说明.md)
+- [行为指令 格式说明](Doc/行为指令/行为指令格式说明.md)
+- [行为检测 策略配置说明](Doc/行为检测/行为检测配置文件说明.md)
 
 ## 系列文章
 - [小桔棱镜-用户行为分析工具](Doc/系列文章/小桔棱镜-用户行为分析利器.md)
