@@ -1,5 +1,8 @@
 # iOS 使用手册
 ## 安装说明
+```
+pod 'DiDiPrism'
+```
 
 ## 代码目录说明
 - Ability （功能区）
