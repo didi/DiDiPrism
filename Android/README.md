@@ -1,8 +1,8 @@
 # 小桔棱镜 Android SDK
 
-* prism-monitor模块负责收集用户操作行为
-* prism-playback模块负责用户操作行为回放
-* prism-behavior模块负责用户操作行为检测
+* prism-monitor模块负责采集操作行为
+* prism-playback模块负责操作行为回放
+* prism-behavior模块负责操作行为检测
 
 ## prism-monitor使用说明
 
@@ -26,7 +26,7 @@ PrismMonitor.getInstance().addOnPrismMonitorListener(new PrismMonitor.OnPrismMon
 // 在Application创建时期初始化
 PrismPlayback.getInstance().init(this);
 
-//通过PrismMonitor监听获取数据
+//通过PrismMonitor监听采集操作数据
 List<EventData> mPlaybackEvents = ...;
 //开启回放
 PrismPlayback.getInstance().playback(mPlaybackEvents);
@@ -39,7 +39,7 @@ PrismPlayback.getInstance().playback(mPlaybackEvents);
 PrismBehavior.getInstance().init(this);
 
 // 设置行为规则
-// 当用户操作符合某行为规则的时候，会发送action为prism_behavior_detect_rule_hit的广播。
+// 当操作行为符合某行为规则的时候，会发送action为prism_behavior_detect_rule_hit的广播。
 PrismBehavior.getInstance().setRules(...);
 // 开启检测
 PrismBehavior.getInstance().start();
