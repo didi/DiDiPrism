@@ -31,23 +31,3 @@ dependencies {
     api project(':prism-monitor')
 
 }
-
-
-apply plugin: 'maven'
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.project {
-                groupId GROUP_ID
-                artifactId ARTIFACT_ID
-                version VERSION
-            }
-            repository(url: RELEASE_REPOSITORY_URL) {
-                authentication(userName: USERNAME, password: PASSWORD)
-            }
-            snapshotRepository(url: project.SNAPSHOT_REPOSITORY_URL) {
-                authentication(userName: USERNAME, password: PASSWORD)
-            }
-        }
-    }
-}
