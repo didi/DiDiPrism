@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     PrismMonitor.OnPrismMonitorListener mOnPrismMonitorListener = new PrismMonitor.OnPrismMonitorListener() {
         @Override
         public void onEvent(EventData eventData) {
-            Log.d("onEvent", eventData.getUnionId());
+            Log.d("onEvent2", eventData.getUnionId());
             mPlaybackEvents.add(eventData);
         }
     };
@@ -48,13 +48,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mPlaybackEvents.clear();
                 PrismMonitor.getInstance().start();
-                PrismMonitor.getInstance().addOnPrismMonitorListener(new PrismMonitor.OnPrismMonitorListener() {
-                    @Override
-                    public void onEvent(EventData eventData) {
-                        Log.d("onEvent", eventData.getUnionId());
-                        mPlaybackEvents.add(eventData);
-                    }
-                });
+                PrismMonitor.getInstance().addOnPrismMonitorListener(mOnPrismMonitorListener);
                 startButton.setEnabled(false);
                 stopButton.setEnabled(true);
                 playbackLayout.setVisibility(View.GONE);
