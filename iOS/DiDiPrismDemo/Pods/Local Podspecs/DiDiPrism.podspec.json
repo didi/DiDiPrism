@@ -1,6 +1,6 @@
 {
   "name": "DiDiPrism",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "summary": "移动端用户行为分析工具",
   "description": "移动端用户行为分析工具",
   "homepage": "https://github.com/didi/DiDiPrism",
@@ -16,7 +16,7 @@
   },
   "source": {
     "git": "https://github.com/didi/DiDiPrism.git",
-    "tag": "0.0.1"
+    "tag": "0.0.2"
   },
   "source_files": "iOS/DiDiPrism/Src/**/*.{h,m}",
   "public_header_files": "iOS/DiDiPrism/Src/**/*.h",
