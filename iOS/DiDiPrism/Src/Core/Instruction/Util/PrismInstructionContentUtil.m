@@ -105,6 +105,13 @@
         if (view.isHidden) {
             continue;
         }
+        BOOL viewHasTapGesture = NO;
+        for (UIGestureRecognizer *gesture in [view gestureRecognizers]) {
+            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
+                viewHasTapGesture = YES;
+                break;
+            }
+        }
         id wxComponent = [view prism_wxComponent];
         if ([wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")] || [view isKindOfClass:[UILabel class]]) {
             if (!*firstTextView) {
@@ -131,6 +138,10 @@
         }
         else if ([wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")] || [view isKindOfClass:[UIImageView class]]) {
             [imageViews prism_addObject:view];
+        }
+        else if ([view isKindOfClass:[UIButton class]] || viewHasTapGesture) {
+            // 不提取可交互view的信息，避免混淆。
+            continue;
         }
         [allSubviews addObjectsFromArray:view.subviews];
     }

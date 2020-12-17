@@ -40,7 +40,7 @@
         if([NSURLProtocol propertyForKey:Prism_REQUEST_HAS_INIT inRequest:request]) {
             return NO;
         }
-        NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = nil; //真实数据源
+        NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = nil; //真实数据源信息
         NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
         __block BOOL containURL = NO;
         [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
