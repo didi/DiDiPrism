@@ -14,6 +14,7 @@
 // Util
 #import "PrismInstructionResponseChainUtil.h"
 #import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionContentUtil.h"
 
 @interface PrismControlInstructionGenerator()
 
@@ -56,7 +57,7 @@
     
     if (!functionName.length) {
         // 获取有代表性的内容便于更好的定位view
-        NSString *subviewContent = [self getRepresentativeContentOfControl:control];
+        NSString *subviewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
         if (subviewContent.length) {
             functionName = [NSString stringWithFormat:@"%@_&_%@", subviewContent, control.autoDotTargetAndSelector];
         }
@@ -65,21 +66,6 @@
         }
     }
     return [NSString stringWithFormat:@"%@%@", kBeginOfViewFunctionFlag, functionName];
-}
-
-
-+ (NSString*)getRepresentativeContentOfControl:(UIControl*)control {
-    UIView *view = control;
-    if (!view.subviews.count) {
-        return nil;
-    }
-    for (UIView *subview in view.subviews) {
-        NSString *subviewContent = [self getRepresentativeContentOfView:subview];
-        if (subviewContent.length) {
-            return subviewContent;
-        }
-    }
-    return nil;
 }
 
 #pragma mark - private method
@@ -109,22 +95,6 @@
 + (NSString*)getFunctionNameOfTextField:(UITextField*)textField {
     if (textField.placeholder.length) {
         return textField.placeholder;
-    }
-    return nil;
-}
-
-+ (NSString*)getRepresentativeContentOfView:(UIView*)view {
-    if ([view isKindOfClass:[UILabel class]]) {
-        UILabel *label = (UILabel*)view;
-        if (label.text.length) {
-            return label.text;
-        }
-    }
-    else if ([view isKindOfClass:[UIImageView class]]) {
-        UIImageView *imageView = (UIImageView*)view;
-        if (imageView.image.autoDotImageName.length) {
-            return imageView.image.autoDotImageName;
-        }
     }
     return nil;
 }

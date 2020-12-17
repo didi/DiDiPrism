@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString*)getInstructionOfControl:(UIControl*)control;
 + (NSString*)getFunctionNameOfControl:(UIControl*)control;
-+ (NSString*)getRepresentativeContentOfControl:(UIControl*)control;
+
 @end
 
 NS_ASSUME_NONNULL_END

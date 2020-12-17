@@ -14,6 +14,7 @@
 #import "NSArray+PrismExtends.h"
 // Util
 #import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionContentUtil.h"
 
 @interface PrismControlInstructionParser()
 
@@ -177,7 +178,7 @@
         NSString *functionInfo = [PrismControlInstructionGenerator getFunctionNameOfControl:control];
         PrismInstructionFormatter *controlFormatter = [[PrismInstructionFormatter alloc] initWithInstruction:[NSString stringWithFormat:@"%@%@", areaAndListInfo, functionInfo]];
         NSString *controlAreaInfo = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewQuadrant] prism_stringWithIndex:1];
-        NSString *viewContent = [PrismControlInstructionGenerator getRepresentativeContentOfControl:control];
+        NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
         NSString *controlFunctionName = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewFunction] prism_stringWithIndex:1];
         control.highlighted = YES;
         NSString *highlightedImageName = nil;
