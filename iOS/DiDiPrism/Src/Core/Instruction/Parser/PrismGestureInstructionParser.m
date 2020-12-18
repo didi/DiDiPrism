@@ -81,17 +81,20 @@
         NSString *functionName = [viewFunctionArray prism_stringWithIndex:1];
         tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName];
         if (!tapGesture) {
-            tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:functionName];
-        }
-        // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
-        if (representativeContent.length && lastScrollView) {
-            for (UIView *subview in lastScrollView.subviews) {
-                UITapGestureRecognizer *resultGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName];
-                if (resultGesture) {
-                    tapGesture = resultGesture;
-                    break;
+            // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
+            if (representativeContent.length && lastScrollView) {
+                for (UIView *subview in lastScrollView.subviews) {
+                    UITapGestureRecognizer *resultGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName];
+                    if (resultGesture) {
+                        tapGesture = resultGesture;
+                        break;
+                    }
                 }
             }
+        }
+        if (!tapGesture) {
+            // 兜底处理
+            tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:functionName];
         }
     }
     // WEEX参考信息 + selector + action
@@ -99,17 +102,20 @@
         NSString *representativeContent = [viewRepresentativeContentArray prism_stringWithIndex:1];
         tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:nil];
         if (!tapGesture) {
-            tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:nil];
-        }
-        // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
-        if (representativeContent.length && lastScrollView) {
-            for (UIView *subview in lastScrollView.subviews) {
-                UITapGestureRecognizer *resultGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:nil];
-                if (resultGesture) {
-                    tapGesture = resultGesture;
-                    break;
+            // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
+            if (representativeContent.length && lastScrollView) {
+                for (UIView *subview in lastScrollView.subviews) {
+                    UITapGestureRecognizer *resultGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:nil];
+                    if (resultGesture) {
+                        tapGesture = resultGesture;
+                        break;
+                    }
                 }
             }
+        }
+        if (!tapGesture) {
+            // 兜底处理
+            tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:nil];
         }
     }
     // title or image + selector + action

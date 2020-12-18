@@ -58,11 +58,21 @@
                     [tableView scrollToRowAtIndexPath:cellIndexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
                     self.didScroll = YES;
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:cellIndexPath];
+                    if (![cell isKindOfClass:NSClassFromString(cellClassName)]) {
+                        // 兼容indexPath.row小幅度漂移场景。
+                        for (UITableViewCell *tempCell in [tableView visibleCells]) {
+                            if ([tempCell isKindOfClass:NSClassFromString(cellClassName)]) {
+                                cell = tempCell;
+                                break;
+                            }
+                        }
+                    }
                     if (cell && [cell isKindOfClass:NSClassFromString(cellClassName)]) {
                         return cell;
                     }
                 }
-                // 做包容处理，如果是通常列表形式的（只有一个section，并且cell类型都一样，而且都不是系统默认类型的(WEEX除外)），取已有的最后一个作为代替。
+                // 兜底处理
+                // 如果是通常列表形式的（只有一个section，并且cell类型都一样，而且都不是系统默认类型的(WEEX除外)），取已有的最后一个作为代替。
                 if (numbersOfSections == 1 &&
                     numbersOfSections > cellIndexPath.section &&
                     (![cellClassName isEqualToString:NSStringFromClass([UITableViewCell class])] || [tableView isKindOfClass:NSClassFromString(@"WXTableView")])) {
@@ -95,11 +105,21 @@
                     [collectionView scrollToItemAtIndexPath:cellIndexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
                     self.didScroll = YES;
                     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:cellIndexPath];
+                    if (![cell isKindOfClass:NSClassFromString(cellClassName)]) {
+                        // 兼容indexPath.row小幅度漂移场景。
+                        for (UICollectionViewCell *tempCell in [collectionView visibleCells]) {
+                            if ([tempCell isKindOfClass:NSClassFromString(cellClassName)]) {
+                                cell = tempCell;
+                                break;
+                            }
+                        }
+                    }
                     if (cell && [cell isKindOfClass:NSClassFromString(cellClassName)]) {
                         return cell;
                     }
                 }
-                // 做包容处理，如果是通常列表形式的（只有一个section，并且cell类型都一样，而且都不是系统默认类型的(WEEX除外)），取已有的最后一个作为代替。
+                // 兜底处理
+                // 如果是通常列表形式的（只有一个section，并且cell类型都一样，而且都不是系统默认类型的(WEEX除外)），取已有的最后一个作为代替。
                 if (numbersOfSections == 1 &&
                     numbersOfSections > cellIndexPath.section &&
                     (![cellClassName isEqualToString:NSStringFromClass([UICollectionViewCell class])] || [collectionView isKindOfClass:NSClassFromString(@"WXCollectionView")])) {

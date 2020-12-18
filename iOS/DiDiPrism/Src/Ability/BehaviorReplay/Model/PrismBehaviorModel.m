@@ -74,7 +74,7 @@
                     NSString *vmContent = [instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewMotion];
                     NSString *vpContent = [instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewPath];
                     NSString *vrContent = [instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewRepresentativeContent];
-                    BOOL containObjComponents = [instruction containsString:vmContent] && [instruction containsString:vpContent] && [instruction containsString:vrContent];
+                    BOOL containObjComponents = vmContent && [instruction containsString:vmContent] && vpContent && [instruction containsString:vpContent] && vrContent && [instruction containsString:vrContent];
                     if ([instruction isEqualToString:obj] || containObjComponents) {
                         self.canReplay = YES;
                         self.startIndex = index;
