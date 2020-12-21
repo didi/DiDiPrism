@@ -9,6 +9,7 @@
 // Category
 #import "PrismBaseInstructionParser+Protected.h"
 #import "NSArray+PrismExtends.h"
+#import "UIView+PrismExtends.h"
 
 @interface PrismEdgePanGestureInstructionParser()
 
@@ -24,6 +25,9 @@
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
         return PrismInstructionParseResultFail;
+    }
+    if (!viewPathArray.lastObject.length) {
+        viewPathArray = [viewPathArray subarrayWithRange:NSMakeRange(0, viewPathArray.count - 1)];
     }
     NSInteger index = 2;
     for (; index < viewPathArray.count; index++) {
@@ -41,11 +45,21 @@
         return PrismInstructionParseResultError;
     }
     
-    UIViewController *targetViewController = (UIViewController*)responder;
+    UIViewController *targetViewController = nil;
+    if ([responder isKindOfClass:[UIView class]]) {
+        UIView *view = (UIView*)responder;
+        targetViewController = [[view nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[view nextResponder] : [view prism_viewController];
+    }
+    else {
+        targetViewController = (UIViewController*)responder;
+    }
     UIView *targetView = targetViewController.view;
     UIScreenEdgePanGestureRecognizer *edgePanGesture = [self searchEdgePanGestureFromSuperView:targetView];
     if (edgePanGesture) {
-        if (targetViewController.navigationController) {
+        if ([targetViewController isKindOfClass:[UINavigationController class]]) {
+            [(UINavigationController*)targetViewController popViewControllerAnimated:YES];
+        }
+        else if (targetViewController.navigationController) {
             [targetViewController.navigationController popViewControllerAnimated:YES];
         }
         else if (targetViewController.parentViewController.presentingViewController) {

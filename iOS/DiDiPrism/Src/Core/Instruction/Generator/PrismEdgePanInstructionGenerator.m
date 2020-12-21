@@ -31,14 +31,7 @@
     }
     
     NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:view];
-    // 获取响应链的方法本身有个问题，就是如果self.view为viewController.view的话，并不会统计到这个viewController。
-    // 但是这一点对于后退滑动手势来说必须修复，所以先在这里修复。其他地方目前运行良好就不做改动（只是回放遍历的时候要多遍历一些）
-    UIViewController *lastViewController = nil;
-    UIResponder* nextResponder = [view nextResponder];
-    if ([nextResponder isKindOfClass:[UIViewController class]]) {
-        lastViewController = (UIViewController*)nextResponder;
-    }
-    view.autoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, responseChainInfo, lastViewController ? NSStringFromClass([lastViewController class]) : @""];
+    view.autoDotFinalMark = [NSString stringWithFormat:@"%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, responseChainInfo];
     return view.autoDotFinalMark;
 }
 

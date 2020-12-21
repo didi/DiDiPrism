@@ -44,7 +44,7 @@
 #pragma mark - private method
 + (NSArray<UIViewController*>*)getParentViewControllersOfView:(UIView*)view {
     NSMutableArray<UIViewController*> *viewControllers = [NSMutableArray array];
-    UIViewController *viewController = view.prism_viewController;
+    UIViewController *viewController = [view prism_viewController];
     if (viewController) {
         [viewControllers addObject:viewController];
         while (viewController.parentViewController) {

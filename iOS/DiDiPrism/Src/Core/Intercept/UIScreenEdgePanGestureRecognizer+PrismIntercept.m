@@ -60,7 +60,7 @@
     }
     
     if (edgePanGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        UIViewController *viewController = self.view.prism_viewController;
+        UIViewController *viewController = [[self.view nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[self.view nextResponder] : [self.view prism_viewController];
         UINavigationController *navigationController = [viewController isKindOfClass:[UINavigationController class]] ? (UINavigationController*)viewController : viewController.navigationController;
         [self setAutoDotNavigationController:navigationController];
         NSInteger viewControllerCount = navigationController.viewControllers.count;
