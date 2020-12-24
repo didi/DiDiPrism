@@ -11,6 +11,7 @@
 #import "NSArray+PrismExtends.h"
 
 @interface PrismInstructionFormatter()
+@property (nonatomic, copy) NSString *instruction;
 @property (nonatomic, copy) NSDictionary<NSString*, NSArray<NSString*>*> *instructionFragments;
 @end
 

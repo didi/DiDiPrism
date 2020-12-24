@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, PrismInstructionFragmentType) {
 };
 
 @interface PrismInstructionFormatter : NSObject
-@property (nonatomic, copy) NSString *instruction;
+@property (nonatomic, copy, readonly) NSString *instruction;
 
 - (instancetype)initWithInstruction:(NSString*)instruction;
 - (NSArray<NSString*>*)instructionFragmentWithType:(PrismInstructionFragmentType)type;

@@ -81,6 +81,9 @@
 ## 微信交流群
 由于群二维码的有效期仅为7天，故可搜索 HulkRong 加我微信入群，可备注：小桔棱镜社区用户。
 
+## TODO
+详见 [近期TODO](https://github.com/didi/DiDiPrism/wiki)
+
 ## 项目成员
 
 **负责人**
