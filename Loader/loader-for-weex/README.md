@@ -52,6 +52,54 @@ const webpackConfig = {
 }
 ```
 
+## 效果
+
+该`Loader`要实现的效果，是给带有点击事件的标签，自动添加一些小桔棱镜的属性，方便Native侧做元素的唯一标识。
+
+比如，我们业务代码里写的是这样一个组件：
+
+```vue
+<template>
+  <div @click="onClick">This is a subtitle.</div>
+</template>
+<script>
+export default {
+  data: () => ({
+
+  }),
+  methods: {
+    onClick() {
+      console.log('---click the subtitle---')
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+
+</style>
+```
+
+`Webpack`在经过`weex-loader-for-didiprism`和`vue-loader`的打包之后，会将上面的Vue组件转换成这样一段AST代码：
+
+```javascript
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "content-title",
+      attrs: { prismFunctionName: "onClick", prismClassName: "content-title" },
+      on: { click: _vm.onClick }
+    },
+    [_vm._v("This is a title.")]
+  )
+}
+```
+
+有点击事件监听的标签，会多出两个属性：`prismFunctionName` 和 `prismClassName`，它们就是给小桔棱镜Native侧使用的属性。这样，开发者就不用手动添加这些属性，主需要关注业务逻辑即可。
+
 ## 协议
 
 <img alt="Apache-2.0 license" src="https://www.apache.org/img/ASF20thAnniversary.jpg" width="128">
