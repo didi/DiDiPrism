@@ -1,4 +1,5 @@
-module.exports = function(src: string): string {
+
+function WeexLoaderForDiDiPrism(src: string): string {
   const tagWithClickHandler = /\<(\w|-)*([\w\=\#\(\)\"\&\.\-\'\`\|\[\]\{\}\+\,\s\?\:\!\_\/@$\u4e00-\u9fa5]*)((@click|v-on:click)="([\w\s\(\)\.\,\=\>\']*)")([\w\=\#\(\)\"\&\.\-\'\`\|\[\]\{\}\+\,\s\?\:\!\_\/@$\u4e00-\u9fa5]*)(\/)?\>/g;
   const tagWithClick = /\<(\w|-)*([\w\=\#\(\)\"\&\.\-\'\`\|\[\]\{\}\+\,\s\?\:\!\_\/@$\u4e00-\u9fa5]*)((@click|v-on:click)="([\w\s\(\)\.\,\=\>\']*)")([\w\=\#\(\)\"\&\.\-\'\`\|\[\]\{\}\+\,\s\?\:\!\_\/@$\u4e00-\u9fa5]*)(\/)?\>/;
 
@@ -24,3 +25,5 @@ module.exports = function(src: string): string {
   }
   return src
 }
+
+module.exports = WeexLoaderForDiDiPrism;
