@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "outDir": "lib/",
+    "esModuleInterop": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "declaration": true,
+    "module": "ES6",
+    "traceResolution": false
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "./lib"
+  ]
+}
