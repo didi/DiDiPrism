@@ -1,6 +1,6 @@
 {
   "name": "weex-loader-for-didiprism",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Webpack loader for Weex project.",
   "main": "./lib/index.js",
   "scripts": {
