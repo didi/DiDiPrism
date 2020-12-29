@@ -29,6 +29,9 @@
     "url": "https://github.com/didi/DiDiPrism/issues"
   },
   "homepage": "https://github.com/didi/DiDiPrism#readme",
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "babel-loader": "^8.0.6",
