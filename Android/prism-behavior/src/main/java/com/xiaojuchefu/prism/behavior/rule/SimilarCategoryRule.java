@@ -21,6 +21,7 @@ public class SimilarCategoryRule implements RuleHandler {
         List<String> categoryCount = (List<String>) ruleContent.ruleState.stateData;
         if (categoryCount == null) {
             categoryCount = new ArrayList<>();
+            ruleContent.ruleState.stateData = categoryCount;
         }
 
         String key = "";
