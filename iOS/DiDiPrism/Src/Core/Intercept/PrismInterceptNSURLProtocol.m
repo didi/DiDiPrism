@@ -14,6 +14,7 @@
 
 #define Prism_REQUEST_HAS_INIT @"PrismRequestHasInit"
 #define Prism_REQUEST_MOCK_RESULT @"PrismRequestMockResult"
+#define EasyDot_REQUEST_INFOS @"EasyDotRequestInfos"
 
 @interface PrismInterceptNSURLProtocol() <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession *session;
@@ -41,6 +42,7 @@
             return NO;
         }
         NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = nil; //真实数据源信息
+        [NSURLProtocol setProperty:requestInfos forKey:EasyDot_REQUEST_INFOS inRequest:request];
         NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
         __block BOOL containURL = NO;
         [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -69,7 +71,7 @@
     __block NSDictionary *mockResult = nil;
     NSMutableDictionary *httpHeaders = [NSMutableDictionary dictionary];
     NSString *httpMethod = request.HTTPMethod;
-    NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = nil; //真实数据源信息
+    NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSURLProtocol propertyForKey:EasyDot_REQUEST_INFOS inRequest:request];
     NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
     [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.originUrl containsString:urlFlag]) {
