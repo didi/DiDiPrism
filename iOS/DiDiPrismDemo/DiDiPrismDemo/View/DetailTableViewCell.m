@@ -62,13 +62,16 @@
     _index = index;
     self.autoDotItemName = [NSString stringWithFormat:@"%ld", _index];
     self.titleLabel.text = [NSString stringWithFormat:@"Cell %ld\n点击前往详情页-A", _index];
-    [self.goButton setTitle:[self buttonTitleOfIndex:_index % 2] forState:UIControlStateNormal];
+    [self.goButton setTitle:[self buttonTitleOfIndex:_index % 3] forState:UIControlStateNormal];
 }
 
 #pragma mark - getters
 - (NSString*)buttonTitleOfIndex:(NSInteger)index {
     if (index == 0) {
         return @"前往详情页-B";
+    }
+    else if (index == 1) {
+        return @"前往WebView";
     }
     return @"无跳转";
 }

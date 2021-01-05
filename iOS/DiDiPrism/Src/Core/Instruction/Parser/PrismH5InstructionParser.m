@@ -6,6 +6,7 @@
 //
 
 #import "PrismH5InstructionParser.h"
+#import <WebKit/WebKit.h>
 
 @interface PrismH5InstructionParser()
 
@@ -20,11 +21,44 @@
     if (h5ViewArray.count < 2) {
         return PrismInstructionParseResultError;
     }
-
-    return PrismInstructionParseResultError;
+    
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    UIViewController *viewController = keyWindow.rootViewController;
+    WKWebView *webView = (WKWebView*)[self recursiveSearchView:[WKWebView class] fromSuperView:viewController.view];
+    if (!webView) {
+        return PrismInstructionParseResultError;
+    }
+    if ([webView isLoading]) {
+        return PrismInstructionParseResultFail;
+    }
+    [webView evaluateJavaScript:[NSString stringWithFormat:@"PRISM_PLAYBACK_PLAY('%@')", h5ViewArray[1]] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        
+    }];
+    return PrismInstructionParseResultSuccess;
 }
 
 #pragma mark - private method
+- (UIView*)recursiveSearchView:(Class)viewClass fromSuperView:(UIView*)superView {
+    if (!viewClass || !superView) {
+        return nil;
+    }
+    if ([superView isKindOfClass:viewClass]) {
+        return superView;
+    }
+    for (UIView *subview in [superView subviews]) {
+        if (subview.isHidden) {
+            continue;
+        }
+        if ([subview isKindOfClass:viewClass]) {
+            return subview;
+        }
+        UIView *resultView = [self recursiveSearchView:viewClass fromSuperView:subview];
+        if (resultView) {
+            return resultView;
+        }
+    }
+    return nil;
+}
 
 #pragma mark - setters
 

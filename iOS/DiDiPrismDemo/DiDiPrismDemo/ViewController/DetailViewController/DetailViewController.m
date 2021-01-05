@@ -11,6 +11,7 @@
 #import "Masonry.h"
 #import "DetailAViewController.h"
 #import "DetailBViewController.h"
+#import "WebViewController.h"
 
 @interface DetailViewController () <UITableViewDelegate,UITableViewDataSource, DetailTableViewCellDelegate>
 @property (nonatomic, strong) UITableView *tableView;
@@ -51,9 +52,12 @@
 #pragma mark - DetailTableViewCellDelegate
 - (void)didGoButtonSelectedWithIndex:(NSInteger)index {
     UIViewController *viewController = nil;
-    index = index % 2;
+    index = index % 3;
     if (index == 0) {
         viewController = [[DetailBViewController alloc] init];
+    }
+    else if (index == 1) {
+        viewController = [[WebViewController alloc] init];
     }
     if (viewController) {
         [self.navigationController pushViewController:viewController animated:YES];

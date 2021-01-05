@@ -17,6 +17,10 @@
 
 #pragma mark - public method
 + (NSString*)getInstructionOfViewController:(UIViewController*)viewController {
+    if ([self isSystemKeyboardOfViewController:viewController]) {
+        return nil;
+    }
+    
     NSMutableString *vrContent = [NSMutableString stringWithString:NSStringFromClass([viewController class])];
     NSString *url = nil;
     SEL urlSelector = @selector(getUrl);
@@ -26,10 +30,7 @@
             [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
         }
     }
-    if (!url && [self isSystemKeyboardOfViewController:viewController]) {
-        [vrContent appendFormat:@"%@%@", kConnectorFlag, @"系统键盘"];
-    }
-    else if (!url && [viewController title].length) {
+    if (!url && [viewController title].length) {
         [vrContent appendFormat:@"%@%@", kConnectorFlag, [viewController title]];
     }
     else {

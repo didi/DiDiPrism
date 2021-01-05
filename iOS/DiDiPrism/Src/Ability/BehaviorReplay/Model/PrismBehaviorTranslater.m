@@ -45,7 +45,7 @@
     // 翻译H5指令
     if (h5ViewArray.count) {
         textModel.descType = PrismBehaviorDescTypeText;
-        textModel.descContent = @"[H5页面中内容]";
+        textModel.descContent = @"[H5页面]";
         if (viewRepresentativeContentArray.count > 1 && [viewRepresentativeContentArray[1] prism_trimmingWhitespaceAndNewlines].length > 0) {
             NSString *content = viewRepresentativeContentArray[1];
             if ([self hasNetworkImage:content]) {
