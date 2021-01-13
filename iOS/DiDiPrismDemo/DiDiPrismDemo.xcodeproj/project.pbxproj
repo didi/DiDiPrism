@@ -11,6 +11,7 @@
 		0A46367525022497009C4757 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A46367425022497009C4757 /* AppDelegate.m */; };
 		0A46368025022499009C4757 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A46367F25022499009C4757 /* Assets.xcassets */; };
 		0A46368625022499009C4757 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A46368525022499009C4757 /* main.m */; };
+		0A842D5725A4958400481C5E /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A842D5625A4958300481C5E /* WebViewController.m */; };
 		0A8C76082546715B00B7CC7C /* EntranceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C76072546715B00B7CC7C /* EntranceViewController.m */; };
 		0A8C760D2546722D00B7CC7C /* BehaviorDetectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C760C2546722D00B7CC7C /* BehaviorDetectViewController.m */; };
 		0A8C7612254676F900B7CC7C /* DetailAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C7611254676F800B7CC7C /* DetailAViewController.m */; };
@@ -42,6 +43,8 @@
 		0A46367F25022499009C4757 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A46368425022499009C4757 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A46368525022499009C4757 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0A842D5525A4958300481C5E /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		0A842D5625A4958300481C5E /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		0A8C76062546715B00B7CC7C /* EntranceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntranceViewController.h; sourceTree = "<group>"; };
 		0A8C76072546715B00B7CC7C /* EntranceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntranceViewController.m; sourceTree = "<group>"; };
 		0A8C760B2546722D00B7CC7C /* BehaviorDetectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BehaviorDetectViewController.h; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				0A8C76162546775700B7CC7C /* DetailBViewController.m */,
 				0A8C761D254677EE00B7CC7C /* DetailViewController.h */,
 				0A8C761E254677EE00B7CC7C /* DetailViewController.m */,
+				0A842D5525A4958300481C5E /* WebViewController.h */,
+				0A842D5625A4958300481C5E /* WebViewController.m */,
 			);
 			path = DetailViewController;
 			sourceTree = "<group>";
@@ -342,6 +347,7 @@
 				0A8C76402547007A00B7CC7C /* DetailBannerBTableViewCell.m in Sources */,
 				0A8C763C2547006B00B7CC7C /* DetailBannerATableViewCell.m in Sources */,
 				0A8C76452547AF5800B7CC7C /* DetailBannerACollectionViewCell.m in Sources */,
+				0A842D5725A4958400481C5E /* WebViewController.m in Sources */,
 				0A8C762825469F9100B7CC7C /* DetailTableViewCell.m in Sources */,
 				0A8C76172546775700B7CC7C /* DetailBViewController.m in Sources */,
 				0AEF98662537E4210064D17A /* BehaviorTextDescViewCell.m in Sources */,
