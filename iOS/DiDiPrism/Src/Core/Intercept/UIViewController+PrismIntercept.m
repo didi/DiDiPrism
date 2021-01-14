@@ -22,10 +22,10 @@
 - (void)autoDot_viewDidAppear:(BOOL)animated {
     [self autoDot_viewDidAppear:animated];
     
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return;
     }
     NSString *instruction = [PrismViewControllerInstructionGenerator getInstructionOfViewController:self];
-    [[PrismBehaviorRecordManager sharedInstance] addInstruction:instruction];
+    [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction];
 }
 @end

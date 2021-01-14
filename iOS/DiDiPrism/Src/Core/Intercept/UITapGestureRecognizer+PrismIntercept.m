@@ -32,7 +32,7 @@
 - (void)autoDot_setState:(UIGestureRecognizerState)state {
     [self autoDot_setState:state];
     
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return;
     }
     // 某些场景下 state 和 self.state 不一致，self.state为UIGestureRecognizerStateFailed
@@ -84,13 +84,13 @@
 
 #pragma mark - actions
 - (void)autoDot_tapAction:(UITapGestureRecognizer*)tapGestureRecognizer {
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return;
     }
     NSString *instruction = [PrismTapGestureInstructionGenerator getInstructionOfTapGesture:self];
     if (instruction.length) {
         NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self.view];
-        [[PrismBehaviorRecordManager sharedInstance] addInstruction:instruction withEventParams:eventParams];
+        [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
     }
 }
 

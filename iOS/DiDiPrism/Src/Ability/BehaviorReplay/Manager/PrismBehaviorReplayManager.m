@@ -10,6 +10,8 @@
 #import "PrismBehaviorReplayOperation.h"
 #import "PrismBehaviorRecordManager.h"
 #import "PrismInstructionDefines.h"
+// Category
+#import "NSArray+PrismExtends.h"
 
 @interface PrismBehaviorReplayManager()
 @property (nonatomic, strong) NSOperationQueue *prismOperationQueue;
@@ -45,7 +47,7 @@
 - (void)startWithModel:(PrismBehaviorListModel *)model
          progressBlock:(void (^)(NSInteger,NSString*))progressBlock
        completionBlock:(void (^)(void))completionBlock {
-    [PrismBehaviorRecordManager sharedInstance].isInReplaying = YES;
+    [PrismBehaviorRecordManager sharedManager].isInReplaying = YES;
     self.model = model;
     NSArray<PrismBehaviorVideoModel*> *behaviorArray = [model.instructionArray subarrayWithRange:NSMakeRange(model.startIndex, MIN(model.endIndex + 1, model.instructionArray.count) - model.startIndex)];
     if (!behaviorArray.count) {
@@ -66,7 +68,7 @@
 }
 
 - (void)goon {
-    [PrismBehaviorRecordManager sharedInstance].isInReplaying = YES;
+    [PrismBehaviorRecordManager sharedManager].isInReplaying = YES;
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
     for (NSOperation *operaion in self.remainingOperationArray) {
         [behaviorOperationQueue addOperation:operaion];
@@ -74,7 +76,7 @@
 }
 
 - (void)pause {
-    [PrismBehaviorRecordManager sharedInstance].isInReplaying = NO;
+    [PrismBehaviorRecordManager sharedManager].isInReplaying = NO;
     self.currentReplayIndex = -1;
     NSMutableArray<NSOperation*> *operationArray = [NSMutableArray array];
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
@@ -92,7 +94,7 @@
 }
 
 - (void)stop {
-    [PrismBehaviorRecordManager sharedInstance].isInReplaying = NO;
+    [PrismBehaviorRecordManager sharedManager].isInReplaying = NO;
     self.currentReplayIndex = -1;
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
     [behaviorOperationQueue.operations enumerateObjectsUsingBlock:^(__kindof NSOperation * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -229,4 +231,34 @@
     return _prismOperationQueue;
 }
 
+- (NSArray<PrismBehaviorItemRequestInfoModel *> *)currentReplayRequestInfos {
+    NSInteger currentReplayIndex = [self currentReplayIndex];
+    if (currentReplayIndex < 0) {
+        return nil;
+    }
+    NSMutableArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSMutableArray array];
+    NSArray<PrismBehaviorItemModel*> *items = self.model.instructions;
+    PrismBehaviorItemModel *currentItem = [items prism_objectAtIndex:currentReplayIndex];
+    [requestInfos addObjectsFromArray:currentItem.requestInfo];
+    // 下一步如果是标记类的指令，包含其网络信息
+    NSInteger index = currentReplayIndex + 1;
+    while ([((PrismBehaviorItemModel*)[items prism_objectAtIndex:index]).instruction containsString:kBeginOfEventFlag]) {
+        PrismBehaviorItemModel *item = (PrismBehaviorItemModel*)[items prism_objectAtIndex:index];
+        [requestInfos addObjectsFromArray:item.requestInfo];
+        index++;
+    }
+    return [requestInfos copy];
+}
+
+- (NSString * _Nonnull (^)(NSURLRequest * _Nonnull))urlFlagPickBlock {
+    if (_urlFlagPickBlock) {
+        return _urlFlagPickBlock;
+    }
+    else {
+        NSString*(^defaultPickBlock)(NSURLRequest*) = ^(NSURLRequest* request) {
+            return [NSString stringWithFormat:@"%@", request.URL.path];
+        };
+        return defaultPickBlock;
+    }
+}
 @end

@@ -60,8 +60,15 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - PrismBehaviorItemRequestInfoModel
 @interface PrismBehaviorItemRequestInfoModel : JSONModel
 @property (nonatomic, copy) NSString *originUrl;
-@property (nonatomic, copy) NSString *traceId; // 1、支持通过请求的traceId获取数据源。
-@property (nonatomic, copy) NSDictionary *result; // 2、也支持直接传入准备好的数据源。
+/*
+ 1、支持通过网络请求的traceId获取数据源。
+ */
+@property (nonatomic, copy) NSString *mockUrl;
+@property (nonatomic, copy) NSString *traceId;
+/*
+ 2、也支持直接传入准备好的数据源。
+ */
+@property (nonatomic, copy) NSDictionary *result;
 @end
 
 NS_ASSUME_NONNULL_END

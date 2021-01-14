@@ -51,7 +51,7 @@
 
 #pragma mark - actions
 - (void)autoDot_edgePanAction:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer {
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return;
     }
     
@@ -81,7 +81,7 @@
         UINavigationController *navigationController = [self autoDotNavigationController];
         NSInteger viewControllerCount = navigationController.viewControllers.count;
         if (navigationController && (viewControllerCount <= [self autoDotViewControllerCount].integerValue)) {
-            [[PrismBehaviorRecordManager sharedInstance] addInstruction:instruction];
+            [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction];
         }
     });
 }

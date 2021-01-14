@@ -12,9 +12,9 @@
 // Category
 #import "NSDictionary+PrismExtends.h"
 
-#define Prism_REQUEST_HAS_INIT @"PrismRequestHasInit"
-#define Prism_REQUEST_MOCK_RESULT @"PrismRequestMockResult"
-#define EasyDot_REQUEST_INFOS @"EasyDotRequestInfos"
+#define PRISM_REQUEST_HAS_INIT @"PrismRequestHasInit"
+#define PRISM_REQUEST_MOCK_RESULT @"PrismRequestMockResult"
+#define PRISM_REQUEST_INFOS @"PrismRequestInfos"
 
 @interface PrismInterceptNSURLProtocol() <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession *session;
@@ -30,20 +30,20 @@
 }
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return NO;
     }
     if (![request.URL.scheme isEqualToString:@"http"]
         && ![request.URL.scheme isEqualToString:@"https"]) {
         return NO;
     }
-    if ([PrismBehaviorRecordManager sharedInstance].isInReplaying) {
-        if([NSURLProtocol propertyForKey:Prism_REQUEST_HAS_INIT inRequest:request]) {
+    if ([PrismBehaviorRecordManager sharedManager].isInReplaying) {
+        if([NSURLProtocol propertyForKey:PRISM_REQUEST_HAS_INIT inRequest:request]) {
             return NO;
         }
-        NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = nil; //真实数据源信息
-        [NSURLProtocol setProperty:requestInfos forKey:EasyDot_REQUEST_INFOS inRequest:request];
-        NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
+        NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [[PrismBehaviorReplayManager sharedManager] currentReplayRequestInfos];
+        [NSURLProtocol setProperty:requestInfos forKey:PRISM_REQUEST_INFOS inRequest:request];
+        NSString *urlFlag = [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock ? [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock(request) : nil;
         __block BOOL containURL = NO;
         [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj.originUrl containsString:urlFlag]) {
@@ -54,13 +54,9 @@
         return containURL;
     }
     else {
-        NSDictionary *header = request.allHTTPHeaderFields;
-        NSString *traceIdKey = @"配置承载trace id的key";
-        if ([header.allKeys containsObject:traceIdKey]) {
-            NSString *urlFlag = [NSString stringWithFormat:@"%@%@", request.URL.host, request.URL.path];
-            NSString *traceId = [header prism_stringForKey:traceIdKey];
-            [[PrismBehaviorRecordManager sharedInstance] addRequestInfoWithUrl:urlFlag traceId:traceId];
-        }
+        NSString *urlFlag = [PrismBehaviorRecordManager sharedManager].urlFlagPickBlock ? [PrismBehaviorRecordManager sharedManager].urlFlagPickBlock(request) : nil;
+        NSString *traceId = [PrismBehaviorRecordManager sharedManager].traceIdPickBlock ? [PrismBehaviorRecordManager sharedManager].traceIdPickBlock(request) : nil;
+        [[PrismBehaviorRecordManager sharedManager] addRequestInfoWithUrl:urlFlag traceId:traceId];
     }
     
     return NO;
@@ -69,9 +65,8 @@
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
     __block NSString *mockUrl = nil;
     __block NSDictionary *mockResult = nil;
-    NSMutableDictionary *httpHeaders = [NSMutableDictionary dictionary];
     NSString *httpMethod = request.HTTPMethod;
-    NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSURLProtocol propertyForKey:EasyDot_REQUEST_INFOS inRequest:request];
+    NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSURLProtocol propertyForKey:PRISM_REQUEST_INFOS inRequest:request];
     NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
     [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.originUrl containsString:urlFlag]) {
@@ -86,8 +81,7 @@
             }
             else {
                 // 方式一
-                mockUrl = [NSString stringWithFormat:@"http://xxx?traceid=%@", obj.traceId];
-                [httpHeaders prism_setValue:@"可定制HTTP header" forKey:@""];
+                mockUrl = obj.mockUrl;
             }
             *stop = YES;
         }
@@ -95,11 +89,8 @@
     
     NSMutableURLRequest *mutableReqeust = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:mockUrl]];
     mutableReqeust.HTTPMethod = httpMethod;
-    if (httpHeaders.allKeys.count) {
-        mutableReqeust.allHTTPHeaderFields = [httpHeaders copy];
-    }
-    [NSURLProtocol setProperty:@(YES) forKey:Prism_REQUEST_HAS_INIT inRequest:mutableReqeust];
-    [NSURLProtocol setProperty:mockResult forKey:Prism_REQUEST_MOCK_RESULT inRequest:mutableReqeust];
+    [NSURLProtocol setProperty:@(YES) forKey:PRISM_REQUEST_HAS_INIT inRequest:mutableReqeust];
+    [NSURLProtocol setProperty:mockResult forKey:PRISM_REQUEST_MOCK_RESULT inRequest:mutableReqeust];
     request = [mutableReqeust copy];
     return request;
 }
@@ -136,7 +127,7 @@
     if (error) {
         [self.client URLProtocol:self didFailWithError:error];
     } else {
-        NSDictionary *dataDictionary = [NSURLProtocol propertyForKey:Prism_REQUEST_MOCK_RESULT inRequest:task.currentRequest];
+        NSDictionary *dataDictionary = [NSURLProtocol propertyForKey:PRISM_REQUEST_MOCK_RESULT inRequest:task.currentRequest];
         if (dataDictionary.allKeys.count) {
             NSError *error = nil;
             NSData *realData = [NSJSONSerialization dataWithJSONObject:dataDictionary

@@ -28,14 +28,14 @@
     void (*functionPointer)(id, SEL, NSSet<UITouch *> *, UIEvent *) = (void (*)(id, SEL, NSSet<UITouch *> *, UIEvent *))original_TouchesEnded_Method_Imp;
     functionPointer(self, _cmd, touches, event);
     
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload] == NO) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
         return;
     }
     if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
         NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:self];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self];
-            [[PrismBehaviorRecordManager sharedInstance] addInstruction:instruction withEventParams:eventParams];
+            [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
         }
     }
 }

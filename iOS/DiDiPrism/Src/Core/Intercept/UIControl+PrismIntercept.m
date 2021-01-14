@@ -25,13 +25,13 @@
 
 
 - (void)autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
-    if ([[PrismBehaviorRecordManager sharedInstance] canUpload]) {
+    if ([[PrismBehaviorRecordManager sharedManager] canUpload]) {
         NSString *targetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
         if ([targetAndSelector isEqualToString:self.autoDotTargetAndSelector]) {
             NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:self];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self];
-                [[PrismBehaviorRecordManager sharedInstance] addInstruction:instruction withEventParams:eventParams];
+                [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
             }
         }
     }

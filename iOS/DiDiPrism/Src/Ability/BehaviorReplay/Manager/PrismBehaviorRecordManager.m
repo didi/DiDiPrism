@@ -15,7 +15,7 @@
 
 @implementation PrismBehaviorRecordManager
 #pragma mark - life cycle
-+ (instancetype)sharedInstance {
++ (instancetype)sharedManager {
     static PrismBehaviorRecordManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -116,5 +116,29 @@
 #pragma mark - setters
 
 #pragma mark - getters
+- (NSString * _Nonnull (^)(NSURLRequest * _Nonnull))urlFlagPickBlock {
+    if (_urlFlagPickBlock) {
+        return _urlFlagPickBlock;
+    }
+    else {
+        NSString*(^defaultPickBlock)(NSURLRequest*) = ^(NSURLRequest* request) {
+            return [NSString stringWithFormat:@"%@%@", request.URL.host, request.URL.path];
+        };
+        return defaultPickBlock;
+    }
+}
 
+- (NSString * _Nonnull (^)(NSURLRequest * _Nonnull))traceIdPickBlock {
+    if (_traceIdPickBlock) {
+        return _traceIdPickBlock;
+    }
+    else {
+        NSString*(^defaultPickBlock)(NSURLRequest*) = ^(NSURLRequest* request) {
+            NSDictionary *header = request.allHTTPHeaderFields;
+            NSString *traceIdKey = @"traceid";
+            return [header prism_stringForKey:traceIdKey];
+        };
+        return defaultPickBlock;
+    }
+}
 @end
