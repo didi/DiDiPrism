@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 #import "PrismBehaviorModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString*(^urlFlagPickBlock)(NSURLRequest*); //定制用于匹配网络请求信息的逻辑。
 @property (nonatomic, assign) BOOL isLastInstructionParseFail;
 @property (nonatomic, assign) NSInteger continuousFailCount; //连续失败计数，不考虑同一指令重试
+
+/*
+ 初始化
+ */
+- (void)setup;
 
 /*
  开始回放

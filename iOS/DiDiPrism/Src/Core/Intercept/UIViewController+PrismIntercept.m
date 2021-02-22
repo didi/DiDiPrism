@@ -6,8 +6,8 @@
 //
 
 #import "UIViewController+PrismIntercept.h"
-#import "PrismBehaviorRecordManager.h"
-#import "PrismViewControllerInstructionGenerator.h"
+// Dispatcher
+#import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
 
@@ -20,12 +20,9 @@
 }
 
 - (void)autoDot_viewDidAppear:(BOOL)animated {
+    //原始逻辑
     [self autoDot_viewDidAppear:animated];
     
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
-        return;
-    }
-    NSString *instruction = [PrismViewControllerInstructionGenerator getInstructionOfViewController:self];
-    [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction];
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewControllerViewDidAppear withSender:self params:nil];
 }
 @end

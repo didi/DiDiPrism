@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (PrismIntercept)
 
+- (void)autoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration;
+
 @end
 
 NS_ASSUME_NONNULL_END

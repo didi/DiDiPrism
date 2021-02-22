@@ -6,6 +6,7 @@
 //
 
 #import "PrismBehaviorReplayManager.h"
+#import "PrismEventDispatcher.h"
 #import "PrismBaseInstructionParser.h"
 #import "PrismBehaviorReplayOperation.h"
 #import "PrismBehaviorRecordManager.h"
@@ -44,6 +45,10 @@
 }
 
 #pragma mark - public method
+- (void)setup {
+    [[PrismEventDispatcher sharedInstance] registerListener:(id<PrismDispatchListenerProtocol>)self];
+}
+
 - (void)startWithModel:(PrismBehaviorListModel *)model
          progressBlock:(void (^)(NSInteger,NSString*))progressBlock
        completionBlock:(void (^)(void))completionBlock {
