@@ -15,6 +15,7 @@
 #import "NSDictionary+PrismExtends.h"
 // Manager
 #import "PrismBehaviorReplayManager.h"
+#import "PrismBehaviorRecordManager.h"
 // View
 #import "BehaviorTextDescView.h"
 #import "BehaviorReplayOperationView.h"
@@ -34,6 +35,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[PrismBehaviorRecordManager sharedManager] setup];
+    [[PrismBehaviorReplayManager sharedManager] setup];
     [self _addNotification];
     [self _initView];
 }

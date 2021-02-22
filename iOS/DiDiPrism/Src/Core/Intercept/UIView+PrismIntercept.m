@@ -6,11 +6,10 @@
 //
 
 #import "UIView+PrismIntercept.h"
-#import "PrismBehaviorRecordManager.h"
-#import "PrismCellInstructionGenerator.h"
+// Dispatcher
+#import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
-#import "PrismInstructionParamUtil.h"
 
 @implementation UIView (PrismIntercept)
 + (void)load {
@@ -28,15 +27,6 @@
     void (*functionPointer)(id, SEL, NSSet<UITouch *> *, UIEvent *) = (void (*)(id, SEL, NSSet<UITouch *> *, UIEvent *))original_TouchesEnded_Method_Imp;
     functionPointer(self, _cmd, touches, event);
     
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
-        return;
-    }
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
-        NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:self];
-        if (instruction.length) {
-            NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self];
-            [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
-        }
-    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded withSender:self params:nil];
 }
 @end

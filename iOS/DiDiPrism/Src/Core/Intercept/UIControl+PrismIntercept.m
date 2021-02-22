@@ -6,18 +6,16 @@
 //
 
 #import "UIControl+PrismIntercept.h"
-#import "PrismBehaviorRecordManager.h"
-#import "PrismControlInstructionGenerator.h"
+// Dispatcher
+#import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
-#import "PrismInstructionParamUtil.h"
 
 @implementation UIControl (PrismIntercept)
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(autoDot_sendAction:to:forEvent:)];
-
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(autoDot_addTarget:action:forControlEvents:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(autoDot_removeTarget:action:forControlEvents:)];
     });
@@ -25,16 +23,10 @@
 
 
 - (void)autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload]) {
-        NSString *targetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
-        if ([targetAndSelector isEqualToString:self.autoDotTargetAndSelector]) {
-            NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:self];
-            if (instruction.length) {
-                NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self];
-                [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
-            }
-        }
-    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"target"] = target;
+    params[@"action"] = NSStringFromSelector(action);
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendActionStart withSender:self params:[params copy]];
     
     //原始逻辑
     [self autoDot_sendAction:action to:target forEvent:event];

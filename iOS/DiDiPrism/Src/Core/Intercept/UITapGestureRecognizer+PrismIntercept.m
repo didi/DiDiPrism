@@ -6,14 +6,12 @@
 //
 
 #import "UITapGestureRecognizer+PrismIntercept.h"
-#import "PrismTapGestureInstructionGenerator.h"
-#import "PrismBehaviorRecordManager.h"
+// Dispatcher
+#import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
 #import "PrismInstructionAreaUtil.h"
-#import "PrismInstructionContentUtil.h"
 #import "PrismInstructionResponseChainUtil.h"
-#import "PrismInstructionParamUtil.h"
 // Category
 #import "UIResponder+PrismIntercept.h"
 
@@ -22,7 +20,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setState:) swizzledSelector:@selector(autoDot_setState:)];
-
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(autoDot_initWithTarget:action:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(autoDot_addTarget:action:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(autoDot_removeTarget:action:)];
@@ -32,9 +29,6 @@
 - (void)autoDot_setState:(UIGestureRecognizerState)state {
     [self autoDot_setState:state];
     
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
-        return;
-    }
     // 某些场景下 state 和 self.state 不一致，self.state为UIGestureRecognizerStateFailed
     if (state == UIGestureRecognizerStateRecognized && self.state == UIGestureRecognizerStateRecognized) {
         //注1：没有选择在setState阶段直接进行event id的收集，是因为类似于WEEX场景中一次操作可以识别到多个手势（区别于实际起作用的手势）。
@@ -43,7 +37,6 @@
             NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:self.view];
             if (responseChainInfo.length) {
                 [self setAutoDotResponseChainInfo:responseChainInfo];
-                
             }
             NSString *areaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:self.view];
             if (areaInfo.length) {
@@ -84,14 +77,10 @@
 
 #pragma mark - actions
 - (void)autoDot_tapAction:(UITapGestureRecognizer*)tapGestureRecognizer {
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
-        return;
-    }
-    NSString *instruction = [PrismTapGestureInstructionGenerator getInstructionOfTapGesture:self];
-    if (instruction.length) {
-        NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:self.view];
-        [[PrismBehaviorRecordManager sharedManager] addInstruction:instruction withEventParams:eventParams];
-    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"target"] = self;
+    params[@"action"] = NSStringFromSelector(@selector(autoDot_tapAction:));
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUITapGestureRecognizerAction withSender:self params:[params copy]];
 }
 
 #pragma mark - public method

@@ -6,7 +6,10 @@
 //
 
 #import "PrismBehaviorRecordManager.h"
+#import "PrismEventDispatcher.h"
+// Instruction
 #import "PrismInstructionDefines.h"
+// Category
 #import "NSDictionary+PrismExtends.h"
 
 @interface PrismBehaviorRecordManager()
@@ -35,6 +38,10 @@
 }
 
 #pragma mark - public method
+- (void)setup {
+    [[PrismEventDispatcher sharedInstance] registerListener:(id<PrismDispatchListenerProtocol>)self];
+}
+
 - (BOOL)canHook {
     return YES;
 }

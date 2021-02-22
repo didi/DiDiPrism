@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString*(^traceIdPickBlock)(NSURLRequest*);
 
 /*
+ 初始化
+ */
+- (void)setup;
+
+/*
  是否可以Hook。
  */
 - (BOOL)canHook;
