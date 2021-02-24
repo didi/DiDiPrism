@@ -27,7 +27,7 @@
     if (![self canUpload]) {
         return;
     }
-    if (event == PrismDispatchEventUIControlSendActionStart) {
+    if (event == PrismDispatchEventUIControlSendAction_Start) {
         UIControl *control = (UIControl*)sender;
         NSObject *target = [params objectForKey:@"target"];
         NSString *action = [params objectForKey:@"action"];
@@ -78,7 +78,7 @@
             [self addInstruction:instruction withEventParams:eventParams];
         }
     }
-    else if (event == PrismDispatchEventUIViewTouchesEnded) {
+    else if (event == PrismDispatchEventUIViewTouchesEnded_End) {
         UIView *view = (UIView*)sender;
         if ([view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionViewCell class]]) {
             NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:view];
