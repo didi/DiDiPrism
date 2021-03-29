@@ -7,6 +7,7 @@
 //
 
 #import "DetailViewController.h"
+#import "PrismAdapter.h"
 #import "DetailTableViewCell.h"
 #import "Masonry.h"
 #import "DetailAViewController.h"
@@ -46,6 +47,8 @@
         cell.delegate = self;
     }
     cell.index = indexPath.row;
+    Prism_RemoveAllEventIds(cell);
+    Prism_AddExposureEventId(cell, @"event_id_1");
     return cell;
 }
 

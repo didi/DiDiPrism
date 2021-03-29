@@ -29,10 +29,10 @@
     
     [[PrismDataVisualizationManager sharedManager] setup];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingComponent alloc] init]];
+    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingMenuComponent alloc] init]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataSwitchComponent alloc] init]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFilterComponent alloc] init]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataBubbleComponent alloc] init]];
-    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingMenuComponent alloc] init]];
     [PrismDataVisualizationManager sharedManager].enable = YES;
     
     [self initView];
