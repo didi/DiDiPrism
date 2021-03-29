@@ -6,6 +6,7 @@
 //
 
 #import "PrismDataFloatingComponent.h"
+#import "UIView+PrismDataVisualization.h"
 // View
 #import "PrismDataFloatingView.h"
 
@@ -18,23 +19,14 @@
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params {
     if (event == PrismDispatchEventUIViewDidMoveToSuperview) {
         UIView *view = (UIView*)sender;
-        if (view.alpha == 0
+        if (!view.relatedInfos.count
+            || view.alpha == 0
             || view.hidden == YES
             || ![PrismIdentifierUtil needHookWithView:view]) {
             return;
         }
         //等待加载完成，比如动画效果、数据渲染等
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            if ([EDPivot EDMode] == EasyDotModeDisabled
-//                || senderView.easyDotDisplayMode != EasyDotDataDisplayModeNatural
-//                || !senderView.easyDotEventInfos.count
-//                || senderView.alpha == 0
-//                || senderView.hidden == YES
-//                || ![EDViewUtils needHookWithView:senderView]) {
-//                return;
-//            }
-//            [[EDDotLookViewManager sharedManager] showElementDataViewInSuperview:senderView ignoreParameters:NO];
-            
             PrismDataFloatingView *floatingView = [[PrismDataFloatingView alloc] init];
             PrismDataFloatingModel *model = [[PrismDataFloatingModel alloc] init];
             model.content = @"123";
@@ -69,5 +61,17 @@
         }
     }
     [theView removeFromSuperview];
+}
+
+#pragma mark - setters
+- (void)setEnable:(BOOL)enable {
+    [super setEnable:enable];
+    
+    if (self.enable) {
+        
+    }
+    else {
+        
+    }
 }
 @end

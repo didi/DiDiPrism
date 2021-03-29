@@ -32,6 +32,7 @@
 		0AEF98682537E4210064D17A /* BehaviorReplayOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEF985F2537E4200064D17A /* BehaviorReplayOperationView.m */; };
 		0AEF98692537E4210064D17A /* BehaviorTextDescNodeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEF98602537E4200064D17A /* BehaviorTextDescNodeCell.m */; };
 		0AEF98732537E4780064D17A /* BehaviorReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEF98712537E4780064D17A /* BehaviorReplayViewController.m */; };
+		0AFC59672611B7040057D81F /* DataVisualizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC59662611B7040057D81F /* DataVisualizationViewController.m */; };
 		D3C4DD37AD08E0EF92C69B8D /* Pods_DiDiPrismDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CF74E66C184B95725E1E79 /* Pods_DiDiPrismDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,8 @@
 		0AEF98642537E4210064D17A /* BehaviorTextDescNodeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorTextDescNodeCell.h; sourceTree = "<group>"; };
 		0AEF986F2537E4780064D17A /* BehaviorReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorReplayViewController.h; sourceTree = "<group>"; };
 		0AEF98712537E4780064D17A /* BehaviorReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BehaviorReplayViewController.m; sourceTree = "<group>"; };
+		0AFC59652611B7040057D81F /* DataVisualizationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataVisualizationViewController.h; sourceTree = "<group>"; };
+		0AFC59662611B7040057D81F /* DataVisualizationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataVisualizationViewController.m; sourceTree = "<group>"; };
 		A4A17CAAD65E6C1ED2A65DBC /* Pods-DiDiPrismDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DiDiPrismDemo.debug.xcconfig"; path = "Target Support Files/Pods-DiDiPrismDemo/Pods-DiDiPrismDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		A79F2CE62391B9F9B27B6DA0 /* Pods-DiDiPrismDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DiDiPrismDemo.release.xcconfig"; path = "Target Support Files/Pods-DiDiPrismDemo/Pods-DiDiPrismDemo.release.xcconfig"; sourceTree = "<group>"; };
 		F2CF74E66C184B95725E1E79 /* Pods_DiDiPrismDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DiDiPrismDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +202,8 @@
 				0A8C76072546715B00B7CC7C /* EntranceViewController.m */,
 				0A8C760B2546722D00B7CC7C /* BehaviorDetectViewController.h */,
 				0A8C760C2546722D00B7CC7C /* BehaviorDetectViewController.m */,
+				0AFC59652611B7040057D81F /* DataVisualizationViewController.h */,
+				0AFC59662611B7040057D81F /* DataVisualizationViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -344,6 +349,7 @@
 				0AEF98692537E4210064D17A /* BehaviorTextDescNodeCell.m in Sources */,
 				0A8C760D2546722D00B7CC7C /* BehaviorDetectViewController.m in Sources */,
 				0A8C76082546715B00B7CC7C /* EntranceViewController.m in Sources */,
+				0AFC59672611B7040057D81F /* DataVisualizationViewController.m in Sources */,
 				0A8C76402547007A00B7CC7C /* DetailBannerBTableViewCell.m in Sources */,
 				0A8C763C2547006B00B7CC7C /* DetailBannerATableViewCell.m in Sources */,
 				0A8C76452547AF5800B7CC7C /* DetailBannerACollectionViewCell.m in Sources */,
