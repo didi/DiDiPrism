@@ -8,11 +8,12 @@
 #import "PrismDataFloatingMenuView.h"
 #import "PrismIdentifierUtil.h"
 
+#define PrismDataFloatingMenuViewWidth 130
+#define PrismDataFloatingMenuItemHeight 40
+
 @interface PrismDataFloatingMenuView()
 @property (nonatomic, strong) UIView *backgroundView;
-@property (nonatomic, strong) UIButton *clickTypeButton;
-@property (nonatomic, strong) UIButton *exposureTypeButton;
-@property (nonatomic, strong) UIButton *funnelButton;
+@property (nonatomic, assign) CGFloat currentOrignX;
 @end
 
 @implementation PrismDataFloatingMenuView
@@ -38,52 +39,35 @@
     }
 }
 
-- (void)funnelAction:(UIButton*)sender {
+- (void)tapButtonAction:(UIButton*)sender {
     [self removeFromSuperview];
-    
-}
-
-- (void)exposureTypeAction:(UIButton*)sender {
-    [self removeFromSuperview];
-    
-}
-
-- (void)clickTypeAction:(UIButton*)sender {
-    [self removeFromSuperview];
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchButtonWithIndex:)]) {
+        [self.delegate didTouchButtonWithIndex:sender.tag - 100];
+    }
 }
 
 #pragma mark - delegate
 
 #pragma mark - public method
-- (void)reload {
+- (void)addMenuItemWithIndex:(NSInteger)index withTitle:(NSString *)title withImageName:(NSString*)imageName {
+    UIButton *button = [self generateButtonWithTitle:title withImageName:imageName];
+    button.tag = 100 + index;
+    button.frame = CGRectMake(0, self.currentOrignX, PrismDataFloatingMenuViewWidth, PrismDataFloatingMenuItemHeight);
+    [self.backgroundView addSubview:button];
+    self.currentOrignX += PrismDataFloatingMenuItemHeight;
+}
 
-    BOOL hasFunnel = YES;
-    
+- (void)reloadWithReferView:(UIView*)referView {
     UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
-    CGFloat orignX = 100, orignY = 100, width = 130, height = 120;
+    CGPoint elementCenter = [referView convertPoint:referView.center toView:mainWindow];
+    CGRect elementRect = [referView convertRect:referView.bounds toView:mainWindow];
     CGRect mainScreenRect = [UIScreen mainScreen].bounds;
     CGPoint mainScreenCenter = CGPointMake(mainScreenRect.origin.x + mainScreenRect.size.width / 2, mainScreenRect.origin.y + mainScreenRect.size.height / 2);
-    
     // frame
-    self.backgroundView.frame = CGRectMake(orignX, orignY, width, height);
-    
-    CGFloat currentOrignX = 0;
-    
-        [self.backgroundView addSubview:self.clickTypeButton];
-        self.clickTypeButton.frame = CGRectMake(0, currentOrignX, width, 40);
-        currentOrignX += 40;
-    
-    
-        [self.backgroundView addSubview:self.exposureTypeButton];
-        self.exposureTypeButton.frame = CGRectMake(0, currentOrignX, width, 40);
-        currentOrignX += 40;
-    
-    
-        [self.backgroundView addSubview:self.funnelButton];
-        self.funnelButton.frame = CGRectMake(0, currentOrignX, width, 40);
-    
-    
+    CGFloat height = self.backgroundView.subviews.count * PrismDataFloatingMenuItemHeight;
+    CGFloat orignX = elementCenter.x <= mainScreenCenter.x || elementRect.size.width > mainScreenRect.size.width * 3 / 5 ? elementRect.origin.x : elementRect.origin.x + elementRect.size.width - PrismDataFloatingMenuViewWidth;
+    CGFloat orignY = elementCenter.y <= mainScreenCenter.y ? elementRect.origin.y + elementRect.size.height + 5 : elementRect.origin.y - height - 5;
+    self.backgroundView.frame = CGRectMake(orignX, orignY, PrismDataFloatingMenuViewWidth, height);
 }
 
 #pragma mark - private method
@@ -97,6 +81,19 @@
     [self addSubview:self.backgroundView];
 }
 
+- (UIButton*)generateButtonWithTitle:(NSString*)title withImageName:(NSString*)imageName {
+    UIButton *button = [[UIButton alloc] init];
+    button.titleLabel.font = [UIFont systemFontOfSize:14];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitle:[NSString stringWithFormat:@"%@        ", title] forState:UIControlStateNormal];
+//    [button setImage:[EDImageUtil imageNamed:@"easydot_data_operate_click"] forState:UIControlStateNormal];
+    if (@available(iOS 9.0, *)) {
+        button.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+    }
+    [button addTarget:self action:@selector(tapButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
 #pragma mark - setters
 
 #pragma mark - getters
@@ -108,51 +105,6 @@
         _backgroundView.layer.masksToBounds = YES;
     }
     return _backgroundView;
-}
-
-- (UIButton *)clickTypeButton {
-    if (!_clickTypeButton) {
-        _clickTypeButton = [[UIButton alloc] init];
-        _clickTypeButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_clickTypeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_clickTypeButton setTitle:@"点击详情        " forState:UIControlStateNormal];
-//        [_clickTypeButton setImage:[EDImageUtil imageNamed:@"easydot_data_operate_click"] forState:UIControlStateNormal];
-        if (@available(iOS 9.0, *)) {
-            _clickTypeButton.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-        }
-        [_clickTypeButton addTarget:self action:@selector(clickTypeAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _clickTypeButton;
-}
-
-- (UIButton *)exposureTypeButton {
-    if (!_exposureTypeButton) {
-        _exposureTypeButton = [[UIButton alloc] init];
-        _exposureTypeButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_exposureTypeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_exposureTypeButton setTitle:@"曝光详情        " forState:UIControlStateNormal];
-//        [_exposureTypeButton setImage:[EDImageUtil imageNamed:@"easydot_data_operate_exposure"] forState:UIControlStateNormal];
-        if (@available(iOS 9.0, *)) {
-            _exposureTypeButton.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-        }
-        [_exposureTypeButton addTarget:self action:@selector(exposureTypeAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _exposureTypeButton;
-}
-
-- (UIButton *)funnelButton {
-    if (!_funnelButton) {
-        _funnelButton = [[UIButton alloc] init];
-        _funnelButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_funnelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_funnelButton setTitle:@"转化漏斗        " forState:UIControlStateNormal];
-//        [_funnelButton setImage:[EDImageUtil imageNamed:@"easydot_data_operate_funnel"] forState:UIControlStateNormal];
-        if (@available(iOS 9.0, *)) {
-            _funnelButton.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-        }
-        [_funnelButton addTarget:self action:@selector(funnelAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _funnelButton;
 }
 
 @end

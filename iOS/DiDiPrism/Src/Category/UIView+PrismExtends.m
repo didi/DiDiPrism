@@ -48,4 +48,31 @@
     return wxComponent;
 }
 
+- (BOOL)prism_hasRelationshipsWithView:(UIView*)view {
+    if (self == view) {
+        return YES;
+    }
+    UIResponder *nextResponder = self.nextResponder;
+    while (nextResponder) {
+        if (nextResponder == view) {
+            return YES;
+        }
+        if (![nextResponder isKindOfClass:[UIView class]]) {
+            break;
+        }
+        nextResponder = nextResponder.nextResponder;
+    }
+    
+    nextResponder = view.nextResponder;
+    while (nextResponder) {
+        if (nextResponder == self) {
+            return YES;
+        }
+        if (![nextResponder isKindOfClass:[UIView class]]) {
+            break;
+        }
+        nextResponder = nextResponder.nextResponder;
+    }
+    return NO;
+}
 @end

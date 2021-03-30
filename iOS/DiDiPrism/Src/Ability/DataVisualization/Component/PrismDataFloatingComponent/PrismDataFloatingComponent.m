@@ -6,12 +6,13 @@
 //
 
 #import "PrismDataFloatingComponent.h"
+#import "UIView+PrismExtends.h"
 #import "UIView+PrismDataVisualization.h"
 // View
 #import "PrismDataFloatingView.h"
 
 @interface PrismDataFloatingComponent()
-
+@property (nonatomic, strong) NSMutableArray<PrismDataFloatingView*> *allFloatingViews;
 @end
 
 @implementation PrismDataFloatingComponent
@@ -27,25 +28,33 @@
         }
         //等待加载完成，比如动画效果、数据渲染等
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            PrismDataFloatingView *floatingView = [[PrismDataFloatingView alloc] init];
-            PrismDataFloatingModel *model = [[PrismDataFloatingModel alloc] init];
-            model.content = @"123";
-            model.flagContent = @"位置:1";
-            model.value = 123;
-            floatingView.model = model;
-            
-            
-            BOOL needResize = view.frame.size.width < MinWidthOfPrismDataFloatingView || view.frame.size.height < MinHeightOfPrismDataFloatingView;
-            if (needResize && (view.clipsToBounds || view.layer.masksToBounds)) {
-                [self removeDataViewFrom:view.superview];
-                [view.superview addSubview:floatingView];
+            PrismDataFloatingView *floatingView = [self viewWithRelatedInfos:view.relatedInfos onSuperview:view ignoreParameters:NO];
+            BOOL isNewFloatingView = !floatingView;
+            if (isNewFloatingView) {
+                floatingView = [[PrismDataFloatingView alloc] init];
+                floatingView.relatedInfos = [view.relatedInfos copy];
+                [self.allFloatingViews addObject:floatingView];
+                
+                PrismDataFloatingModel *model = [[PrismDataFloatingModel alloc] init];
+                model.content = @"123";
+                model.flagContent = @"位置:1";
+                model.value = 123;
+                floatingView.model = model;
             }
-            else {
-                [self removeDataViewFrom:view];
-                [view addSubview:floatingView];
+            floatingView.hidden = ![self enable];
+            if (![floatingView superview]) {
+                BOOL needResize = view.frame.size.width < MinWidthOfPrismDataFloatingView || view.frame.size.height < MinHeightOfPrismDataFloatingView;
+                if (needResize && (view.clipsToBounds || view.layer.masksToBounds)) {
+                    [self removeDataViewFrom:view.superview];
+                    [view.superview addSubview:floatingView];
+                }
+                else {
+                    [self removeDataViewFrom:view];
+                    [view addSubview:floatingView];
+                }
+                //trigger setter
+                floatingView.frame = CGRectZero;
             }
-            //trigger setter
-            floatingView.frame = CGRectZero;
         });
     }
 }
@@ -63,6 +72,20 @@
     [theView removeFromSuperview];
 }
 
+- (PrismDataFloatingView*)viewWithRelatedInfos:(PrismElementRelatedInfos*)relatedInfos
+                                   onSuperview:(UIView*)superview
+                              ignoreParameters:(BOOL)ignoreParameters {
+    for (PrismDataFloatingView *view in self.allFloatingViews) {
+        BOOL isClickIdEqual = [view.relatedInfos clickTypeEventId].length ? [[view.relatedInfos clickTypeEventId] isEqualToString:[relatedInfos clickTypeEventId]] : YES;
+        BOOL isExposureIdEqual = [view.relatedInfos exposureTypeEventId].length ? [[view.relatedInfos exposureTypeEventId] isEqualToString:[relatedInfos exposureTypeEventId]] : YES;
+        BOOL isEqual = ignoreParameters ? (isClickIdEqual && isExposureIdEqual) : [view.relatedInfos isEqual:relatedInfos];
+        if (isEqual && (!view.superview || [view.superview prism_hasRelationshipsWithView:superview])) {
+            return view;
+        }
+    }
+    return nil;
+}
+
 #pragma mark - setters
 - (void)setEnable:(BOOL)enable {
     [super setEnable:enable];
@@ -73,5 +96,13 @@
     else {
         
     }
+}
+
+#pragma mark - getters
+- (NSMutableArray<PrismDataFloatingView *> *)allFloatingViews {
+    if (!_allFloatingViews) {
+        _allFloatingViews = [NSMutableArray array];
+    }
+    return _allFloatingViews;
 }
 @end

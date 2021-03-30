@@ -29,7 +29,27 @@
     
     [[PrismDataVisualizationManager sharedManager] setup];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingComponent alloc] init]];
-    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingMenuComponent alloc] init]];
+    PrismDataFloatingMenuComponent *floatingMenuComponent = [[PrismDataFloatingMenuComponent alloc] init];
+    PrismDataFloatingMenuItemConfig *clickItem = [[PrismDataFloatingMenuItemConfig alloc] init];
+    clickItem.index = 1;
+    clickItem.name = @"点击详情";
+    clickItem.block = ^{
+        
+    };
+    PrismDataFloatingMenuItemConfig *exposeItem = [[PrismDataFloatingMenuItemConfig alloc] init];
+    exposeItem.index = 2;
+    exposeItem.name = @"曝光详情";
+    exposeItem.block = ^{
+        
+    };
+    PrismDataFloatingMenuItemConfig *funnelItem = [[PrismDataFloatingMenuItemConfig alloc] init];
+    funnelItem.index = 3;
+    funnelItem.name = @"转化漏斗";
+    funnelItem.block = ^{
+        
+    };
+    [floatingMenuComponent setupWithConfig:@[clickItem,exposeItem,funnelItem]];
+    [[PrismDataVisualizationManager sharedManager] registerComponent:floatingMenuComponent];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataSwitchComponent alloc] init]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFilterComponent alloc] init]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataBubbleComponent alloc] init]];

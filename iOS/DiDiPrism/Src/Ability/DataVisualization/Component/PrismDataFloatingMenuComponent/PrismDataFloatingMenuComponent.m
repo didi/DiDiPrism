@@ -9,16 +9,26 @@
 // View
 #import "PrismDataFloatingMenuView.h"
 
-@interface PrismDataFloatingMenuComponent()
+@interface PrismDataFloatingMenuComponent() <PrismDataFloatingMenuViewDelegate>
 @property (nonatomic, strong) PrismDataFloatingMenuView *menuView;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 @property (nonatomic, assign) BOOL isMenuViewShowing;
+@property (nonatomic, copy) NSArray<PrismDataFloatingMenuItemConfig *> *menuItemConfig;
 @end
 
 @implementation PrismDataFloatingMenuComponent
 #pragma mark - life cycle
 
 #pragma mark - public method
+- (void)setupWithConfig:(NSArray<PrismDataFloatingMenuItemConfig *> *)config {
+    if (!config.count) {
+        return;
+    }
+    self.menuItemConfig = config;
+    for (PrismDataFloatingMenuItemConfig *itemConfig in config) {
+        [self.menuView addMenuItemWithIndex:itemConfig.index withTitle:itemConfig.name withImageName:itemConfig.imageName];
+    }
+}
 
 #pragma mark - private method
 
@@ -34,11 +44,31 @@
     UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
     self.menuView.frame = mainWindow.bounds;
     [mainWindow addSubview:self.menuView];
-    [self.menuView reload];
+    
+    UIView *matchedView = nil;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(matchViewWithTapGesture:)]) {
+        matchedView = [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate matchViewWithTapGesture:gesture];
+    }
+    [self.menuView reloadWithReferView:matchedView];
     
     if (@available(iOS 10.0, *)) {
         UIImpactFeedbackGenerator *feedBackGenertor = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
         [feedBackGenertor impactOccurred];
+    }
+}
+
+#pragma mark - delegate
+#pragma mark PrismDataFloatingMenuViewDelegate
+- (void)didTouchNothing {
+    self.isMenuViewShowing = NO;
+}
+
+- (void)didTouchButtonWithIndex:(NSInteger)index {
+    self.isMenuViewShowing = NO;
+    for (PrismDataFloatingMenuItemConfig *itemConfig in self.menuItemConfig) {
+        if (itemConfig.index == index && itemConfig.block) {
+            itemConfig.block();
+        }
     }
 }
 
@@ -60,6 +90,7 @@
 - (PrismDataFloatingMenuView *)menuView {
     if (!_menuView) {
         _menuView = [[PrismDataFloatingMenuView alloc] init];
+        _menuView.delegate = self;
     }
     return _menuView;
 }

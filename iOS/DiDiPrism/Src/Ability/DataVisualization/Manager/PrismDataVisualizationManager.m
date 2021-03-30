@@ -33,6 +33,7 @@
         return;
     }
     if (![self.allComponents containsObject:component]) {
+        component.delegate = self;
         [self.allComponents addObject:component];
     }
 }

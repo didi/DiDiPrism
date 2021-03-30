@@ -12,12 +12,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol PrismDataBaseComponentDelegate <NSObject>
+
+@end
+
 @protocol PrismDataProviderProtocol <NSObject>
 - (void)provideDataWithParams:(NSDictionary*)params withCompletion:(void(^)(PrismDataBaseModel*))completion;
 @end
 
 @interface PrismDataBaseComponent : NSObject
 @property (nonatomic, assign) BOOL enable;
+@property (nonatomic, weak) id<PrismDataBaseComponentDelegate> delegate;
 @property (nonatomic, weak) id<PrismDataProviderProtocol> dataProvider;
 
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params;

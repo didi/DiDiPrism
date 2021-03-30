@@ -14,5 +14,5 @@
 - (UICollectionView*)prism_UICollectionViewBelow;
 - (UIViewController *)prism_viewController;
 - (id)prism_wxComponent;
-
+- (BOOL)prism_hasRelationshipsWithView:(UIView*)view;
 @end
