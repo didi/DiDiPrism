@@ -9,17 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define PrismDataFilterViewOrignX 5
-#define PrismDataFilterViewOrignYToBottom 8
+#define PrismDataFilterViewOrignX 10
+#define PrismDataFilterViewOrignYToBottom 30
 #define PrismDataFilterViewFoldWidth 40
 #define PrismDataFilterViewUnfoldWidth 320
 #define PrismDataFilterViewHeight 40
 #define PrismDataFilterViewSelectPageWidth 80
 
 @protocol PrismDataFilterViewDelegate <NSObject>
-- (void)didTouchLeftButton:(UIButton*)sender isFolding:(BOOL)isFolding;
-- (void)didTouchMiddleButton:(UIButton*)sender isShow:(BOOL)isShow;
-- (void)didTouchRightButton:(UIButton*)sender;
+- (void)didTouchFoldButton:(UIButton*)sender isFolding:(BOOL)isFolding;
+- (void)didTouchFilterButton:(UIButton*)sender isShow:(BOOL)isShow;
+- (void)didTouchThroughButton:(UIButton*)sender;
 @end
 
 @interface PrismDataFilterView : UIView

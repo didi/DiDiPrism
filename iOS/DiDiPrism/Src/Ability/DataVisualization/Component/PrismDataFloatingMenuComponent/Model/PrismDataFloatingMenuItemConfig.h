@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PrismDataFloatingMenuItemConfig : NSObject
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *imageName;
+@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) void(^block)(void);
 @end
 

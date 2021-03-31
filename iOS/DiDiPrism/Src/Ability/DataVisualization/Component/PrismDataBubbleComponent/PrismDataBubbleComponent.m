@@ -56,7 +56,7 @@
 #pragma mark - getters
 - (PrismDataBubbleView *)bubbleView {
     if (!_bubbleView) {
-        _bubbleView = [[PrismDataBubbleView alloc] initWithFrame:CGRectMake(10, 70, PrismDataBubbleViewFoldWidth, PrismDataBubbleViewHeight)];
+        _bubbleView = [[PrismDataBubbleView alloc] initWithFrame:CGRectMake(10, 100, PrismDataBubbleViewFoldWidth, PrismDataBubbleViewHeight)];
     }
     return _bubbleView;
 }

@@ -40,7 +40,7 @@
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
         
-        _switchView = [[PrismDataSwitchView alloc] initWithFrame:CGRectMake(screenWidth - PrismDataSwitchViewWidth - 10, screenHeight - PrismDataSwitchViewHeight - 50, PrismDataSwitchViewWidth, PrismDataSwitchViewHeight)];
+        _switchView = [[PrismDataSwitchView alloc] initWithFrame:CGRectMake(screenWidth - PrismDataSwitchViewWidth - 35, screenHeight - PrismDataSwitchViewHeight - 80, PrismDataSwitchViewWidth, PrismDataSwitchViewHeight)];
     }
     return _switchView;
 }

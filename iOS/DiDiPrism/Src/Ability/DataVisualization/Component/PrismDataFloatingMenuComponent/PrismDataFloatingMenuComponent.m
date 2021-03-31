@@ -26,7 +26,7 @@
     }
     self.menuItemConfig = config;
     for (PrismDataFloatingMenuItemConfig *itemConfig in config) {
-        [self.menuView addMenuItemWithIndex:itemConfig.index withTitle:itemConfig.name withImageName:itemConfig.imageName];
+        [self.menuView addMenuItemWithIndex:itemConfig.index withTitle:itemConfig.name withImage:itemConfig.image];
     }
 }
 

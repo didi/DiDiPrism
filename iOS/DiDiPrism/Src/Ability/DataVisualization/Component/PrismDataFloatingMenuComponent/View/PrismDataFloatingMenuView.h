@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PrismDataFloatingMenuView : UIView
 @property (nonatomic, weak) id<PrismDataFloatingMenuViewDelegate> delegate;
 
-- (void)addMenuItemWithIndex:(NSInteger)index withTitle:(NSString *)title withImageName:(NSString*)imageName;
+- (void)addMenuItemWithIndex:(NSInteger)index withTitle:(NSString *)title withImage:(UIImage*)image;
 - (void)reloadWithReferView:(UIView*)referView;
 @end
 

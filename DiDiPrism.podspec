@@ -107,6 +107,9 @@ Pod::Spec.new do |spec|
 
   # spec.resource  = "icon.png"
   # spec.resources = "Resources/*.png"
+  spec.resource_bundles = {
+    'DiDiPrism' => 'iOS/DiDiPrism/Resource/**/*'
+  }
 
   # spec.preserve_paths = "FilesToSave", "MoreFilesToSave"
 

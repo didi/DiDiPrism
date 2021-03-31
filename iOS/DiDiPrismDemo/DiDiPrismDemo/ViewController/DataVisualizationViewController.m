@@ -28,7 +28,9 @@
     [super viewDidLoad];
     
     [[PrismDataVisualizationManager sharedManager] setup];
+    // 悬浮窗组件
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingComponent alloc] init]];
+    // 长按菜单组件
     PrismDataFloatingMenuComponent *floatingMenuComponent = [[PrismDataFloatingMenuComponent alloc] init];
     PrismDataFloatingMenuItemConfig *clickItem = [[PrismDataFloatingMenuItemConfig alloc] init];
     clickItem.index = 1;
@@ -50,8 +52,33 @@
     };
     [floatingMenuComponent setupWithConfig:@[clickItem,exposeItem,funnelItem]];
     [[PrismDataVisualizationManager sharedManager] registerComponent:floatingMenuComponent];
+    // 模式切换组件
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataSwitchComponent alloc] init]];
-    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFilterComponent alloc] init]];
+    // 筛选器组件
+    PrismDataFilterComponent *filterComponent = [[PrismDataFilterComponent alloc] init];
+    NSMutableArray<PrismDataFilterItemConfig*> *filterItemConfig = [NSMutableArray array];
+    PrismDataFilterItemConfig *itemConfig0 = [[PrismDataFilterItemConfig alloc] init];
+    itemConfig0.index = 0;
+    itemConfig0.title = @"城市";
+    itemConfig0.items = @[];
+    itemConfig0.style = PrismDataFilterEditorViewStylePicker;
+    [filterItemConfig addObject:itemConfig0];
+    PrismDataFilterItemConfig *itemConfig1 = [[PrismDataFilterItemConfig alloc] init];
+    itemConfig1.index = 1;
+    itemConfig1.title = @"用户类型";
+    PrismDataFilterItem *item0 = [[PrismDataFilterItem alloc] init];
+    item0.index = 0;
+    item0.itemName = @"新用户";
+    PrismDataFilterItem *item1 = [[PrismDataFilterItem alloc] init];
+    item1.index = 1;
+    item1.itemName = @"老用户";
+    item1.isSelected = YES;
+    itemConfig1.items = @[item0, item1];
+    itemConfig1.style = PrismDataFilterEditorViewStyleRadio;
+    [filterItemConfig addObject:itemConfig1];
+    filterComponent.config = [filterItemConfig copy];
+    [[PrismDataVisualizationManager sharedManager] registerComponent:filterComponent];
+    // 气泡组件
     [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataBubbleComponent alloc] init]];
     [PrismDataVisualizationManager sharedManager].enable = YES;
     

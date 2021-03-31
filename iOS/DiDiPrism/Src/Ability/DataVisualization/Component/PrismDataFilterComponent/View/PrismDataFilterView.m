@@ -7,12 +7,14 @@
 
 #import "PrismDataFilterView.h"
 #import "Masonry.h"
+// Util
 #import "PrismIdentifierUtil.h"
+#import "PrismImageUtil.h"
 
 @interface PrismDataFilterView()
-@property (nonatomic, strong) UIButton *leftButton;
-@property (nonatomic, strong) UIButton *middleButton;
-@property (nonatomic, strong) UIButton *rightButton;
+@property (nonatomic, strong) UIButton *foldButton;
+@property (nonatomic, strong) UIButton *filterButton;
+@property (nonatomic, strong) UIButton *throughButton;
 
 @property (nonatomic, assign) BOOL isFolding;
 @end
@@ -35,43 +37,43 @@
 
 #pragma mark - action
 - (void)foldAction:(UIButton*)sender {
-    if (self.middleButton.isSelected) {
-        self.middleButton.selected = NO;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchMiddleButton:isShow:)]) {
-            [self.delegate didTouchMiddleButton:self.middleButton isShow:NO];
+    if (self.filterButton.isSelected) {
+        self.filterButton.selected = NO;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFilterButton:isShow:)]) {
+            [self.delegate didTouchFilterButton:self.filterButton isShow:NO];
         }
         return;
     }
     self.isFolding = !self.isFolding;
     CGRect lastFrame = self.frame;
     CGFloat currentWidth = self.isFolding ? PrismDataFilterViewFoldWidth : PrismDataFilterViewUnfoldWidth;
-    CGFloat currentOrignX = self.isFolding ? PrismDataFilterViewOrignX : ([UIScreen mainScreen].applicationFrame.size.width - currentWidth) / 2;
+    CGFloat currentOrignX = self.isFolding ? PrismDataFilterViewOrignX : ([UIScreen mainScreen].bounds.size.width - currentWidth) / 2;
     [UIView animateWithDuration:0.25 animations:^{
         self.frame = CGRectMake(currentOrignX, lastFrame.origin.y, currentWidth, lastFrame.size.height);
     }];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchLeftButton:isFolding:)]) {
-        [self.delegate didTouchLeftButton:sender isFolding:self.isFolding];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFoldButtondidTouchFoldButton:isFolding:)]) {
+        [self.delegate didTouchFoldButton:sender isFolding:self.isFolding];
     }
 }
 
 - (void)editAction:(UIButton*)sender {
     sender.selected = !sender.isSelected;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchMiddleButton:isShow:)]) {
-        [self.delegate didTouchMiddleButton:sender isShow:sender.isSelected];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFilterButton:isShow:)]) {
+        [self.delegate didTouchFilterButton:sender isShow:sender.isSelected];
     }
 }
 
 - (void)selectPageAction:(UIButton*)sender {
-    if (self.middleButton.isSelected) {
-        self.middleButton.selected = NO;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchMiddleButton:isShow:)]) {
-            [self.delegate didTouchMiddleButton:self.middleButton isShow:NO];
+    if (self.filterButton.isSelected) {
+        self.filterButton.selected = NO;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFilterButton:isShow:)]) {
+            [self.delegate didTouchFilterButton:self.filterButton isShow:NO];
         }
         return;
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchRightButton:)]) {
-        [self.delegate didTouchRightButton:sender];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchThroughButton:)]) {
+        [self.delegate didTouchThroughButton:sender];
     }
 }
 
@@ -89,22 +91,22 @@
     self.layer.cornerRadius = PrismDataFilterViewHeight / 2;
     self.layer.masksToBounds = YES;
     
-    [self addSubview:self.leftButton];
-    [self addSubview:self.middleButton];
-    [self addSubview:self.rightButton];
+    [self addSubview:self.foldButton];
+    [self addSubview:self.filterButton];
+    [self addSubview:self.throughButton];
     
-    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.equalTo(self);
         make.width.mas_equalTo(PrismDataFilterViewFoldWidth);
     }];
-    [self.middleButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.filterButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.left.equalTo(self.leftButton.mas_right);
+        make.left.equalTo(self.foldButton.mas_right);
         make.width.mas_equalTo(PrismDataFilterViewUnfoldWidth - PrismDataFilterViewFoldWidth - PrismDataFilterViewSelectPageWidth);
     }];
-    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.throughButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.left.equalTo(self.middleButton.mas_right);
+        make.left.equalTo(self.filterButton.mas_right);
         make.width.mas_equalTo(PrismDataFilterViewSelectPageWidth);
     }];
 }
@@ -116,41 +118,41 @@
 #pragma mark - setters
 
 #pragma mark - getters
-- (UIButton *)leftButton {
-    if (!_leftButton) {
-        _leftButton = [[UIButton alloc] init];
-        _leftButton.accessibilityLabel = [PrismIdentifierUtil identifier];
-//        [_foldButton setImage:[EDImageUtil imageNamed:@"easydot_filter_normal.png"] forState:UIControlStateNormal];
-        [_leftButton addTarget:self action:@selector(foldAction:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)foldButton {
+    if (!_foldButton) {
+        _foldButton = [[UIButton alloc] init];
+        _foldButton.accessibilityLabel = [PrismIdentifierUtil identifier];
+        [_foldButton setImage:[PrismImageUtil imageNamed:@"prism_visualization_fold.png"] forState:UIControlStateNormal];
+        [_foldButton addTarget:self action:@selector(foldAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _leftButton;
+    return _foldButton;
 }
 
-- (UIButton *)middleButton {
-    if (!_middleButton) {
-        _middleButton = [[UIButton alloc] init];
-        _middleButton.accessibilityLabel = [PrismIdentifierUtil identifier];
-        [_middleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_middleButton setTitleColor:[UIColor colorWithRed:0.36 green:0.68 blue:1.0 alpha:1.0] forState:UIControlStateSelected];
-        _middleButton.titleLabel.font = [UIFont systemFontOfSize:12];
-        _middleButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [_middleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
-        [_middleButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)filterButton {
+    if (!_filterButton) {
+        _filterButton = [[UIButton alloc] init];
+        _filterButton.accessibilityLabel = [PrismIdentifierUtil identifier];
+        [_filterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_filterButton setTitleColor:[UIColor colorWithRed:0.36 green:0.68 blue:1.0 alpha:1.0] forState:UIControlStateSelected];
+        _filterButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        _filterButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [_filterButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
+        [_filterButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _middleButton;
+    return _filterButton;
 }
 
-- (UIButton *)rightButton {
-    if (!_rightButton) {
-        _rightButton = [[UIButton alloc] init];
-        _rightButton.accessibilityLabel = [PrismIdentifierUtil identifier];
-        _rightButton.backgroundColor = [UIColor colorWithRed:0.18 green:0.21 blue:0.26 alpha:1.0];
-        _rightButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_rightButton setTitle:@" 任意门" forState:UIControlStateNormal];
-//        [_selectPageButton setImage:[EDImageUtil imageNamed:@"easydot_data_goto_page.png"] forState:UIControlStateNormal];
-        [_rightButton addTarget:self action:@selector(selectPageAction:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)throughButton {
+    if (!_throughButton) {
+        _throughButton = [[UIButton alloc] init];
+        _throughButton.accessibilityLabel = [PrismIdentifierUtil identifier];
+        _throughButton.backgroundColor = [UIColor colorWithRed:0.18 green:0.21 blue:0.26 alpha:1.0];
+        _throughButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_throughButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_throughButton setTitle:@" 任意门" forState:UIControlStateNormal];
+        [_throughButton setImage:[PrismImageUtil imageNamed:@"prism_visualization_through_door.png"] forState:UIControlStateNormal];
+        [_throughButton addTarget:self action:@selector(selectPageAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _rightButton;
+    return _throughButton;
 }
 @end

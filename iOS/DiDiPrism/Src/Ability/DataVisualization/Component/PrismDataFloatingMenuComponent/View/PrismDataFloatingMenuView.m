@@ -49,8 +49,8 @@
 #pragma mark - delegate
 
 #pragma mark - public method
-- (void)addMenuItemWithIndex:(NSInteger)index withTitle:(NSString *)title withImageName:(NSString*)imageName {
-    UIButton *button = [self generateButtonWithTitle:title withImageName:imageName];
+- (void)addMenuItemWithIndex:(NSInteger)index withTitle:(NSString *)title withImage:(UIImage*)image {
+    UIButton *button = [self generateButtonWithTitle:title withImage:image];
     button.tag = 100 + index;
     button.frame = CGRectMake(0, self.currentOrignX, PrismDataFloatingMenuViewWidth, PrismDataFloatingMenuItemHeight);
     [self.backgroundView addSubview:button];
@@ -81,12 +81,12 @@
     [self addSubview:self.backgroundView];
 }
 
-- (UIButton*)generateButtonWithTitle:(NSString*)title withImageName:(NSString*)imageName {
+- (UIButton*)generateButtonWithTitle:(NSString*)title withImage:(UIImage*)image {
     UIButton *button = [[UIButton alloc] init];
     button.titleLabel.font = [UIFont systemFontOfSize:14];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setTitle:[NSString stringWithFormat:@"%@        ", title] forState:UIControlStateNormal];
-//    [button setImage:[EDImageUtil imageNamed:@"easydot_data_operate_click"] forState:UIControlStateNormal];
+    [button setImage:image forState:UIControlStateNormal];
     if (@available(iOS 9.0, *)) {
         button.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
     }
