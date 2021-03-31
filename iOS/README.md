@@ -1,17 +1,28 @@
 # iOS 使用手册
 ## 安装说明
 ```
-pod 'DiDiPrism'
+pod 'DiDiPrism', :subspecs => ['Core', 'WithBehaviorRecord', 'WithBehaviorReplay', 'WithBehaviorDetect', 'WithDataVisualization']
+
+// 其中：
+// WithBehaviorRecord 为操作采集模块。
+// WithBehaviorReplay 为操作回放模块。
+// WithBehaviorDetect 为操作检测模块。
+// WithDataVisualization 为数据可视化模块。
 ```
 
 ## 代码目录说明
 - Ability （功能区）
-    - BehaviorDetect （操作检测模块）
-    - BehaviorReplay （操作回放模块）
-- Category （分类区）
+    - BehaviorRecord （操作采集）
+    - BehaviorReplay （操作回放）
+    - BehaviorDetect （操作检测）
+    - DataVisualization （数据可视化）
 - Core （核心区）
     - Instruction （指令模块，含指令定义、生成、解析等）
     - Intercept （拦截模块，含触控拦截、请求拦截、事件监听等）
+    - EventDispatcher （事件分发）
+- Protocol （协议层）
+- Adapter （适配层）
+- Category （分类区）
 - Util （工具区）
 
 ## 代码使用说明

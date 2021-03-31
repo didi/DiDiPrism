@@ -91,10 +91,8 @@ Pod::Spec.new do |spec|
   #  Not including the public_header_files will make all headers public.
   #
 
-  spec.source_files  = "iOS/DiDiPrism/Src/**/*.{h,m}"
+  # spec.source_files  = "iOS/DiDiPrism/Src/**/*.{h,m}"
   # spec.exclude_files = "Classes/Exclude"
-
-  spec.public_header_files = 'iOS/DiDiPrism/Src/**/*.h'
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -107,9 +105,6 @@ Pod::Spec.new do |spec|
 
   # spec.resource  = "icon.png"
   # spec.resources = "Resources/*.png"
-  spec.resource_bundles = {
-    'DiDiPrism' => 'iOS/DiDiPrism/Resource/**/*'
-  }
 
   # spec.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
@@ -136,6 +131,37 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
 
   # spec.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  spec.dependency "JSONModel", '~> 1.0'
-  spec.dependency "Masonry"
+
+  spec.default_subspec = 'Core'
+  
+  spec.subspec 'Core' do |ss| 
+    ss.source_files = ['iOS/DiDiPrism/Src/Core/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Category/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Util/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Protocol/**/*{.h,.m}']
+  end
+
+  spec.subspec 'WithBehaviorRecord' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorRecord/**/*{.h,.m}'
+    ss.dependency 'DiDiPrism/Core'
+  end
+
+  spec.subspec 'WithBehaviorReplay' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorReplay/**/*{.h,.m}'
+    ss.dependency 'DiDiPrism/Core'
+    ss.dependency "JSONModel", '~> 1.0'
+  end
+
+  spec.subspec 'WithBehaviorDetect' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorDetect/**/*{.h,.m}'
+    ss.dependency 'DiDiPrism/Core'
+    ss.dependency "JSONModel", '~> 1.0'
+  end
+
+  spec.subspec 'WithDataVisualization' do |ss| 
+    ss.source_files = ['iOS/DiDiPrism/Src/Ability/DataVisualization/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Adapter/**/*{.h,.m}']
+    ss.resource_bundles = {
+      'DiDiPrism' => 'iOS/DiDiPrism/Resource/**/*'
+    }
+    ss.dependency 'DiDiPrism/Core'
+    ss.dependency "Masonry"
+  end
+
 end
