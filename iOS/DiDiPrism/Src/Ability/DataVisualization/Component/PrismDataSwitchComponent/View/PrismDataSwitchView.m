@@ -12,8 +12,8 @@
 #import "UIButton+PrismExtends.h"
 
 @interface PrismDataSwitchView()
-@property (nonatomic, strong) UIButton *leftModeButton;
-@property (nonatomic, strong) UIButton *rightModeButton;
+@property (nonatomic, strong) UIButton *dataModeButton;
+@property (nonatomic, strong) UIButton *heatModeButton;
 @end
 
 @implementation PrismDataSwitchView
@@ -32,25 +32,25 @@
 }
 
 #pragma mark - action
-- (void)leftModeAction:(UIButton*)sender {
+- (void)dataModeAction:(UIButton*)sender {
     if (sender.isSelected) {
         return;
     }
     [sender setSelected:YES];
-    [self.rightModeButton setSelected:NO];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchLeftModeButton:)]) {
-        [self.delegate didTouchLeftModeButton:sender];
+    [self.heatModeButton setSelected:NO];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchDataModeButton:)]) {
+        [self.delegate didTouchDataModeButton:sender];
     }
 }
 
-- (void)rightModeAction:(UIButton*)sender {
+- (void)heatModeAction:(UIButton*)sender {
     if (sender.isSelected) {
         return;
     }
     [sender setSelected:YES];
-    [self.leftModeButton setSelected:NO];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchRightModeButton:)]) {
-        [self.delegate didTouchRightModeButton:sender];
+    [self.dataModeButton setSelected:NO];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchHeatModeButton:)]) {
+        [self.delegate didTouchHeatModeButton:sender];
     }
 }
 
@@ -70,16 +70,16 @@
     self.layer.cornerRadius = PrismDataSwitchViewHeight / 2;
     self.layer.masksToBounds = YES;
     
-    [self.leftModeButton setSelected:YES];
-    [self addSubview:self.leftModeButton];
-    [self addSubview:self.rightModeButton];
+    [self.dataModeButton setSelected:YES];
+    [self addSubview:self.dataModeButton];
+    [self addSubview:self.heatModeButton];
     
-    [self.leftModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.dataModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self).offset(3);
         make.bottom.equalTo(self).offset(-3);
         make.right.equalTo(self.mas_centerX);
     }];
-    [self.rightModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.heatModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(3);
         make.right.bottom.equalTo(self).offset(-3);
         make.left.equalTo(self.mas_centerX);
@@ -89,38 +89,38 @@
 #pragma mark - setters
 
 #pragma mark - getters
-- (UIButton *)leftModeButton {
-    if (!_leftModeButton) {
-        _leftModeButton = [[UIButton alloc] init];
-        _leftModeButton.accessibilityLabel = [PrismIdentifierUtil identifier];
-        _leftModeButton.layer.cornerRadius = (PrismDataSwitchViewHeight - 6) / 2;
-        _leftModeButton.layer.masksToBounds = YES;
-        _leftModeButton.titleLabel.font = [UIFont systemFontOfSize:12];
-        [_leftModeButton setTitle:@"看数据" forState:UIControlStateNormal];
-        [_leftModeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_leftModeButton setTitleColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] forState:UIControlStateSelected];
-        [_leftModeButton prism_setBackgroundColor:[UIColor clearColor] forState:UIControlStateNormal];
-        [_leftModeButton prism_setBackgroundColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [_leftModeButton addTarget:self action:@selector(leftModeAction:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)dataModeButton {
+    if (!_dataModeButton) {
+        _dataModeButton = [[UIButton alloc] init];
+        _dataModeButton.accessibilityLabel = [PrismIdentifierUtil identifier];
+        _dataModeButton.layer.cornerRadius = (PrismDataSwitchViewHeight - 6) / 2;
+        _dataModeButton.layer.masksToBounds = YES;
+        _dataModeButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_dataModeButton setTitle:@"看数据" forState:UIControlStateNormal];
+        [_dataModeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_dataModeButton setTitleColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] forState:UIControlStateSelected];
+        [_dataModeButton prism_setBackgroundColor:[UIColor clearColor] forState:UIControlStateNormal];
+        [_dataModeButton prism_setBackgroundColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [_dataModeButton addTarget:self action:@selector(dataModeAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _leftModeButton;
+    return _dataModeButton;
 }
 
-- (UIButton *)rightModeButton {
-    if (!_rightModeButton) {
-        _rightModeButton = [[UIButton alloc] init];
-        _rightModeButton.accessibilityLabel = [PrismIdentifierUtil identifier];
-        _rightModeButton.layer.cornerRadius = (PrismDataSwitchViewHeight - 6) / 2;
-        _rightModeButton.layer.masksToBounds = YES;
-        _rightModeButton.titleLabel.font = [UIFont systemFontOfSize:12];
-        [_rightModeButton setTitle:@"看热力" forState:UIControlStateNormal];
-        [_rightModeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_rightModeButton setTitleColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] forState:UIControlStateSelected];
-        [_rightModeButton prism_setBackgroundColor:[UIColor clearColor] forState:UIControlStateNormal];
-        [_rightModeButton prism_setBackgroundColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [_rightModeButton addTarget:self action:@selector(rightModeAction:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)heatModeButton {
+    if (!_heatModeButton) {
+        _heatModeButton = [[UIButton alloc] init];
+        _heatModeButton.accessibilityLabel = [PrismIdentifierUtil identifier];
+        _heatModeButton.layer.cornerRadius = (PrismDataSwitchViewHeight - 6) / 2;
+        _heatModeButton.layer.masksToBounds = YES;
+        _heatModeButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_heatModeButton setTitle:@"看热力" forState:UIControlStateNormal];
+        [_heatModeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_heatModeButton setTitleColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0] forState:UIControlStateSelected];
+        [_heatModeButton prism_setBackgroundColor:[UIColor clearColor] forState:UIControlStateNormal];
+        [_heatModeButton prism_setBackgroundColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [_heatModeButton addTarget:self action:@selector(heatModeAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _rightModeButton;
+    return _heatModeButton;
 }
 
 @end

@@ -36,6 +36,9 @@
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
+    if (!self.standardValue) {
+        return;
+    }
     CGContextRef context = UIGraphicsGetCurrentContext();
     NSArray<UIColor*> *allColor = @[[UIColor prism_colorWithHex:0x340019 andAlpha:0.9],
                                   [UIColor prism_colorWithHex:0x780008 andAlpha:0.8],
@@ -86,6 +89,11 @@
 #pragma mark - setters
 - (void)setValue:(NSInteger)value {
     _value = value;
+    [self setNeedsDisplay];
+}
+
+- (void)setStandardValue:(NSInteger)standardValue {
+    _standardValue = standardValue;
     [self setNeedsDisplay];
 }
 

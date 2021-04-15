@@ -6,24 +6,13 @@
 //
 
 #import "PrismDataVisualizationManager+Delegate.h"
-// View
-#import "PrismDataFloatingView.h"
-// Component
-#import "PrismDataFloatingMenuComponent.h"
-#import "PrismDataFloatingComponent.h"
 
 @implementation PrismDataVisualizationManager (Delegate)
 #pragma mark - delegate
 #pragma mark PrismDataFloatingMenuComponentDelegate
 - (UIView*)matchViewWithTapGesture:(UITapGestureRecognizer*)tapGesture {
     UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
-    __block PrismDataFloatingComponent *floatingComponent = nil;
-    [self.allComponents enumerateObjectsUsingBlock:^(PrismDataBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[PrismDataFloatingComponent class]]) {
-            floatingComponent = obj;
-            *stop = YES;
-        }
-    }];
+    PrismDataFloatingComponent *floatingComponent = [self floatingComponent];
     if (!floatingComponent) {
         return nil;
     }
@@ -48,6 +37,31 @@
         hitTestView = [hitTestView superview];
     }
     return resultView;
+}
+
+#pragma mark PrismDataSwitchComponentDelegate
+- (void)switchToMode:(PrismDataSwitchComponentMode)mode {
+    PrismDataFloatingComponent *floatingComponent = [self floatingComponent];
+    if (!floatingComponent) {
+        return;
+    }
+    BOOL isHeatMode = mode == PrismDataSwitchComponentHeatMode;
+    NSArray<PrismDataFloatingView*> *allFloatingViews = [floatingComponent allFloatingViews];
+    for (PrismDataFloatingView *view in allFloatingViews) {
+        [view setHeatMapEnable:isHeatMode];
+    }
+}
+
+#pragma mark - private method
+- (PrismDataFloatingComponent*)floatingComponent {
+    __block PrismDataFloatingComponent *floatingComponent = nil;
+    [self.allComponents enumerateObjectsUsingBlock:^(PrismDataBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[PrismDataFloatingComponent class]]) {
+            floatingComponent = obj;
+            *stop = YES;
+        }
+    }];
+    return floatingComponent;
 }
 
 @end

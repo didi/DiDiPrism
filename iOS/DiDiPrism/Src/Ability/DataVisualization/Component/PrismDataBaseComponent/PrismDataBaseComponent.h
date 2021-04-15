@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<PrismDataProviderProtocol> dataProvider;
 
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params;
+
+#pragma mark - protected method
+- (UIViewController*)_protected_searchMainViewController;
 @end
 
 NS_ASSUME_NONNULL_END

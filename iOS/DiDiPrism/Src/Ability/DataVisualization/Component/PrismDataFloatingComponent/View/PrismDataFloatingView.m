@@ -161,6 +161,7 @@
     self.contentLabel.text = _model.content;
     self.flagContentLabel.text = [NSString stringWithFormat:@" %@", _model.flagContent];
     self.heatMapView.value = _model.value;
+    self.heatMapView.standardValue = _model.standardValue;
 }
 
 - (void)setHeatMapEnable:(BOOL)heatMapEnable {

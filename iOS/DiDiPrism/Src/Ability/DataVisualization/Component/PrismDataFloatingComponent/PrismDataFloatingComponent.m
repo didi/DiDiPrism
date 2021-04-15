@@ -57,6 +57,21 @@
             }
         });
     }
+    
+    if (event == PrismDispatchEventUIViewTouchesEnded_End ||
+        event == PrismDispatchEventUIControlTouchAction ||
+        event == PrismDispatchEventUITapGestureRecognizerAction) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            UIViewController *mainViewController = [self _protected_searchMainViewController];
+            NSInteger standardValue = [self searchStandardValueOfViewController:mainViewController];
+            NSArray<PrismDataFloatingView*> *allFloatingViews = [self.allFloatingViews copy];
+            for (PrismDataFloatingView *view in allFloatingViews) {
+                PrismDataFloatingModel *model = view.model;
+                model.standardValue = standardValue;
+                view.model = model;
+            }
+        });
+    }
 }
 
 #pragma mark - private method
@@ -75,7 +90,8 @@
 - (PrismDataFloatingView*)viewWithRelatedInfos:(PrismElementRelatedInfos*)relatedInfos
                                    onSuperview:(UIView*)superview
                               ignoreParameters:(BOOL)ignoreParameters {
-    for (PrismDataFloatingView *view in self.allFloatingViews) {
+    NSArray<PrismDataFloatingView*> *allFloatingViews = [self.allFloatingViews copy];
+    for (PrismDataFloatingView *view in allFloatingViews) {
         BOOL isClickIdEqual = [view.relatedInfos clickTypeEventId].length ? [[view.relatedInfos clickTypeEventId] isEqualToString:[relatedInfos clickTypeEventId]] : YES;
         BOOL isExposureIdEqual = [view.relatedInfos exposureTypeEventId].length ? [[view.relatedInfos exposureTypeEventId] isEqualToString:[relatedInfos exposureTypeEventId]] : YES;
         BOOL isEqual = ignoreParameters ? (isClickIdEqual && isExposureIdEqual) : [view.relatedInfos isEqual:relatedInfos];
@@ -84,6 +100,59 @@
         }
     }
     return nil;
+}
+
+- (NSInteger)searchStandardValueOfViewController:(UIViewController*)viewController {
+    NSInteger standardValue = 0;
+    NSMutableArray<UIView*> *visibleViewArray = [NSMutableArray array];
+    [self ergodicSubviewsOf:viewController.view
+       parentViewController:viewController
+           visibleViewArray:visibleViewArray];
+    if (!visibleViewArray.count) {
+        return standardValue;
+    }
+    for (UIView *visibleView in visibleViewArray) {
+        __block PrismDataFloatingView *floatingView = nil;
+        [[visibleView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[PrismDataFloatingView class]]) {
+                floatingView = (PrismDataFloatingView*)obj;
+                *stop = YES;
+            }
+        }];
+        if (!floatingView) {
+            continue;
+        }
+        standardValue = MAX(standardValue, floatingView.model.value);
+    }
+    return standardValue;
+}
+
+- (void)ergodicSubviewsOf:(UIView*)parentView
+     parentViewController:(UIViewController*)parentViewController
+         visibleViewArray:(NSMutableArray<UIView*> *)visibleViewArray {
+    if (parentView.hidden == YES || parentView.alpha == 0 || parentView.userInteractionEnabled == NO) {
+        return;
+    }
+    UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
+    CGRect frameInKeyWindow = [parentView.superview convertRect:parentView.frame toView:mainWindow];
+    BOOL isVisible = CGRectContainsRect(mainWindow.bounds, frameInKeyWindow);
+    if (!isVisible) {
+        return;
+    }
+    if (parentView.prism_viewController != parentViewController) {
+        return;
+    }
+    [visibleViewArray addObject:parentView];
+    
+    NSArray<UIView*> *subviews = parentView.subviews;
+    if (!subviews.count) {
+        return;
+    }
+    for (UIView *subview in subviews) {
+        [self ergodicSubviewsOf:subview
+           parentViewController:parentViewController
+               visibleViewArray:visibleViewArray];
+    }
 }
 
 #pragma mark - setters

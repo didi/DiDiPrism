@@ -22,6 +22,8 @@
         event == PrismDispatchEventUIControlTouchAction ||
         event == PrismDispatchEventUITapGestureRecognizerAction) {
         
+        UIViewController *mainViewController = [self _protected_searchMainViewController];
+        
         PrismDataBubbleModel *model = [[PrismDataBubbleModel alloc] init];
         model.content = [NSString stringWithFormat:@"%f", random()];
         model.promptTitle = @"页面停留时长";

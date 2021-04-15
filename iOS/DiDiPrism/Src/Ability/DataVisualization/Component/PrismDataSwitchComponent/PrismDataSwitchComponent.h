@@ -9,6 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, PrismDataSwitchComponentMode) {
+    PrismDataSwitchComponentDataMode,
+    PrismDataSwitchComponentHeatMode
+};
+
+@protocol PrismDataSwitchComponentDelegate <PrismDataBaseComponentDelegate>
+
+- (void)switchToMode:(PrismDataSwitchComponentMode)mode;
+
+@end
+
 @interface PrismDataSwitchComponent : PrismDataBaseComponent
 
 @end

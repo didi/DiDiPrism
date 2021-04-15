@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define PrismDataSwitchViewHeight 35
 
 @protocol PrismDataSwitchViewDelegate <NSObject>
-- (void)didTouchLeftModeButton:(UIButton*)sender;
-- (void)didTouchRightModeButton:(UIButton*)sender;
+- (void)didTouchDataModeButton:(UIButton*)sender;
+- (void)didTouchHeatModeButton:(UIButton*)sender;
 @end
 
 @interface PrismDataSwitchView : UIView

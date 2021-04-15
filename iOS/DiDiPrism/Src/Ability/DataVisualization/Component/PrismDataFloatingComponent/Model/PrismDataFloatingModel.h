@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *flagContent;
 @property (nonatomic, assign) NSInteger value;
+@property (nonatomic, assign) NSInteger standardValue;
 @end
 
 NS_ASSUME_NONNULL_END
