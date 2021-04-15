@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, PrismDataSwitchComponentMode) {
 @end
 
 @interface PrismDataSwitchComponent : PrismDataBaseComponent
-
+- (void)handleView:(BOOL)isHidden;
 @end
 
 NS_ASSUME_NONNULL_END

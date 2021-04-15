@@ -134,7 +134,9 @@
     self.twoColumnItems = nil;
     self.oneColumnItems = allItems;
     [self.typePicker reloadAllComponents];
-    [self.typePicker selectRow:defaultRow inComponent:0 animated:NO];
+    if (defaultRow < allItems.count) {
+        [self.typePicker selectRow:defaultRow inComponent:0 animated:NO];
+    }
 }
 
 - (void)reloadWithAllItems:(NSDictionary<NSString *,NSArray<PrismDataFilterItem*> *> *)allItems

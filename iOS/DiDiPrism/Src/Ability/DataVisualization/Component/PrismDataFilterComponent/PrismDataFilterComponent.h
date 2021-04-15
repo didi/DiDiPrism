@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol PrismDataFilterComponentDelegate <PrismDataBaseComponentDelegate>
+
+- (void)foldAllComponent:(BOOL)isFolding;
+
+@end
+
 @interface PrismDataFilterComponent : PrismDataBaseComponent
 @property (nonatomic, copy) NSArray<PrismDataFilterItemConfig*> *config;
 @end

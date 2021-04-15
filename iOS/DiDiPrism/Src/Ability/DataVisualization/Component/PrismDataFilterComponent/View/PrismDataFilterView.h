@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define PrismDataFilterViewOrignX 10
 #define PrismDataFilterViewOrignYToBottom 30
 #define PrismDataFilterViewFoldWidth 40
-#define PrismDataFilterViewUnfoldWidth 320
+#define PrismDataFilterViewUnfoldWidth 290
 #define PrismDataFilterViewHeight 40
 #define PrismDataFilterViewSelectPageWidth 80
 
@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismDataFilterView : UIView
 @property (nonatomic, weak) id<PrismDataFilterViewDelegate> delegate;
+
+- (void)reset;
 @end
 
 NS_ASSUME_NONNULL_END

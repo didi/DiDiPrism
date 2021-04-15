@@ -17,6 +17,11 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
+- (void)handleView:(BOOL)isHidden {
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.switchView setHidden:isHidden];
+    }];
+}
 
 #pragma mark - private method
 
@@ -52,7 +57,7 @@
     if (!_switchView) {
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        _switchView = [[PrismDataSwitchView alloc] initWithFrame:CGRectMake(screenWidth - PrismDataSwitchViewWidth - 35, screenHeight - PrismDataSwitchViewHeight - 80, PrismDataSwitchViewWidth, PrismDataSwitchViewHeight)];
+        _switchView = [[PrismDataSwitchView alloc] initWithFrame:CGRectMake(screenWidth - PrismDataSwitchViewWidth - 50, screenHeight - PrismDataSwitchViewHeight - 80, PrismDataSwitchViewWidth, PrismDataSwitchViewHeight)];
         _switchView.delegate = self;
     }
     return _switchView;

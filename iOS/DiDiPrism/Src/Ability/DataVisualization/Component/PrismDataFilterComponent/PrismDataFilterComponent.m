@@ -10,7 +10,7 @@
 #import "PrismDataFilterView.h"
 #import "PrismDataFilterEditorView.h"
 
-@interface PrismDataFilterComponent() <PrismDataFilterViewDelegate>
+@interface PrismDataFilterComponent() <PrismDataFilterViewDelegate,PrismDataFilterEditorViewDelegate>
 @property (nonatomic, strong) PrismDataFilterView *filterView;
 @property (nonatomic, strong) PrismDataFilterEditorView *editorView;
 @end
@@ -25,25 +25,41 @@
 #pragma mark - delegate
 #pragma mark PrismDataFilterViewDelegate
 - (void)didTouchFoldButton:(UIButton *)sender isFolding:(BOOL)isFolding {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(foldAllComponent:)]) {
+        [(id<PrismDataFilterComponentDelegate>)self.delegate foldAllComponent:isFolding];
+    }
 }
 
 - (void)didTouchFilterButton:(UIButton *)sender isShow:(BOOL)isShow {
-    if (![self.editorView superview]) {
-        UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
-        [mainWindow addSubview:self.editorView];
+    if (isShow) {
+        if (![self.editorView superview]) {
+            UIWindow *mainWindow = UIApplication.sharedApplication.delegate.window;
+            [mainWindow addSubview:self.editorView];
+        }
+        [self.editorView setupWithConfig:self.config];
+        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+        CGFloat width = 320;
+        CGFloat height = 60 + 50 + self.config.count * 40;
+        CGFloat originX = (screenWidth - width) / 2;
+        CGFloat originY = self.filterView.frame.origin.y - 10 - height;
+        self.editorView.frame = CGRectMake(originX, originY, width, height);
     }
-    [self.editorView setupWithConfig:self.config];
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-    CGFloat width = 320;
-    CGFloat height = 60 + 50 + self.config.count * 40;
-    CGFloat originX = (screenWidth - width) / 2;
-    CGFloat originY = self.filterView.frame.origin.y - 10 - height;
-    self.editorView.frame = CGRectMake(originX, originY, width, height);
+    else {
+        [self.editorView removeFromSuperview];
+    }
 }
 
 - (void)didTouchThroughButton:(UIButton *)sender {
     
+}
+
+#pragma mark PrismDataFilterEditorViewDelegate
+- (void)didTouchCancelButton:(UIButton *)sender {
+    [self.filterView reset];
+}
+
+- (void)didTouchSaveButton:(UIButton *)sender withConfig:(NSArray<PrismDataFilterItemConfig *> *)config {
+    [self.filterView reset];
 }
 
 #pragma mark - setters
@@ -74,6 +90,7 @@
 - (PrismDataFilterEditorView *)editorView {
     if (!_editorView) {
         _editorView = [[PrismDataFilterEditorView alloc] init];
+        _editorView.delegate = self;
     }
     return _editorView;
 }

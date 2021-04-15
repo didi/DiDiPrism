@@ -12,6 +12,7 @@
 #import "PrismImageUtil.h"
 // Category
 #import "UIButton+PrismExtends.h"
+#import "NSArray+PrismExtends.h"
 // View
 #import "PrismDataPickerView.h"
 
@@ -122,10 +123,25 @@
         return;
     }
     [sender setSelected:!sender.isSelected];
-    for (NSInteger tag = sender.tag/10*10; tag < sender.tag/10*10 + 10 && tag != sender.tag; tag++) {
+    for (NSInteger tag = sender.tag/10*10; tag < sender.tag/10*10 + 10; tag++) {
+        if (tag == sender.tag) {
+            continue;
+        }
         UIView *view = [self viewWithTag:tag];
         if (view && [view isKindOfClass:[UIButton class]]) {
             [(UIButton*)view setSelected:NO];
+        }
+    }
+    
+    
+    NSInteger parentIndex = [self calculateParentIndexWithChildrenTag:sender.tag];
+    NSInteger childrenIndex = [self calculateChildrenIndexWithChildrenTag:sender.tag];
+    for (PrismDataFilterItemConfig *itemConfig in self.config) {
+        if (itemConfig.index != parentIndex) {
+            continue;
+        }
+        for (PrismDataFilterItem *item in itemConfig.items) {
+            item.isSelected = item.index == childrenIndex;
         }
     }
 }
@@ -139,7 +155,7 @@
     
     NSString *itemName = [sender.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     for (PrismDataFilterItemConfig *config in self.config) {
-        if (config.index == [self calculateParentIndexWithChildrenTag:sender.tag childrenIndex:1]) {
+        if (config.index == [self calculateParentIndexWithChildrenTag:sender.tag]) {
             self.currentItems = config.items;
             break;
         }
@@ -151,21 +167,21 @@
             *stop = YES;
         }
     }];
-    self.selectedItem = self.currentItems[defaultRow];
+    self.selectedItem = [self.currentItems prism_objectAtIndex:defaultRow];
     [self.pickerView reloadWithAllItems:self.currentItems defaultRow:defaultRow];
 }
 
 - (void)cancelAction:(UIButton*)sender {
     [self removeFromSuperview];
-    if (_cancelBlock) {
-        _cancelBlock();
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchCancelButton:)]) {
+        [self.delegate didTouchCancelButton:sender];
     }
 }
 
 - (void)saveAction:(UIButton*)sender {
     [self removeFromSuperview];
-    if (_saveBlock) {
-        _saveBlock();
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchSaveButton:withConfig:)]) {
+        [self.delegate didTouchSaveButton:sender withConfig:self.config];
     }
 }
 
@@ -203,15 +219,14 @@
 - (NSInteger)calculateParentTagWithParentIndex:(NSInteger)parentIndex {
     return parentIndex + 100;
 }
-- (NSInteger)calculateParentIndexWithParentTag:(NSInteger)parentTag {
-    return parentTag - 100;
-}
-
 - (NSInteger)calculateChildrenTagWithParentIndex:(NSInteger)parentIndex childrenIndex:(NSInteger)childrenIndex {
     return parentIndex * 1000 + childrenIndex;
 }
-- (NSInteger)calculateParentIndexWithChildrenTag:(NSInteger)childrenTag childrenIndex:(NSInteger)childrenIndex {
-    return (childrenTag - childrenIndex) / 1000;
+- (NSInteger)calculateParentIndexWithChildrenTag:(NSInteger)childrenTag {
+    return childrenTag / 1000;
+}
+- (NSInteger)calculateChildrenIndexWithChildrenTag:(NSInteger)childrenTag {
+    return childrenTag % 1000;
 }
 
 - (UILabel *)generateLabelWithTitle:(NSString*)title {

@@ -12,10 +12,11 @@
 #import "PrismDataFloatingMenuComponent.h"
 #import "PrismDataFloatingComponent.h"
 #import "PrismDataSwitchComponent.h"
+#import "PrismDataFilterComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PrismDataVisualizationManager (Delegate) <PrismDataFloatingMenuComponentDelegate, PrismDataSwitchComponentDelegate>
+@interface PrismDataVisualizationManager (Delegate) <PrismDataFloatingMenuComponentDelegate, PrismDataSwitchComponentDelegate, PrismDataFilterComponentDelegate>
 
 @end
 

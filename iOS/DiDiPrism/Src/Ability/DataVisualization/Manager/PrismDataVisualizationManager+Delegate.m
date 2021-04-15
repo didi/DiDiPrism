@@ -52,6 +52,11 @@
     }
 }
 
+#pragma mark PrismDataFilterComponentDelegate
+- (void)foldAllComponent:(BOOL)isFolding {
+    [[self switchComponent] handleView:isFolding];
+}
+
 #pragma mark - private method
 - (PrismDataFloatingComponent*)floatingComponent {
     __block PrismDataFloatingComponent *floatingComponent = nil;
@@ -64,4 +69,14 @@
     return floatingComponent;
 }
 
+- (PrismDataSwitchComponent*)switchComponent {
+    __block PrismDataSwitchComponent *switchComponent = nil;
+    [self.allComponents enumerateObjectsUsingBlock:^(PrismDataBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[PrismDataSwitchComponent class]]) {
+            switchComponent = obj;
+            *stop = YES;
+        }
+    }];
+    return switchComponent;
+}
 @end

@@ -45,6 +45,8 @@
         return;
     }
     self.isFolding = !self.isFolding;
+    NSString *imageName = self.isFolding ? @"prism_visualization_unfold.png" : @"prism_visualization_fold.png";
+    [sender setImage:[PrismImageUtil imageNamed:imageName] forState:UIControlStateNormal];
     CGRect lastFrame = self.frame;
     CGFloat currentWidth = self.isFolding ? PrismDataFilterViewFoldWidth : PrismDataFilterViewUnfoldWidth;
     CGFloat currentOrignX = self.isFolding ? PrismDataFilterViewOrignX : ([UIScreen mainScreen].bounds.size.width - currentWidth) / 2;
@@ -52,7 +54,7 @@
         self.frame = CGRectMake(currentOrignX, lastFrame.origin.y, currentWidth, lastFrame.size.height);
     }];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFoldButtondidTouchFoldButton:isFolding:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTouchFoldButton:isFolding:)]) {
         [self.delegate didTouchFoldButton:sender isFolding:self.isFolding];
     }
 }
@@ -80,6 +82,9 @@
 #pragma mark - delegate
 
 #pragma mark - public method
+- (void)reset {
+    [self.filterButton setSelected:NO];
+}
 
 #pragma mark - private method
 - (void)initView {
@@ -134,8 +139,10 @@
         _filterButton.accessibilityLabel = [PrismIdentifierUtil identifier];
         [_filterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_filterButton setTitleColor:[UIColor colorWithRed:0.36 green:0.68 blue:1.0 alpha:1.0] forState:UIControlStateSelected];
-        _filterButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        _filterButton.titleLabel.font = [UIFont systemFontOfSize:14];
         _filterButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [_filterButton setTitle:@"数据筛选" forState:UIControlStateNormal];
+        [_filterButton setTitle:@"数据筛选" forState:UIControlStateSelected];
         [_filterButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
         [_filterButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
     }
