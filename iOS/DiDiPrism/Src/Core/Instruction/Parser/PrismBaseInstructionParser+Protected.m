@@ -25,7 +25,7 @@
     [[keyWindow subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:NSClassFromString(@"UITransitionView")] && [[obj subviews] count]) {
             UIView *aimView = (UIView*)[obj subviews][0];
-            presentedVC = [[aimView nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[aimView nextResponder] : [aimView prism_viewController];
+            presentedVC = [aimView prism_viewController];
             *stop = YES;
         }
     }];

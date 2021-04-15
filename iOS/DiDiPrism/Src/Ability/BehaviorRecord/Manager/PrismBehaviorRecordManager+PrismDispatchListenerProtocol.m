@@ -46,7 +46,7 @@
             return;
         }
         if (edgePanGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            UIViewController *viewController = [[edgePanGestureRecognizer.view nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[edgePanGestureRecognizer.view nextResponder] : [edgePanGestureRecognizer.view prism_viewController];
+            UIViewController *viewController = [edgePanGestureRecognizer.view prism_viewController];
             UINavigationController *navigationController = [viewController isKindOfClass:[UINavigationController class]] ? (UINavigationController*)viewController : viewController.navigationController;
             [edgePanGestureRecognizer setAutoDotNavigationController:navigationController];
             NSInteger viewControllerCount = navigationController.viewControllers.count;
