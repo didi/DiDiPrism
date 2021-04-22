@@ -23,19 +23,16 @@
         event == PrismDispatchEventUITapGestureRecognizerAction) {
         
         UIViewController *mainViewController = [self _protected_searchMainViewController];
-        
-        PrismDataBubbleModel *model = [[PrismDataBubbleModel alloc] init];
-        model.content = [NSString stringWithFormat:@"%f", random()];
-        model.promptTitle = @"页面停留时长";
-        self.bubbleView.model = model;
-        
-        if (self.dataProvider && [self.dataProvider respondsToSelector:@selector(provideDataWithParams:withCompletion:)]) {
-            [self.dataProvider provideDataWithParams:nil withCompletion:^(PrismDataBaseModel * _Nonnull model) {
-                if (![model isKindOfClass:[PrismDataBubbleModel class]]) {
-                    return;
-                }
-                PrismDataBubbleModel *result = (PrismDataBubbleModel*)model;
-            }];
+        if (mainViewController) {
+            if (self.dataProvider && [self.dataProvider respondsToSelector:@selector(provideDataToComponent:withParams:withCompletion:)]) {
+                __weak typeof(self) weakSelf = self;
+                [self.dataProvider provideDataToComponent:self withParams:@{@"mainVC":mainViewController} withCompletion:^(PrismDataBaseModel * _Nonnull model) {
+                    if (![model isKindOfClass:[PrismDataBubbleModel class]]) {
+                        return;
+                    }
+                    weakSelf.bubbleView.model = (PrismDataBubbleModel*)model;
+                }];
+            }
         }
     }
 }

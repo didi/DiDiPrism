@@ -69,7 +69,8 @@
 - (void)setupWithConfig:(NSArray<PrismDataFilterItemConfig*>*)config {
     [self clearSubview];
     self.config = config;
-    for (PrismDataFilterItemConfig *itemConfig in config) {
+    for (PrismDataFilterItemConfig *itemConfig in self.config) {
+        itemConfig.currentItem = itemConfig.selectedItem;
         UILabel *titleLabel = [self generateLabelWithTitle:itemConfig.title];
         titleLabel.tag = [self calculateParentTagWithParentIndex:itemConfig.index];
         [self addSubview:titleLabel];
@@ -84,7 +85,7 @@
             for (PrismDataFilterItem *item in itemConfig.items) {
                 UIButton *button = [self generateButtonWithTitle:item.itemName];
                 button.tag = [self calculateChildrenTagWithParentIndex:itemConfig.index childrenIndex:item.index];
-                [button setSelected:item.isSelected];
+                [button setSelected:itemConfig.selectedItem == item];
                 [self addSubview:button];
                 UIView *previousItem = [self viewWithTag:button.tag - 1];
                 previousItem = previousItem ?: titleLabel;
@@ -99,7 +100,7 @@
         else if (itemConfig.style == PrismDataFilterEditorViewStylePicker) {
             NSString *title = @"全部";
             for (PrismDataFilterItem *item in itemConfig.items) {
-                if (item.isSelected) {
+                if (itemConfig.selectedItem == item) {
                     title = item.itemName;
                     break;
                 }
@@ -141,7 +142,10 @@
             continue;
         }
         for (PrismDataFilterItem *item in itemConfig.items) {
-            item.isSelected = item.index == childrenIndex;
+            if (item.index == childrenIndex) {
+                itemConfig.currentItem = item;
+                break;
+            }
         }
     }
 }

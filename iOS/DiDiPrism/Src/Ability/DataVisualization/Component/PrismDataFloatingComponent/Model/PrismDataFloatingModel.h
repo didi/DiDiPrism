@@ -10,7 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismDataFloatingModel : PrismDataBaseModel
-@property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *flagContent;
 @property (nonatomic, assign) NSInteger value;
 @property (nonatomic, assign) NSInteger standardValue;

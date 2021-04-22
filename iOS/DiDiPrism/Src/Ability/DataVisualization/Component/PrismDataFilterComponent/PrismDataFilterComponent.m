@@ -60,6 +60,10 @@
 
 - (void)didTouchSaveButton:(UIButton *)sender withConfig:(NSArray<PrismDataFilterItemConfig *> *)config {
     [self.filterView reset];
+    self.config = config;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(filterDataWithConfig:)]) {
+        [(id<PrismDataFilterComponentDelegate>)self.delegate filterDataWithConfig:config];
+    }
 }
 
 #pragma mark - setters

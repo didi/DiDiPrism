@@ -53,6 +53,10 @@
 }
 
 #pragma mark PrismDataFilterComponentDelegate
+- (void)filterDataWithConfig:(NSArray<PrismDataFilterItemConfig *> *)config {
+    [[self floatingComponent] reloadAllFloatingViewsWithFilterConfig:config];
+}
+
 - (void)foldAllComponent:(BOOL)isFolding {
     [[self switchComponent] handleView:isFolding];
 }

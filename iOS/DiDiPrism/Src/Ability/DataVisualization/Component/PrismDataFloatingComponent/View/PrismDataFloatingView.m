@@ -158,7 +158,7 @@
 - (void)setModel:(PrismDataFloatingModel *)model {
     _model = model;
     
-    self.contentLabel.text = _model.content;
+    self.contentLabel.text = [NSString stringWithFormat:@"%ld", _model.value];
     self.flagContentLabel.text = [NSString stringWithFormat:@" %@", _model.flagContent];
     self.heatMapView.value = _model.value;
     self.heatMapView.standardValue = _model.standardValue;

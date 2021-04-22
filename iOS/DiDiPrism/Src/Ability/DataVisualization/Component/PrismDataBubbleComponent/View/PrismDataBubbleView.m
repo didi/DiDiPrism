@@ -11,7 +11,6 @@
 
 @interface PrismDataBubbleView()<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UILabel *timeLabel;
-@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIView *backgroundView;
 @end
 
@@ -66,7 +65,6 @@
     
     [self addSubview:self.backgroundView];
     [self.backgroundView addSubview:self.timeLabel];
-    [self.backgroundView addSubview:self.titleLabel];
     
     [self.backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
@@ -75,10 +73,6 @@
         make.left.top.bottom.equalTo(self.backgroundView);
         make.width.mas_equalTo(PrismDataBubbleViewFoldWidth);
     }];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.equalTo(self.backgroundView);
-        make.left.equalTo(self.timeLabel.mas_right).offset(3);
-    }];
 }
 
 #pragma mark - setters
@@ -86,7 +80,6 @@
     _model = model;
     
     self.timeLabel.text = _model.content;
-    self.titleLabel.text = _model.promptTitle;//@"页面人均停留时长(iOS)";
 }
 
 #pragma mark - getters
@@ -98,15 +91,6 @@
         _timeLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _timeLabel;
-}
-
-- (UILabel *)titleLabel {
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont systemFontOfSize:10];
-        _titleLabel.textColor = [UIColor colorWithRed:0.36 green:0.68 blue:1 alpha:1];
-    }
-    return _titleLabel;
 }
 
 - (UIView *)backgroundView {

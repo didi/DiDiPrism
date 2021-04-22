@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PrismDataFilterComponentDelegate <PrismDataBaseComponentDelegate>
 
+- (void)filterDataWithConfig:(NSArray<PrismDataFilterItemConfig*>*)config;
 - (void)foldAllComponent:(BOOL)isFolding;
 
 @end

@@ -11,13 +11,16 @@
 #import "PrismDataBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@class PrismDataBaseComponent;
 
 @protocol PrismDataBaseComponentDelegate <NSObject>
 
 @end
 
 @protocol PrismDataProviderProtocol <NSObject>
-- (void)provideDataWithParams:(NSDictionary*)params withCompletion:(void(^)(PrismDataBaseModel*))completion;
+- (void)provideDataToComponent:(PrismDataBaseComponent*)component
+                    withParams:(NSDictionary*)params
+                withCompletion:(void(^)(PrismDataBaseModel*))completion;
 @end
 
 @interface PrismDataBaseComponent : NSObject

@@ -8,83 +8,98 @@
 #import "PrismDataFloatingComponent.h"
 #import "UIView+PrismExtends.h"
 #import "UIView+PrismDataVisualization.h"
-// View
-#import "PrismDataFloatingView.h"
 
 @interface PrismDataFloatingComponent()
 @property (nonatomic, strong) NSMutableArray<PrismDataFloatingView*> *allFloatingViews;
+@property (nonatomic, copy) NSArray<PrismDataFilterItemConfig *> *filterConfig;
 @end
 
 @implementation PrismDataFloatingComponent
 
+#pragma mark - public method
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params {
     if (event == PrismDispatchEventUIViewDidMoveToSuperview) {
-        UIView *view = (UIView*)sender;
-        if (!view.relatedInfos.count
-            || view.alpha == 0
-            || view.hidden == YES
-            || ![PrismIdentifierUtil needHookWithView:view]) {
-            return;
-        }
-        //等待加载完成，比如动画效果、数据渲染等
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            PrismDataFloatingView *floatingView = [self viewWithRelatedInfos:view.relatedInfos onSuperview:view ignoreParameters:NO];
-            BOOL isNewFloatingView = !floatingView;
-            if (isNewFloatingView) {
-                floatingView = [[PrismDataFloatingView alloc] init];
-                floatingView.relatedInfos = [view.relatedInfos copy];
-                [self.allFloatingViews addObject:floatingView];
-                
-                PrismDataFloatingModel *model = [[PrismDataFloatingModel alloc] init];
-                model.content = @"123";
-                model.flagContent = @"位置:1";
-                model.value = 123;
-                floatingView.model = model;
-            }
-            floatingView.hidden = ![self enable];
-            if (![floatingView superview]) {
-                BOOL needResize = view.frame.size.width < MinWidthOfPrismDataFloatingView || view.frame.size.height < MinHeightOfPrismDataFloatingView;
-                if (needResize && (view.clipsToBounds || view.layer.masksToBounds)) {
-                    [self removeDataViewFrom:view.superview];
-                    [view.superview addSubview:floatingView];
-                }
-                else {
-                    [self removeDataViewFrom:view];
-                    [view addSubview:floatingView];
-                }
-                //trigger setter
-                floatingView.frame = CGRectZero;
-            }
-        });
+        [self loadFloatingViewTo:sender];
     }
     
     if (event == PrismDispatchEventUIViewTouchesEnded_End ||
         event == PrismDispatchEventUIControlTouchAction ||
         event == PrismDispatchEventUITapGestureRecognizerAction) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            UIViewController *mainViewController = [self _protected_searchMainViewController];
-            NSInteger standardValue = [self searchStandardValueOfViewController:mainViewController];
-            NSArray<PrismDataFloatingView*> *allFloatingViews = [self.allFloatingViews copy];
-            for (PrismDataFloatingView *view in allFloatingViews) {
-                PrismDataFloatingModel *model = view.model;
-                model.standardValue = standardValue;
-                view.model = model;
-            }
-        });
+        [self updateStandardValue];
+    }
+}
+
+- (void)reloadAllFloatingViewsWithFilterConfig:(NSArray<PrismDataFilterItemConfig *>*)filterConfig {
+    self.filterConfig = filterConfig;
+    if (!self.allFloatingViews.count) {
+        return;
+    }
+    for (PrismDataFloatingView *floatingView in self.allFloatingViews) {
+        [self updateFloatingView:floatingView];
     }
 }
 
 #pragma mark - private method
-- (void)removeDataViewFrom:(UIView*)superview {
-    UIView *theView = nil;
+- (void)loadFloatingViewTo:(NSObject*)sender {
+    UIView *view = (UIView*)sender;
+    if (!view.relatedInfos.count
+        || view.alpha == 0
+        || view.hidden == YES
+        || ![PrismIdentifierUtil needHookWithView:view]) {
+        return;
+    }
+    //等待加载完成，比如动画效果、数据渲染等
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        PrismDataFloatingView *floatingView = [self viewWithRelatedInfos:view.relatedInfos onSuperview:view ignoreParameters:NO];
+        if (!floatingView) {
+            floatingView = [[PrismDataFloatingView alloc] init];
+            floatingView.relatedInfos = [view.relatedInfos copy];
+            [self.allFloatingViews addObject:floatingView];
+            [self updateFloatingView:floatingView];
+        }
+        floatingView.hidden = ![self enable];
+        if (![floatingView superview]) {
+            BOOL needResize = view.frame.size.width < MinWidthOfPrismDataFloatingView || view.frame.size.height < MinHeightOfPrismDataFloatingView;
+            if (needResize && (view.clipsToBounds || view.layer.masksToBounds)) {
+                [self removeFloatingViewFrom:view.superview];
+                [view.superview addSubview:floatingView];
+            }
+            else {
+                [self removeFloatingViewFrom:view];
+                [view addSubview:floatingView];
+            }
+            //trigger setter
+            floatingView.frame = CGRectZero;
+        }
+    });
+}
+
+- (void)updateFloatingView:(PrismDataFloatingView*)floatingView {
+    if (self.dataProvider && [self.dataProvider respondsToSelector:@selector(provideDataToComponent:withParams:withCompletion:)]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        if ([floatingView relatedInfos]) {
+            params[@"relatedInfos"] = [floatingView relatedInfos];
+        }
+        if (self.filterConfig) {
+            params[@"filterConfig"] = self.filterConfig;
+        }
+        [self.dataProvider provideDataToComponent:self withParams:[params copy] withCompletion:^(PrismDataBaseModel * _Nonnull model) {
+            if (![model isKindOfClass:[PrismDataFloatingModel class]]) {
+                return;
+            }
+            floatingView.model = (PrismDataFloatingModel*)model;
+        }];
+    }
+}
+
+- (void)removeFloatingViewFrom:(UIView*)superview {
     NSArray<UIView*> *subviews = [superview subviews];
     for (UIView *subview in subviews) {
         if ([subview isKindOfClass:[PrismDataFloatingView class]]) {
-            theView = subview;
+            [subview removeFromSuperview];
             break;
         }
     }
-    [theView removeFromSuperview];
 }
 
 - (PrismDataFloatingView*)viewWithRelatedInfos:(PrismElementRelatedInfos*)relatedInfos
@@ -100,6 +115,19 @@
         }
     }
     return nil;
+}
+
+- (void)updateStandardValue {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIViewController *mainViewController = [self _protected_searchMainViewController];
+        NSInteger standardValue = [self searchStandardValueOfViewController:mainViewController];
+        NSArray<PrismDataFloatingView*> *allFloatingViews = [self.allFloatingViews copy];
+        for (PrismDataFloatingView *view in allFloatingViews) {
+            PrismDataFloatingModel *model = view.model;
+            model.standardValue = standardValue;
+            view.model = model;
+        }
+    });
 }
 
 - (NSInteger)searchStandardValueOfViewController:(UIViewController*)viewController {

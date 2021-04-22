@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismDataBubbleModel : PrismDataBaseModel
 @property (nonatomic, copy) NSString *content;
-@property (nonatomic, copy) NSString *promptTitle;
 @end
 
 NS_ASSUME_NONNULL_END

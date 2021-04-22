@@ -18,18 +18,24 @@
 #import "PrismDataBubbleComponent.h"
 #import "PrismDataFloatingMenuComponent.h"
 
-@interface DataVisualizationViewController ()
+@interface DataVisualizationViewController () <PrismDataProviderProtocol>
 
 @end
 
 @implementation DataVisualizationViewController
 #pragma mark - life cycle
+- (void)dealloc {
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [[PrismDataVisualizationManager sharedManager] setup];
     // 悬浮窗组件
-    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataFloatingComponent alloc] init]];
+    PrismDataFloatingComponent *floatingComponent = [[PrismDataFloatingComponent alloc] init];
+    floatingComponent.dataProvider = self;
+    [[PrismDataVisualizationManager sharedManager] registerComponent:floatingComponent];
     // 长按菜单组件
     PrismDataFloatingMenuComponent *floatingMenuComponent = [[PrismDataFloatingMenuComponent alloc] init];
     PrismDataFloatingMenuItemConfig *clickItem = [[PrismDataFloatingMenuItemConfig alloc] init];
@@ -72,14 +78,16 @@
     PrismDataFilterItem *item1 = [[PrismDataFilterItem alloc] init];
     item1.index = 1;
     item1.itemName = @"老用户";
-    item1.isSelected = YES;
+    itemConfig1.selectedItem = item1;
     itemConfig1.items = @[item0, item1];
     itemConfig1.style = PrismDataFilterEditorViewStyleRadio;
     [filterItemConfig addObject:itemConfig1];
     filterComponent.config = [filterItemConfig copy];
     [[PrismDataVisualizationManager sharedManager] registerComponent:filterComponent];
     // 气泡组件
-    [[PrismDataVisualizationManager sharedManager] registerComponent:[[PrismDataBubbleComponent alloc] init]];
+    PrismDataBubbleComponent *bubbleComponent = [[PrismDataBubbleComponent alloc] init];
+    bubbleComponent.dataProvider = self;
+    [[PrismDataVisualizationManager sharedManager] registerComponent:bubbleComponent];
     [PrismDataVisualizationManager sharedManager].enable = YES;
     
     [self initView];
@@ -90,6 +98,24 @@
 #pragma mark - action
 
 #pragma mark - delegate
+#pragma mark PrismDataProviderProtocol
+- (void)provideDataToComponent:(PrismDataBaseComponent *)component withParams:(NSDictionary *)params withCompletion:(void (^)(PrismDataBaseModel * _Nonnull))completion {
+    if ([component isKindOfClass:[PrismDataFloatingComponent class]]) {
+        PrismDataFloatingModel *model = [[PrismDataFloatingModel alloc] init];
+        model.flagContent = @"位置:1";
+        model.value = 123;
+        if (completion) {
+            completion(model);
+        }
+    }
+    else if ([component isKindOfClass:[PrismDataBubbleComponent class]]) {
+        PrismDataBubbleModel *model = [[PrismDataBubbleModel alloc] init];
+        model.content = @"12";
+        if (completion) {
+            completion(model);
+        }
+    }
+}
 
 #pragma mark - public method
 
