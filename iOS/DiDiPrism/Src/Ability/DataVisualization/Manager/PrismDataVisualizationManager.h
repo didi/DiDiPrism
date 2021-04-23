@@ -19,7 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  初始化
  */
-- (void)setup;
+- (void)install;
+- (void)uninstall;
 
 - (void)registerComponent:(PrismDataBaseComponent*)component;
 - (void)unregisterComponent:(PrismDataBaseComponent*)component;

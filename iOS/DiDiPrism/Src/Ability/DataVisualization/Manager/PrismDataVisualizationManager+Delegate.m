@@ -66,7 +66,7 @@
     __block PrismDataFloatingComponent *floatingComponent = nil;
     [self.allComponents enumerateObjectsUsingBlock:^(PrismDataBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[PrismDataFloatingComponent class]]) {
-            floatingComponent = obj;
+            floatingComponent = (PrismDataFloatingComponent*)obj;
             *stop = YES;
         }
     }];
@@ -77,7 +77,7 @@
     __block PrismDataSwitchComponent *switchComponent = nil;
     [self.allComponents enumerateObjectsUsingBlock:^(PrismDataBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[PrismDataSwitchComponent class]]) {
-            switchComponent = obj;
+            switchComponent = (PrismDataSwitchComponent*)obj;
             *stop = YES;
         }
     }];

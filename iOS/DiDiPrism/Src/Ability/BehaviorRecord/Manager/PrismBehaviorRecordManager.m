@@ -38,8 +38,13 @@
 }
 
 #pragma mark - public method
-- (void)setup {
+- (void)install {
     [[PrismEventDispatcher sharedInstance] registerListener:(id<PrismDispatchListenerProtocol>)self];
+}
+
+- (void)uninstall {
+    [[PrismEventDispatcher sharedInstance] unregisterListener:(id<PrismDispatchListenerProtocol>)self];
+    
 }
 
 - (BOOL)canHook {

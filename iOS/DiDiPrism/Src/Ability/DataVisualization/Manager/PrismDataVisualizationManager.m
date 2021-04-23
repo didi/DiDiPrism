@@ -24,8 +24,14 @@
 }
 
 #pragma mark - public method
-- (void)setup {
+- (void)install {
     [[PrismEventDispatcher sharedInstance] registerListener:(id<PrismDispatchListenerProtocol>)self];
+}
+
+- (void)uninstall {
+    [[PrismEventDispatcher sharedInstance] unregisterListener:(id<PrismDispatchListenerProtocol>)self];
+    [self setEnable:NO];
+    [self.allComponents removeAllObjects];
 }
 
 - (void)registerComponent:(PrismDataBaseComponent*)component {
@@ -33,7 +39,7 @@
         return;
     }
     if (![self.allComponents containsObject:component]) {
-        component.delegate = self;
+        component.delegate = (id<PrismDataBaseComponentDelegate>)self;
         [self.allComponents addObject:component];
     }
 }

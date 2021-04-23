@@ -25,13 +25,13 @@
 @implementation DataVisualizationViewController
 #pragma mark - life cycle
 - (void)dealloc {
-    
+    [[PrismDataVisualizationManager sharedManager] uninstall];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[PrismDataVisualizationManager sharedManager] setup];
+    [[PrismDataVisualizationManager sharedManager] install];
     // 悬浮窗组件
     PrismDataFloatingComponent *floatingComponent = [[PrismDataFloatingComponent alloc] init];
     floatingComponent.dataProvider = self;
@@ -78,8 +78,8 @@
     PrismDataFilterItem *item1 = [[PrismDataFilterItem alloc] init];
     item1.index = 1;
     item1.itemName = @"老用户";
-    itemConfig1.selectedItem = item1;
     itemConfig1.items = @[item0, item1];
+    itemConfig1.selectedItem = item1;
     itemConfig1.style = PrismDataFilterEditorViewStyleRadio;
     [filterItemConfig addObject:itemConfig1];
     filterComponent.config = [filterItemConfig copy];
@@ -110,7 +110,7 @@
     }
     else if ([component isKindOfClass:[PrismDataBubbleComponent class]]) {
         PrismDataBubbleModel *model = [[PrismDataBubbleModel alloc] init];
-        model.content = @"12";
+        model.content = @"12″";
         if (completion) {
             completion(model);
         }
