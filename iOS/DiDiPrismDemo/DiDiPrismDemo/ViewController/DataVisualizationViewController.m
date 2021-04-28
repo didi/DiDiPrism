@@ -41,19 +41,19 @@
     PrismDataFloatingMenuItemConfig *clickItem = [[PrismDataFloatingMenuItemConfig alloc] init];
     clickItem.index = 1;
     clickItem.name = @"点击详情";
-    clickItem.block = ^{
+    clickItem.block = ^(UIView * _Nonnull touchedView) {
         
     };
     PrismDataFloatingMenuItemConfig *exposeItem = [[PrismDataFloatingMenuItemConfig alloc] init];
     exposeItem.index = 2;
     exposeItem.name = @"曝光详情";
-    exposeItem.block = ^{
+    exposeItem.block = ^(UIView * _Nonnull touchedView) {
         
     };
     PrismDataFloatingMenuItemConfig *funnelItem = [[PrismDataFloatingMenuItemConfig alloc] init];
     funnelItem.index = 3;
     funnelItem.name = @"转化漏斗";
-    funnelItem.block = ^{
+    funnelItem.block = ^(UIView * _Nonnull touchedView) {
         
     };
     [floatingMenuComponent setupWithConfig:@[clickItem,exposeItem,funnelItem]];

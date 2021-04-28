@@ -6,6 +6,7 @@
 //
 
 #import "PrismDataFloatingMenuComponent.h"
+#import "UIView+PrismDataVisualization.h"
 // View
 #import "PrismDataFloatingMenuView.h"
 
@@ -76,7 +77,7 @@
     }
     for (PrismDataFloatingMenuItemConfig *itemConfig in self.menuItemConfig) {
         if (itemConfig.index == index && itemConfig.block) {
-            itemConfig.block();
+            itemConfig.block(self.touchedView);
         }
     }
 }

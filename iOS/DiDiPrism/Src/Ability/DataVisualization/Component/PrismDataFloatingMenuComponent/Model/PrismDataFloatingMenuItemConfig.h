@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, strong) void(^block)(void);
+@property (nonatomic, strong) void(^block)(UIView*);
 @end
 
 NS_ASSUME_NONNULL_END
