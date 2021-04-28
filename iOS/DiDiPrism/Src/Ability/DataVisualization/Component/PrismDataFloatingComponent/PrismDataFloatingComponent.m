@@ -23,7 +23,7 @@
     }
     
     if (event == PrismDispatchEventUIViewTouchesEnded_End ||
-        event == PrismDispatchEventUIControlTouchAction ||
+        event == PrismDispatchEventUIControlSendAction_Start ||
         event == PrismDispatchEventUITapGestureRecognizerAction) {
         [self updateStandardValue];
     }

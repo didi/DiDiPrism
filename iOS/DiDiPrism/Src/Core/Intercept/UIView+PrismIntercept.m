@@ -17,6 +17,7 @@
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(touchesEnded:withEvent:) swizzledSelector:@selector(autoDot_touchesEnded:withEvent:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToSuperview) swizzledSelector:@selector(autoDot_didMoveToSuperview)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToWindow) swizzledSelector:@selector(autoDot_didMoveToWindow)];
     });
 }
 
@@ -37,5 +38,13 @@
         return;
     }
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToSuperview withSender:self params:nil];
+}
+
+- (void)autoDot_didMoveToWindow {
+    [self autoDot_didMoveToWindow];
+    if (!self.superview) {
+        return;
+    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToWindow withSender:self params:nil];
 }
 @end

@@ -19,7 +19,7 @@
 #pragma mark - public method
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params {
     if (event == PrismDispatchEventUIViewTouchesEnded_End ||
-        event == PrismDispatchEventUIControlTouchAction ||
+        event == PrismDispatchEventUIControlSendAction_Start ||
         event == PrismDispatchEventUITapGestureRecognizerAction) {
         
         UIViewController *mainViewController = [self _protected_searchMainViewController];

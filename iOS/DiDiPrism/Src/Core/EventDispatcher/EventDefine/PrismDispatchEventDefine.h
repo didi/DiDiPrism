@@ -12,8 +12,6 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
     /*
      UIView
      */
-    PrismDispatchEventUIViewTouchesBegan_Start,
-    PrismDispatchEventUIViewTouchesBegan_End,
     PrismDispatchEventUIViewTouchesEnded_End,
     PrismDispatchEventUIViewDidMoveToSuperview,
     PrismDispatchEventUIViewDidMoveToWindow,
