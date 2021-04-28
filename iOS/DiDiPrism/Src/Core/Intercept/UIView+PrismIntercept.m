@@ -16,6 +16,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(touchesEnded:withEvent:) swizzledSelector:@selector(autoDot_touchesEnded:withEvent:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToSuperview) swizzledSelector:@selector(autoDot_didMoveToSuperview)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToWindow) swizzledSelector:@selector(autoDot_didMoveToWindow)];
     });
 }
 
@@ -27,6 +29,22 @@
     void (*functionPointer)(id, SEL, NSSet<UITouch *> *, UIEvent *) = (void (*)(id, SEL, NSSet<UITouch *> *, UIEvent *))original_TouchesEnded_Method_Imp;
     functionPointer(self, _cmd, touches, event);
     
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded withSender:self params:nil];
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_End withSender:self params:nil];
+}
+
+- (void)autoDot_didMoveToSuperview {
+    [self autoDot_didMoveToSuperview];
+    if (!self.superview) {
+        return;
+    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToSuperview withSender:self params:nil];
+}
+
+- (void)autoDot_didMoveToWindow {
+    [self autoDot_didMoveToWindow];
+    if (!self.superview) {
+        return;
+    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToWindow withSender:self params:nil];
 }
 @end

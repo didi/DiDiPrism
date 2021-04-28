@@ -56,4 +56,11 @@ CGFloat colorComponentFrom(NSString *string, NSUInteger start, NSUInteger length
     }
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
+
++ (UIColor *)prism_colorWithHex:(UInt32)hex andAlpha:(CGFloat)alpha {
+    return [UIColor colorWithRed:((hex >> 16) & 0xFF) / 255.0
+                           green:((hex >> 8) & 0xFF) / 255.0
+                            blue:(hex & 0xFF) / 255.0
+                           alpha:alpha];
+}
 @end

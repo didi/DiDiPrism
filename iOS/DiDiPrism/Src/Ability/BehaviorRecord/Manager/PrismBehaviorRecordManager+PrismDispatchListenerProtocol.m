@@ -27,7 +27,7 @@
     if (![self canUpload]) {
         return;
     }
-    if (event == PrismDispatchEventUIControlSendActionStart) {
+    if (event == PrismDispatchEventUIControlSendAction_Start) {
         UIControl *control = (UIControl*)sender;
         NSObject *target = [params objectForKey:@"target"];
         NSString *action = [params objectForKey:@"action"];
@@ -46,7 +46,7 @@
             return;
         }
         if (edgePanGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            UIViewController *viewController = [[edgePanGestureRecognizer.view nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[edgePanGestureRecognizer.view nextResponder] : [edgePanGestureRecognizer.view prism_viewController];
+            UIViewController *viewController = [edgePanGestureRecognizer.view prism_viewController];
             UINavigationController *navigationController = [viewController isKindOfClass:[UINavigationController class]] ? (UINavigationController*)viewController : viewController.navigationController;
             [edgePanGestureRecognizer setAutoDotNavigationController:navigationController];
             NSInteger viewControllerCount = navigationController.viewControllers.count;
@@ -78,7 +78,7 @@
             [self addInstruction:instruction withEventParams:eventParams];
         }
     }
-    else if (event == PrismDispatchEventUIViewTouchesEnded) {
+    else if (event == PrismDispatchEventUIViewTouchesEnded_End) {
         UIView *view = (UIView*)sender;
         if ([view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionViewCell class]]) {
             NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:view];

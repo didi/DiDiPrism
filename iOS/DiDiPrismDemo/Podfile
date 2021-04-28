@@ -6,7 +6,7 @@ target 'DiDiPrismDemo' do
   use_frameworks!
 
   # Pods for DiDiPrismDemo
-  pod 'DiDiPrism', :path => '../../DiDiPrism.podspec'
+  pod 'DiDiPrism', :path => '../../DiDiPrism.podspec', :subspecs => ['Core', 'WithBehaviorRecord', 'WithBehaviorReplay', 'WithBehaviorDetect', 'WithDataVisualization']
   pod 'Masonry'
   pod 'SDWebImage', '~> 5.0'
   pod 'MBProgressHUD', '~> 1.2.0'

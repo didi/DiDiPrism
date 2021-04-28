@@ -21,17 +21,15 @@
     });
 }
 
-
 - (void)autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = target;
     params[@"action"] = NSStringFromSelector(action);
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendActionStart withSender:self params:[params copy]];
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendAction_Start withSender:self params:[params copy]];
     
     //原始逻辑
     [self autoDot_sendAction:action to:target forEvent:event];
 }
-
 
 - (void)autoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     //原始逻辑

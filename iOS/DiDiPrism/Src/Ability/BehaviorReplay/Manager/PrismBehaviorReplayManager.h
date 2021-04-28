@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  初始化
  */
-- (void)setup;
+- (void)install;
+- (void)uninstall;
 
 /*
  开始回放

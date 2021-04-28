@@ -52,7 +52,7 @@
             [viewControllers insertObject:viewController atIndex:0];
         }
         //viewController.view被添加到了目标VC.view上，但是viewController没有被添加到目标VC上。
-        if (viewController.view.prism_viewController) {
+        if (viewController.view.superview.prism_viewController) {
             NSArray<UIViewController*> *moreVC = [self getParentViewControllersOfView:viewController.view];
             if (moreVC.count) {
                [viewControllers insertObjects:moreVC atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,[moreVC count])]];

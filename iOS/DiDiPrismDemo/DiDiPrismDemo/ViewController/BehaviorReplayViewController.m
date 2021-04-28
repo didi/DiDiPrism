@@ -32,11 +32,17 @@
 
 @implementation BehaviorReplayViewController
 #pragma mark - life cycle
+- (void)dealloc {
+    [[PrismBehaviorRecordManager sharedManager] uninstall];
+    [[PrismBehaviorReplayManager sharedManager] uninstall];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [[PrismBehaviorRecordManager sharedManager] setup];
-    [[PrismBehaviorReplayManager sharedManager] setup];
+    [[PrismBehaviorRecordManager sharedManager] install];
+    [[PrismBehaviorReplayManager sharedManager] install];
+    
     [self _addNotification];
     [self _initView];
 }

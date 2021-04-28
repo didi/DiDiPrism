@@ -48,7 +48,7 @@
     UIViewController *targetViewController = nil;
     if ([responder isKindOfClass:[UIView class]]) {
         UIView *view = (UIView*)responder;
-        targetViewController = [[view nextResponder] isKindOfClass:[UIViewController class]] ? (UIViewController*)[view nextResponder] : [view prism_viewController];
+        targetViewController = [view prism_viewController];
     }
     else {
         targetViewController = (UIViewController*)responder;

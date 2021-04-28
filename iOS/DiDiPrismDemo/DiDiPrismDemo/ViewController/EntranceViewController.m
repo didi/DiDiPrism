@@ -9,6 +9,7 @@
 #import "EntranceViewController.h"
 #import "BehaviorReplayViewController.h"
 #import "BehaviorDetectViewController.h"
+#import "DataVisualizationViewController.h"
 
 @interface EntranceViewController ()
 
@@ -33,6 +34,11 @@
     [self.navigationController pushViewController:detectVC animated:YES];
 }
 
+- (void)goVisualizationAction:(UIButton*)sender {
+    DataVisualizationViewController *visualizationtVC = [[DataVisualizationViewController alloc] init];
+    [self.navigationController pushViewController:visualizationtVC animated:YES];
+}
+
 #pragma mark - delegate
 
 #pragma mark - public method
@@ -53,6 +59,12 @@
     [goDetectButton setTitle:@"行为检测" forState:UIControlStateNormal];
     [goDetectButton addTarget:self action:@selector(goDetectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:goDetectButton];
+    
+    UIButton *goVisualizationButton = [self generateButton];
+    goVisualizationButton.frame = CGRectMake(110, 460, 180, 90);
+    [goVisualizationButton setTitle:@"数据可视化" forState:UIControlStateNormal];
+    [goVisualizationButton addTarget:self action:@selector(goVisualizationAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:goVisualizationButton];
 }
 
 - (UIButton*)generateButton {
