@@ -121,14 +121,6 @@
     switch (_showMode) {
         case PrismDataFloatingViewModeNormal:
         {
-            self.contentLabel.textColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
-            self.contentView.backgroundColor = [UIColor clearColor];
-            self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
-            self.layer.borderColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1].CGColor;
-        }
-            break;
-        case PrismDataFloatingViewModeFiltered:
-        {
             self.contentLabel.textColor = [UIColor whiteColor];
             self.contentView.backgroundColor = [UIColor prism_colorWithHexString:@"#5BAEFF"];
             self.backgroundColor = [[UIColor prism_colorWithHexString:@"#5BAEFF"] colorWithAlphaComponent:0.2];

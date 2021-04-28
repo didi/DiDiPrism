@@ -21,7 +21,8 @@
     for (PrismDataFloatingView *floatingView in allFloatingViews) {
         CGPoint floatingViewPoint = [tapGesture locationInView:floatingView];
         if ([floatingView window]
-            && [floatingView pointInside:floatingViewPoint withEvent:nil]) {
+            && [floatingView pointInside:floatingViewPoint withEvent:nil]
+            && [floatingView superview].isHidden == NO) {
             [allMatchedView addObject:floatingView];
         }
     }
@@ -37,6 +38,18 @@
         hitTestView = [hitTestView superview];
     }
     return resultView;
+}
+
+- (void)menuDidAppearWithTouchedView:(UIView *)touchedView {
+    if ([touchedView isKindOfClass:[PrismDataFloatingView class]]) {
+        [(PrismDataFloatingView*)touchedView setShowMode:PrismDataFloatingViewModeSelected];
+    }
+}
+
+- (void)menuDidDisappearWithTouchedView:(UIView *)touchedView {
+    if ([touchedView isKindOfClass:[PrismDataFloatingView class]]) {
+        [(PrismDataFloatingView*)touchedView setShowMode:PrismDataFloatingViewModeNormal];
+    }
 }
 
 #pragma mark PrismDataSwitchComponentDelegate

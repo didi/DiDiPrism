@@ -53,6 +53,7 @@
         PrismDataFloatingView *floatingView = [self viewWithRelatedInfos:view.relatedInfos onSuperview:view ignoreParameters:NO];
         if (!floatingView) {
             floatingView = [[PrismDataFloatingView alloc] init];
+            floatingView.showMode = PrismDataFloatingViewModeNormal;
             floatingView.relatedInfos = [view.relatedInfos copy];
             [self.allFloatingViews addObject:floatingView];
             [self updateFloatingView:floatingView];

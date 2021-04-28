@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 @property (nonatomic, assign) BOOL isMenuViewShowing;
 @property (nonatomic, copy) NSArray<PrismDataFloatingMenuItemConfig *> *menuItemConfig;
+@property (nonatomic, weak) UIView *touchedView;
 @end
 
 @implementation PrismDataFloatingMenuComponent
@@ -45,12 +46,14 @@
     self.menuView.frame = mainWindow.bounds;
     [mainWindow addSubview:self.menuView];
     
-    UIView *matchedView = nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(matchViewWithTapGesture:)]) {
-        matchedView = [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate matchViewWithTapGesture:gesture];
+        self.touchedView = [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate matchViewWithTapGesture:gesture];
     }
-    [self.menuView reloadWithReferView:matchedView];
+    [self.menuView reloadWithReferView:self.touchedView];
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(menuDidAppearWithTouchedView:)]) {
+        [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate menuDidAppearWithTouchedView:self.touchedView];
+    }
     if (@available(iOS 10.0, *)) {
         UIImpactFeedbackGenerator *feedBackGenertor = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
         [feedBackGenertor impactOccurred];
@@ -61,10 +64,16 @@
 #pragma mark PrismDataFloatingMenuViewDelegate
 - (void)didTouchNothing {
     self.isMenuViewShowing = NO;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(menuDidDisappearWithTouchedView:)]) {
+        [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate menuDidDisappearWithTouchedView:self.touchedView];
+    }
 }
 
 - (void)didTouchButtonWithIndex:(NSInteger)index {
     self.isMenuViewShowing = NO;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(menuDidDisappearWithTouchedView:)]) {
+        [(id<PrismDataFloatingMenuComponentDelegate>)self.delegate menuDidDisappearWithTouchedView:self.touchedView];
+    }
     for (PrismDataFloatingMenuItemConfig *itemConfig in self.menuItemConfig) {
         if (itemConfig.index == index && itemConfig.block) {
             itemConfig.block();

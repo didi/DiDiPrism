@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol PrismDataFloatingMenuComponentDelegate <PrismDataBaseComponentDelegate>
 
 - (UIView*)matchViewWithTapGesture:(UITapGestureRecognizer*)tapGesture;
-
+- (void)menuDidAppearWithTouchedView:(UIView*)touchedView;
+- (void)menuDidDisappearWithTouchedView:(UIView*)touchedView;
 @end
 
 @interface PrismDataFloatingMenuComponent : PrismDataBaseComponent
