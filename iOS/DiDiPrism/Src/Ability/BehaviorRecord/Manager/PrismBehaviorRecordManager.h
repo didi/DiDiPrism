@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)canUpload;
 /*
-是否可以上报H5页面指令。
+ 是否可以上报H5页面指令。
 */
 - (BOOL)canH5Upload;
 

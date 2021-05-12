@@ -67,7 +67,6 @@
     if (!instruction.length) {
         return;
     }
-    // TODO: 构造通知器
     [[NSNotificationCenter defaultCenter] postNotificationName:@"prism_new_instruction_notification" object:nil userInfo:@{@"instruction":instruction, @"params":eventParams.allKeys.count ? eventParams : @{}}];
 }
 
@@ -76,7 +75,6 @@
         return;
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-        // TODO: 构造通知器
         [[NSNotificationCenter defaultCenter] postNotificationName:@"prism_new_request_notification" object:nil userInfo:@{@"url":url, @"traceId":traceId}];
     });
 }

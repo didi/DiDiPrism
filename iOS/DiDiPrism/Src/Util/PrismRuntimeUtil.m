@@ -6,7 +6,6 @@
 //
 
 #import "PrismRuntimeUtil.h"
-#import "PrismBehaviorRecordManager.h"
 
 @implementation PrismRuntimeUtil
 + (void)hookClass:(Class)cls originalSelector:(SEL)originalSelector swizzledSelector:(SEL)swizzledSelector {

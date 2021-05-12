@@ -6,7 +6,6 @@
 //
 
 #import "PrismTapGestureInstructionGenerator.h"
-#import "PrismBehaviorRecordManager.h"
 #import "PrismInstructionDefines.h"
 // Util
 #import "PrismInstructionResponseChainUtil.h"
@@ -37,8 +36,7 @@
     NSString *responseChainInfo = [tapGesture autoDotResponseChainInfo];
     NSString *areaInfo = [tapGesture autoDotAreaInfo];
     // 屏蔽Native侧的H5页面点击指令
-    if ([[PrismBehaviorRecordManager sharedManager] canH5Upload] &&
-        ([areaInfo containsString:@"WKScrollView"] || [areaInfo containsString:@"WKContentView"])) {
+    if (([areaInfo containsString:@"WKScrollView"] || [areaInfo containsString:@"WKContentView"])) {
         return nil;
     }
     NSString *functionName = [self getFunctionNameOfTapGesture:tapGesture];
