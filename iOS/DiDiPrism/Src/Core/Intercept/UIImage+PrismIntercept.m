@@ -6,7 +6,6 @@
 //
 
 #import "UIImage+PrismIntercept.h"
-#import "PrismBehaviorRecordManager.h"
 // Util
 #import "PrismRuntimeUtil.h"
 

@@ -1,12 +1,11 @@
 //
-//  PrismInterceptNSURLProtocol.m
+//  PrismReplayNSURLProtocol.m
 //  DiDiPrism
 //
 //  Created by hulk on 2020/4/1.
 //
 
-#import "PrismInterceptNSURLProtocol.h"
-#import "PrismBehaviorRecordManager.h"
+#import "PrismReplayNSURLProtocol.h"
 #import "PrismBehaviorReplayManager.h"
 #import "PrismBehaviorModel.h"
 // Category
@@ -16,11 +15,11 @@
 #define PRISM_REQUEST_MOCK_RESULT @"PrismRequestMockResult"
 #define PRISM_REQUEST_INFOS @"PrismRequestInfos"
 
-@interface PrismInterceptNSURLProtocol() <NSURLSessionDelegate>
+@interface PrismReplayNSURLProtocol() <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession *session;
 @end
 
-@implementation PrismInterceptNSURLProtocol
+@implementation PrismReplayNSURLProtocol
 #pragma mark - life cycle
 
 #pragma mark - override method
@@ -30,14 +29,11 @@
 }
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    if ([[PrismBehaviorRecordManager sharedManager] canUpload] == NO) {
-        return NO;
-    }
     if (![request.URL.scheme isEqualToString:@"http"]
         && ![request.URL.scheme isEqualToString:@"https"]) {
         return NO;
     }
-    if ([PrismBehaviorRecordManager sharedManager].isInReplaying) {
+    if ([PrismBehaviorReplayManager sharedManager].isInReplaying) {
         if([NSURLProtocol propertyForKey:PRISM_REQUEST_HAS_INIT inRequest:request]) {
             return NO;
         }
@@ -52,11 +48,6 @@
             }
         }];
         return containURL;
-    }
-    else {
-        NSString *urlFlag = [PrismBehaviorRecordManager sharedManager].urlFlagPickBlock ? [PrismBehaviorRecordManager sharedManager].urlFlagPickBlock(request) : nil;
-        NSString *traceId = [PrismBehaviorRecordManager sharedManager].traceIdPickBlock ? [PrismBehaviorRecordManager sharedManager].traceIdPickBlock(request) : nil;
-        [[PrismBehaviorRecordManager sharedManager] addRequestInfoWithUrl:urlFlag traceId:traceId];
     }
     
     return NO;

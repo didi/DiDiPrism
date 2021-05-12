@@ -1,5 +1,5 @@
 //
-//  PrismInterceptNSURLProtocol.h
+//  PrismReplayNSURLProtocol.h
 //  DiDiPrism
 //
 //  Created by hulk on 2020/4/1.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PrismInterceptNSURLProtocol : NSURLProtocol
+@interface PrismReplayNSURLProtocol : NSURLProtocol
 
 @end
 

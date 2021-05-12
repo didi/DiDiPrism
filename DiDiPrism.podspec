@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "DiDiPrism"
-  spec.version      = "0.0.5"
+  spec.version      = "0.0.6"
   spec.summary      = "一款专注移动端操作行为的工具"
 
   # This description is used to generate tags and improve search results.

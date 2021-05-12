@@ -1,16 +1,16 @@
 //
-//  NSURLSessionConfiguration+PrismIntercept.m
+//  NSURLSessionConfiguration+PrismRecord.m
 //  DiDiPrism
 //
 //  Created by hulk on 2020/4/1.
 //
 
-#import "NSURLSessionConfiguration+PrismIntercept.h"
-#import "PrismInterceptNSURLProtocol.h"
+#import "NSURLSessionConfiguration+PrismRecord.h"
+#import "PrismRecordNSURLProtocol.h"
 // Util
 #import "PrismRuntimeUtil.h"
 
-@implementation NSURLSessionConfiguration (PrismIntercept)
+@implementation NSURLSessionConfiguration (PrismRecord)
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -22,7 +22,7 @@
 + (NSURLSessionConfiguration *)autoDot_defaultSessionConfiguration{
     NSURLSessionConfiguration *configuration = [self autoDot_defaultSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
-    [protocolClasses insertObject:[PrismInterceptNSURLProtocol class] atIndex:0];
+    [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
     configuration.protocolClasses = [protocolClasses copy];
     return configuration;
 }
@@ -30,7 +30,7 @@
 + (NSURLSessionConfiguration *)autoDot_ephemeralSessionConfiguration{
     NSURLSessionConfiguration *configuration = [self autoDot_ephemeralSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
-    [protocolClasses insertObject:[PrismInterceptNSURLProtocol class] atIndex:0];
+    [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
     configuration.protocolClasses = [protocolClasses copy];
     return configuration;
 }

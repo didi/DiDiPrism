@@ -1,5 +1,5 @@
 //
-//  NSURLSessionConfiguration+PrismIntercept.h
+//  PrismRecordNSURLProtocol.h
 //  DiDiPrism
 //
 //  Created by hulk on 2020/4/1.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSURLSessionConfiguration (PrismIntercept)
+@interface PrismRecordNSURLProtocol : NSURLProtocol
 
 @end
 

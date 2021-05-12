@@ -9,7 +9,6 @@
 #import "PrismEventDispatcher.h"
 #import "PrismBaseInstructionParser.h"
 #import "PrismBehaviorReplayOperation.h"
-#import "PrismBehaviorRecordManager.h"
 #import "PrismInstructionDefines.h"
 // Category
 #import "NSArray+PrismExtends.h"
@@ -57,7 +56,7 @@
 - (void)startWithModel:(PrismBehaviorListModel *)model
          progressBlock:(void (^)(NSInteger,NSString*))progressBlock
        completionBlock:(void (^)(void))completionBlock {
-    [PrismBehaviorRecordManager sharedManager].isInReplaying = YES;
+    self.isInReplaying = YES;
     self.model = model;
     NSArray<PrismBehaviorVideoModel*> *behaviorArray = [model.instructionArray subarrayWithRange:NSMakeRange(model.startIndex, MIN(model.endIndex + 1, model.instructionArray.count) - model.startIndex)];
     if (!behaviorArray.count) {
@@ -78,7 +77,7 @@
 }
 
 - (void)goon {
-    [PrismBehaviorRecordManager sharedManager].isInReplaying = YES;
+    self.isInReplaying = YES;
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
     for (NSOperation *operaion in self.remainingOperationArray) {
         [behaviorOperationQueue addOperation:operaion];
@@ -86,7 +85,7 @@
 }
 
 - (void)pause {
-    [PrismBehaviorRecordManager sharedManager].isInReplaying = NO;
+    self.isInReplaying = NO;
     self.currentReplayIndex = -1;
     NSMutableArray<NSOperation*> *operationArray = [NSMutableArray array];
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
@@ -104,7 +103,7 @@
 }
 
 - (void)stop {
-    [PrismBehaviorRecordManager sharedManager].isInReplaying = NO;
+    self.isInReplaying = NO;
     self.currentReplayIndex = -1;
     NSOperationQueue *behaviorOperationQueue = self.prismOperationQueue;
     [behaviorOperationQueue.operations enumerateObjectsUsingBlock:^(__kindof NSOperation * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

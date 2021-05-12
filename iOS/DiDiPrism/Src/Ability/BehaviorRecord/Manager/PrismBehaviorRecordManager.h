@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismBehaviorRecordManager : NSObject <WKScriptMessageHandler>
 + (instancetype)sharedManager;
-@property (nonatomic, assign) BOOL isInReplaying;
+
 /*
  定制用于提取网络请求信息的逻辑。
  */

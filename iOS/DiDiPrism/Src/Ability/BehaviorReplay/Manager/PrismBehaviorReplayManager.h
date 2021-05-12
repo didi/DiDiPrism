@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PrismBehaviorReplayManager : NSObject
 + (instancetype)sharedManager;
 
+@property (nonatomic, assign) BOOL isInReplaying;
 @property (nonatomic, assign) NSInteger currentReplayIndex; //当前正在回放的指令索引
 @property (nonatomic, copy, readonly) NSArray<PrismBehaviorItemRequestInfoModel*> *currentReplayRequestInfos; //当前正在回放的指令关联的网络信息
 @property (nonatomic, strong) NSString*(^urlFlagPickBlock)(NSURLRequest*); //定制用于匹配网络请求信息的逻辑。
