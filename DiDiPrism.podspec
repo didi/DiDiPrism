@@ -163,5 +163,10 @@ Pod::Spec.new do |spec|
     ss.dependency 'DiDiPrism/Core'
     ss.dependency "Masonry"
   end
+  
+  spec.subspec 'WithBehaviorDistribution' do |ss|
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorDistribution/**/*{.h,.m}'
+    ss.dependency 'DiDiPrism/Core'
+  end
 
 end
