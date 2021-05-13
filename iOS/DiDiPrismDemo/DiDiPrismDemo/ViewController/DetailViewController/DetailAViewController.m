@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "DetailAViewController.h"
 #import "DetailBViewController.h"
+#import "DetailPresentedViewController.h"
 #import "WebViewController.h"
 #import "DetailTableViewCell.h"
 #import "DetailBannerATableViewCell.h"
@@ -95,7 +96,7 @@
             return 1;
             break;
         case 2:
-            return 10;
+            return 15;
             break;
         default:
             break;
@@ -133,7 +134,7 @@
 #pragma mark - DetailTableViewCellDelegate
 - (void)didGoButtonSelectedWithIndex:(NSInteger)index {
     UIViewController *viewController = nil;
-    index = index % 3;
+    index = index % 4;
     if (index == 0) {
         viewController = [[DetailBViewController alloc] init];
     }
@@ -142,6 +143,10 @@
     }
     if (viewController) {
         [self.navigationController pushViewController:viewController animated:YES];
+    }
+    
+    if (index == 2) {
+        [self.navigationController presentViewController:[[DetailPresentedViewController alloc] init] animated:YES completion:nil];
     }
 }
 

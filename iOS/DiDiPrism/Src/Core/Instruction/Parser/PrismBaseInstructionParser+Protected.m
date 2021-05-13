@@ -21,7 +21,10 @@
         return keyWindow.rootViewController;
     }
     // 考虑presentViewController的情况
-    __block UIViewController *presentedVC = nil;
+    __block UIViewController *presentedVC = [self searchPresentedViewControllerWithRootController:keyWindow.rootViewController];
+    if (presentedVC) {
+        return presentedVC;
+    }
     [[keyWindow subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:NSClassFromString(@"UITransitionView")] && [[obj subviews] count]) {
             UIView *aimView = (UIView*)[obj subviews][0];
@@ -30,6 +33,28 @@
         }
     }];
     return presentedVC;
+}
+
+- (UIViewController*)searchPresentedViewControllerWithRootController:(UIViewController*)rootController {
+    if (rootController.presentedViewController) {
+        return rootController.presentedViewController;
+    }
+    
+    if ([rootController isKindOfClass:[UINavigationController class]]) {
+        UIViewController *resultVC = [self searchPresentedViewControllerWithRootController:[(UINavigationController*)rootController visibleViewController]];
+        if (resultVC) {
+            return resultVC;
+        }
+    }
+    else {
+        for (UIViewController *childVC in [rootController childViewControllers]) {
+            UIViewController *resultVC = [self searchPresentedViewControllerWithRootController:childVC];
+            if (resultVC) {
+                return resultVC;
+            }
+        }
+    }
+    return nil;
 }
 
 - (UIView*)searchScrollViewCellWithScrollViewClassName:(NSString*)scrollViewClassName
