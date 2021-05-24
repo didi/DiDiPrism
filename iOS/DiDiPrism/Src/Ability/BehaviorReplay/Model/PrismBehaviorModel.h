@@ -5,7 +5,7 @@
 //  Created by hulk on 2019/10/12.
 //
 
-#import "JSONModel.h"
+#import <JSONModel/JSONModel.h>
 #import "PrismBehaviorTextModel.h"
 #import "PrismBehaviorVideoModel.h"
 #import "PrismInstructionFormatter.h"

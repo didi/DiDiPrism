@@ -5,7 +5,7 @@
 //  Created by hulk on 2020/9/29.
 //
 
-#import "JSONModel.h"
+#import <JSONModel/JSONModel.h>
 #import "PrismInstructionFormatter.h"
 
 NS_ASSUME_NONNULL_BEGIN
