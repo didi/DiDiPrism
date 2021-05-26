@@ -26,7 +26,6 @@
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     NSArray<NSString*> *viewMotionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
-    NSArray<NSString*> *viewFunctionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewFunction];
     NSArray<NSString*> *viewRepresentativeContentArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewRepresentativeContent];
     NSArray<NSString*> *viewPathArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     
@@ -72,7 +71,7 @@
         textModel.descContent = @"列表";
     }
     // 翻译参考信息和功能信息
-    NSArray<NSString*> *contentArray = [[[NSArray array] arrayByAddingObjectsFromArray:viewFunctionArray] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
+    NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
     [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([self hasChinese:obj]) {
             textModel.descType = PrismBehaviorDescTypeText;
@@ -94,7 +93,7 @@
         return textModel;
     }
 
-    [viewFunctionArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([self hasLocalImage:obj]) {
             textModel.descType = PrismBehaviorDescTypeLocalImage;
             textModel.descContent = obj;

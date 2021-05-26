@@ -14,7 +14,6 @@
 #import "NSArray+PrismExtends.h"
 // Util
 #import "PrismInstructionAreaUtil.h"
-#import "PrismInstructionContentUtil.h"
 
 @interface PrismControlInstructionParser()
 
@@ -82,11 +81,11 @@
         NSString *representativeContent = [viewRepresentativeContentArray prism_stringWithIndex:1];
         Class targetClass = NSClassFromString([viewFunctionArray prism_objectAtIndex:1]);
         NSString *targetAction = [viewFunctionArray prism_stringWithIndex:2];
-        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withFunctionName:nil withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
+        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
         // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
         if (!targetControl && lastScrollView) {
             for (UIView *subview in lastScrollView.subviews) {
-                UIControl *resultControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withFunctionName:nil withTargetClass:targetClass withAction:targetAction fromSuperView:subview];
+                UIControl *resultControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:targetClass withAction:targetAction fromSuperView:subview];
                 if (resultControl) {
                     targetControl = resultControl;
                     break;
@@ -97,27 +96,8 @@
             targetControl = [self searchControlWithArea:areaInfo withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
         }
     }
-    // title or image + target + selector
-    else if (viewFunctionArray.count == 4) {
-        NSString *functionName = [viewFunctionArray prism_objectAtIndex:1];
-        Class targetClass = NSClassFromString([viewFunctionArray prism_objectAtIndex:2]);
-        NSString *targetAction = [viewFunctionArray prism_stringWithIndex:3];
-        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:nil withFunctionName:functionName withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
-        // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
-        if (!targetControl && lastScrollView) {
-            for (UIView *subview in lastScrollView.subviews) {
-                targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:nil withFunctionName:functionName withTargetClass:targetClass withAction:targetAction fromSuperView:subview];
-                if (targetControl) {
-                    break;
-                }
-            }
-        }
-        if (!targetControl) {
-            targetControl = [self searchControlWithArea:areaInfo withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
-        }
-    }
     // target + selector
-    else if (viewFunctionArray.count == 3) {
+    else if (viewFunctionArray.count) {
         Class targetClass = NSClassFromString([viewFunctionArray prism_objectAtIndex:1]);
         NSString *targetAction = [viewFunctionArray prism_stringWithIndex:2];
         targetControl = [self searchControlWithArea:areaInfo withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
@@ -132,13 +112,13 @@
         }
     }
     // title or image
-    else if (viewFunctionArray.count == 2) {
-        NSString *functionName = [viewFunctionArray prism_objectAtIndex:1];
-        targetControl = [self searchControlWithArea:areaInfo withFunctionName:functionName fromSuperView:targetView];
+    else if (viewRepresentativeContentArray.count) {
+        NSString *viewContent = [viewRepresentativeContentArray prism_objectAtIndex:1];
+        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:viewContent fromSuperView:targetView];
         // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
         if (!targetControl && lastScrollView) {
             for (UIView *subview in lastScrollView.subviews) {
-                targetControl = [self searchControlWithArea:areaInfo withFunctionName:functionName fromSuperView:subview];
+                targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:viewContent fromSuperView:subview];
                 if (targetControl) {
                     break;
                 }
@@ -158,28 +138,26 @@
 }
 
 #pragma mark - private method
-- (UIControl*)searchControlWithArea:(NSString*)areaInfo withFunctionName:(NSString*)functionName fromSuperView:(UIView*)superView {
-    return [self searchControlWithArea:areaInfo withRepresentativeContent:nil withFunctionName:functionName withTargetClass:nil withAction:nil fromSuperView:superView];
+- (UIControl*)searchControlWithArea:(NSString*)areaInfo withRepresentativeContent:(NSString*)representativeContent fromSuperView:(UIView*)superView {
+    return [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:nil withAction:nil fromSuperView:superView];
 }
 
 - (UIControl*)searchControlWithArea:(NSString*)areaInfo withTargetClass:(Class)targetClass withAction:(NSString*)action fromSuperView:(UIView*)superView {
-    return [self searchControlWithArea:areaInfo withRepresentativeContent:nil withFunctionName:nil withTargetClass:targetClass withAction:action fromSuperView:superView];
+    return [self searchControlWithArea:areaInfo withRepresentativeContent:nil withTargetClass:targetClass withAction:action fromSuperView:superView];
 }
 
 - (UIControl*)searchControlWithArea:(NSString*)areaInfo
           withRepresentativeContent:(NSString*)representativeContent
-                   withFunctionName:(NSString*)functionName
                     withTargetClass:(Class)targetClass
                          withAction:(NSString*)action
                       fromSuperView:(UIView*)superView {
     if ([superView isKindOfClass:[UIControl class]]) {
         UIControl *control = (UIControl*)superView;
-        NSString *areaAndListInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:control];
-        NSString *functionInfo = [PrismControlInstructionGenerator getFunctionNameOfControl:control];
-        PrismInstructionFormatter *controlFormatter = [[PrismInstructionFormatter alloc] initWithInstruction:[NSString stringWithFormat:@"%@%@", areaAndListInfo, functionInfo]];
-        NSString *controlAreaInfo = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewQuadrant] prism_stringWithIndex:1];
-        NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
-        NSString *controlFunctionName = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewFunction] prism_stringWithIndex:1];
+        NSString *controlAreaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:control];
+        NSString *controlViewContent = [PrismControlInstructionGenerator getViewContentOfControl:control];
+        PrismInstructionFormatter *controlFormatter = [[PrismInstructionFormatter alloc] initWithInstruction:[NSString stringWithFormat:@"%@%@", controlAreaInfo, controlViewContent]];
+        controlAreaInfo = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewQuadrant] prism_stringWithIndex:1];
+        controlViewContent = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewRepresentativeContent] prism_stringWithIndex:1];
         control.highlighted = YES;
         NSString *highlightedImageName = nil;
         if ([control isKindOfClass:[UIButton class]]) {
@@ -197,8 +175,7 @@
             }
             BOOL isAreaInfoEqual = [self isAreaInfoEqualBetween:controlAreaInfo withAnother:areaInfo allowCompatibleMode:NO];
             if (isAreaInfoEqual
-                && (!representativeContent.length || [representativeContent isEqualToString:viewContent])
-                && (!functionName.length || ([controlFunctionName isEqualToString:functionName] || [highlightedImageName isEqualToString:functionName]))
+                && (!representativeContent.length || ([representativeContent isEqualToString:controlViewContent] || [representativeContent isEqualToString:highlightedImageName]))
                 && (!targetClass || [target isKindOfClass:targetClass])
                 && (!action.length || [controlActions containsObject:action])) {
                 return control;
@@ -210,7 +187,7 @@
         return nil;
     }
     for (UIView *view in superView.subviews) {
-        UIControl *control = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName withTargetClass:targetClass withAction:action fromSuperView:view];
+        UIControl *control = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:targetClass withAction:action fromSuperView:view];
         if (control) {
             return control;
         }
