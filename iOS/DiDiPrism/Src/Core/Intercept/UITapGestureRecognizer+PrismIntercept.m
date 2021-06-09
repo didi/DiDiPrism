@@ -29,7 +29,7 @@
 - (void)autoDot_setState:(UIGestureRecognizerState)state {
     [self autoDot_setState:state];
     
-    // 某些场景下 state 和 self.state 不一致，self.state为UIGestureRecognizerStateFailed
+    // set逻辑后 state 和 self.state 应一致，某些场景下self.state依然为UIGestureRecognizerStateFailed不符合预期。
     if (state == UIGestureRecognizerStateRecognized && self.state == UIGestureRecognizerStateRecognized) {
         //注1：没有选择在setState阶段直接进行event id的收集，是因为类似于WEEX场景中一次操作可以识别到多个手势（区别于实际起作用的手势）。
         //注2：选择在setState阶段先收集响应链信息和区位信息，是因为有些场景下点击事件触发后view.superview可能为nil，需提前捕捉。

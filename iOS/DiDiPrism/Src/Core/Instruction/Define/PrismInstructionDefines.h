@@ -40,7 +40,7 @@
 // View Motion具体标识
 #define kViewMotionControlFlag @"control"
 #define kViewMotionEdgePanGestureFlag @"edgePanGesture"
-#define kViewMotionGestureFlag @"gesture"
+#define kViewMotionTapGestureFlag @"tapGesture"
 #define kViewMotionCellFlag @"cell"
 
 #endif /* PrismInstructionDefines_h */

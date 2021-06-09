@@ -5,7 +5,7 @@
 //  Created by hulk on 2019/7/25.
 //
 
-#import "PrismGestureInstructionParser.h"
+#import "PrismTapGestureInstructionParser.h"
 #import "PrismBaseInstructionParser+Protected.h"
 #import "PrismTapGestureInstructionGenerator.h"
 // Category
@@ -14,11 +14,11 @@
 // Util
 #import "PrismInstructionAreaUtil.h"
 
-@interface PrismGestureInstructionParser()
+@interface PrismTapGestureInstructionParser()
 
 @end
 
-@implementation PrismGestureInstructionParser
+@implementation PrismTapGestureInstructionParser
 #pragma mark - life cycle
 
 #pragma mark - public method

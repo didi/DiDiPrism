@@ -11,7 +11,7 @@
 #import "NSArray+PrismExtends.h"
 // Parser
 #import "PrismControlInstructionParser.h"
-#import "PrismGestureInstructionParser.h"
+#import "PrismTapGestureInstructionParser.h"
 #import "PrismCellInstructionParser.h"
 #import "PrismTagInstructionParser.h"
 #import "PrismEdgePanGestureInstructionParser.h"
@@ -36,8 +36,8 @@
     if ([viewMotion isEqualToString:kViewMotionControlFlag]) {
         return [[PrismControlInstructionParser alloc] init];
     }
-    else if ([viewMotion isEqualToString:kViewMotionGestureFlag]) {
-        return [[PrismGestureInstructionParser alloc] init];
+    else if ([viewMotion isEqualToString:kViewMotionTapGestureFlag]) {
+        return [[PrismTapGestureInstructionParser alloc] init];
     }
     else if ([viewMotion isEqualToString:kViewMotionCellFlag]) {
         return [[PrismCellInstructionParser alloc] init];

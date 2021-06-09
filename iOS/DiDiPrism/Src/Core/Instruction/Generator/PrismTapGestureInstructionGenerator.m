@@ -40,7 +40,7 @@
         return nil;
     }
     NSString *functionName = [self getFunctionNameOfTapGesture:tapGesture];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionGestureFlag, responseChainInfo, areaInfo, functionName];
+    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionTapGestureFlag, responseChainInfo, areaInfo, functionName];
     // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
     if ([areaInfo containsString:kBeginOfViewListFlag]) {
         return instruction;

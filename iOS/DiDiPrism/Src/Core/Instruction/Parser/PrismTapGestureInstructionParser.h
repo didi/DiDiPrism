@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PrismGestureInstructionParser : PrismBaseInstructionParser
+@interface PrismTapGestureInstructionParser : PrismBaseInstructionParser
 
 @end
 
