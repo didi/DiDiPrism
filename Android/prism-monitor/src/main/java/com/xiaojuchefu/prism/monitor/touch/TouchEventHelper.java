@@ -29,6 +29,18 @@ import java.util.List;
 
 public class TouchEventHelper {
 
+    private static final int PRISM_INSTRUCTION_AREA_UNKNOWN = 0;
+    private static final int PRISM_INSTRUCTION_AREA_CENTER = 1;
+    private static final int PRISM_INSTRUCTION_AREA_UP = 2;
+    private static final int PRISM_INSTRUCTION_AREA_BOTTOM = 3;
+    private static final int PRISM_INSTRUCTION_AREA_LEFT = 4;
+    private static final int PRISM_INSTRUCTION_AREA_RIGHT = 5;
+//    private static final int PRISM_INSTRUCTION_AREA_UPLEFT = 8;
+//    private static final int PRISM_INSTRUCTION_AREA_UPRIGHT = 10;
+//    private static final int PRISM_INSTRUCTION_AREA_BOTTOMLEFT = 12;
+//    private static final int PRISM_INSTRUCTION_AREA_BOTTOMRIGHT = 15;
+    private static final int PRISM_INSTRUCTION_AREA_CANSCROLL = 100;
+
     private static int mWindowWidth = -1;
     private static int mWindowHeight = -1;
 
@@ -58,9 +70,7 @@ public class TouchEventHelper {
             getViewContent(touchView, eventId);
         }
         // quadrant
-        if (!viewPath.inScrollableContainer) {
-            getQuadrant(touchView.getContext(), touchRecord, eventId);
-        }
+        getQuadrant(touchView.getContext(), touchView, viewPath.inScrollableContainer,touchRecord, eventId);
 
         EventData eventData = new EventData(PrismConstants.Event.TOUCH);
         eventData.eventId = eventId.toString();
@@ -281,21 +291,57 @@ public class TouchEventHelper {
         return count;
     }
 
-    private static void getQuadrant(Context context, TouchRecord touchRecord, StringBuilder eventId) {
+    private static void getQuadrant(Context context, View touchView, boolean inScrollableContainer,TouchRecord touchRecord, StringBuilder eventId) {
         int centreX = getWindowWidth(context) / 2;
         int centreY = getWindowHeight(context) / 2;
 
-        float x = touchRecord.mDownX;
-        float y = touchRecord.mDownY;
         eventId.append(PrismConstants.Symbol.DIVIDER);
-        if (x > centreX && y <= centreY) {
-            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("1");
-        } else if (x >= centreX && y > centreY) {
-            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("2");
-        } else if (x < centreX && y >= centreY) {
-            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("3");
-        } else if (x <= centreX && y < centreY) {
-            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("4");
+        if(!inScrollableContainer) {
+            int[] location = new int[2];
+            touchView.getLocationInWindow(location);
+            int vx = location[0];
+            int vy = location[1];
+            touchView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int vw = touchView.getMeasuredWidth();
+            int vh = touchView.getMeasuredHeight();
+            int vCentreX = vx + vw / 2;
+            int vCentreY = vy + vh / 2;
+
+            int horizontalValue = PRISM_INSTRUCTION_AREA_UNKNOWN;
+            if (vCentreX == centreX) {
+                horizontalValue = PRISM_INSTRUCTION_AREA_CENTER;
+            }
+            else if (vCentreX < centreX) {
+                horizontalValue = PRISM_INSTRUCTION_AREA_LEFT;
+            }
+            else {
+                horizontalValue = PRISM_INSTRUCTION_AREA_RIGHT;
+            }
+            int verticalValue = PRISM_INSTRUCTION_AREA_UNKNOWN;
+            if (vCentreY == centreY) {
+                verticalValue = PRISM_INSTRUCTION_AREA_CENTER;
+            }
+            else if (vCentreY < centreY) {
+                verticalValue = PRISM_INSTRUCTION_AREA_UP;
+            }
+            else {
+                verticalValue = PRISM_INSTRUCTION_AREA_BOTTOM;
+            }
+
+            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append(horizontalValue * verticalValue);
+//            float x = touchRecord.mDownX;
+//            float y = touchRecord.mDownY;
+//            if (x > centreX && y <= centreY) {
+//                eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("1");
+//            } else if (x >= centreX && y > centreY) {
+//                eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("2");
+//            } else if (x < centreX && y >= centreY) {
+//                eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("3");
+//            } else if (x <= centreX && y < centreY) {
+//                eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append("4");
+//            }
+        } else {
+            eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append(PRISM_INSTRUCTION_AREA_CANSCROLL);
         }
     }
 
