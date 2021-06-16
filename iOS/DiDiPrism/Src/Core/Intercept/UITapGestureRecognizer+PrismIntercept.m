@@ -19,15 +19,15 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setState:) swizzledSelector:@selector(autoDot_setState:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(autoDot_initWithTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(autoDot_addTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(autoDot_removeTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setState:) swizzledSelector:@selector(prism_AutoDot_setState:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(prism_AutoDot_initWithTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(prism_AutoDot_addTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(prism_AutoDot_removeTarget:action:)];
     });
 }
 
-- (void)autoDot_setState:(UIGestureRecognizerState)state {
-    [self autoDot_setState:state];
+- (void)prism_AutoDot_setState:(UIGestureRecognizerState)state {
+    [self prism_AutoDot_setState:state];
     
     // set逻辑后 state 和 self.state 应一致，某些场景下self.state依然为UIGestureRecognizerStateFailed不符合预期。
     if (state == UIGestureRecognizerStateRecognized && self.state == UIGestureRecognizerStateRecognized) {
@@ -47,39 +47,39 @@
 }
 
 
-- (instancetype)autoDot_initWithTarget:(id)target action:(SEL)action {
+- (instancetype)prism_AutoDot_initWithTarget:(id)target action:(SEL)action {
     //原始逻辑
-    UITapGestureRecognizer *gesture = [self autoDot_initWithTarget:target action:action];
+    UITapGestureRecognizer *gesture = [self prism_AutoDot_initWithTarget:target action:action];
     
-    [gesture addTarget:self action:@selector(autoDot_tapAction:)];
+    [gesture addTarget:self action:@selector(prism_AutoDot_tapAction:)];
     gesture.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     
     return gesture;
 }
 
-- (void)autoDot_addTarget:(id)target action:(SEL)action {
+- (void)prism_AutoDot_addTarget:(id)target action:(SEL)action {
     //原始逻辑
-    [self autoDot_addTarget:target action:action];
+    [self prism_AutoDot_addTarget:target action:action];
     
-    [self autoDot_addTarget:self action:@selector(autoDot_tapAction:)];
+    [self prism_AutoDot_addTarget:self action:@selector(prism_AutoDot_tapAction:)];
     if (!self.autoDotTargetAndSelector.length) {
         self.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     }
 }
 
-- (void)autoDot_removeTarget:(id)target action:(SEL)action {
+- (void)prism_AutoDot_removeTarget:(id)target action:(SEL)action {
     //原始逻辑
-    [self autoDot_removeTarget:target action:action];
+    [self prism_AutoDot_removeTarget:target action:action];
     
-    [self autoDot_removeTarget:self action:@selector(autoDot_tapAction:)];
+    [self prism_AutoDot_removeTarget:self action:@selector(prism_AutoDot_tapAction:)];
     self.autoDotTargetAndSelector = @"";
 }
 
 #pragma mark - actions
-- (void)autoDot_tapAction:(UITapGestureRecognizer*)tapGestureRecognizer {
+- (void)prism_AutoDot_tapAction:(UITapGestureRecognizer*)tapGestureRecognizer {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = self;
-    params[@"action"] = NSStringFromSelector(@selector(autoDot_tapAction:));
+    params[@"action"] = NSStringFromSelector(@selector(prism_AutoDot_tapAction:));
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUITapGestureRecognizerAction withSender:self params:[params copy]];
 }
 

@@ -13,41 +13,41 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:) swizzledSelector:@selector(autoDot_imageNamed:) isClassMethod:YES];
+        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:) swizzledSelector:@selector(prism_AutoDot_imageNamed:) isClassMethod:YES];
         #if __has_include(<UIKit/UITraitCollection.h>)
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:) swizzledSelector:@selector(autoDot_imageNamed:inBundle:compatibleWithTraitCollection:) isClassMethod:YES];
+        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:) swizzledSelector:@selector(prism_AutoDot_imageNamed:inBundle:compatibleWithTraitCollection:) isClassMethod:YES];
         #endif
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageWithContentsOfFile:) swizzledSelector:@selector(autoDot_imageWithContentsOfFile:) isClassMethod:YES];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithContentsOfFile:) swizzledSelector:@selector(autoDot_initWithContentsOfFile:)];
+        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageWithContentsOfFile:) swizzledSelector:@selector(prism_AutoDot_imageWithContentsOfFile:) isClassMethod:YES];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithContentsOfFile:) swizzledSelector:@selector(prism_AutoDot_initWithContentsOfFile:)];
     });
 }
 
-+ (UIImage *)autoDot_imageNamed:(NSString *)name {
-    UIImage *image = [self autoDot_imageNamed:name];
++ (UIImage *)prism_AutoDot_imageNamed:(NSString *)name {
+    UIImage *image = [self prism_AutoDot_imageNamed:name];
     
     image.autoDotImageName = [self getImageNameFromPath:name];
     
     return image;
 }
 
-+ (UIImage *)autoDot_imageNamed:(NSString *)name inBundle:(NSBundle *)bundle compatibleWithTraitCollection:(UITraitCollection *)traitCollection {
-    UIImage *image = [self autoDot_imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
++ (UIImage *)prism_AutoDot_imageNamed:(NSString *)name inBundle:(NSBundle *)bundle compatibleWithTraitCollection:(UITraitCollection *)traitCollection {
+    UIImage *image = [self prism_AutoDot_imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
     
     image.autoDotImageName = [self getImageNameFromPath:name];
     
     return image;
 }
 
-+ (UIImage *)autoDot_imageWithContentsOfFile:(NSString *)path {
-    UIImage *image = [self autoDot_imageWithContentsOfFile:path];
++ (UIImage *)prism_AutoDot_imageWithContentsOfFile:(NSString *)path {
+    UIImage *image = [self prism_AutoDot_imageWithContentsOfFile:path];
     
     image.autoDotImageName = [self getImageNameFromPath:path];
     
     return image;
 }
 
-- (instancetype)autoDot_initWithContentsOfFile:(NSString *)path {
-    UIImage *image = [self autoDot_initWithContentsOfFile:path];
+- (instancetype)prism_AutoDot_initWithContentsOfFile:(NSString *)path {
+    UIImage *image = [self prism_AutoDot_initWithContentsOfFile:path];
     
     image.autoDotImageName = [UIImage getImageNameFromPath:path];
     

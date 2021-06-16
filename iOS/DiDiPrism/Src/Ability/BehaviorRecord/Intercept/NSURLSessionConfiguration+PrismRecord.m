@@ -14,21 +14,21 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(defaultSessionConfiguration) swizzledSelector:@selector(autoDot_defaultSessionConfiguration) isClassMethod:YES];
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(ephemeralSessionConfiguration) swizzledSelector:@selector(autoDot_ephemeralSessionConfiguration) isClassMethod:YES];
+        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(defaultSessionConfiguration) swizzledSelector:@selector(prism_AutoDot_defaultSessionConfiguration) isClassMethod:YES];
+        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(ephemeralSessionConfiguration) swizzledSelector:@selector(prism_AutoDot_ephemeralSessionConfiguration) isClassMethod:YES];
     });
 }
 
-+ (NSURLSessionConfiguration *)autoDot_defaultSessionConfiguration{
-    NSURLSessionConfiguration *configuration = [self autoDot_defaultSessionConfiguration];
++ (NSURLSessionConfiguration *)prism_AutoDot_defaultSessionConfiguration{
+    NSURLSessionConfiguration *configuration = [self prism_AutoDot_defaultSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
     [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
     configuration.protocolClasses = [protocolClasses copy];
     return configuration;
 }
 
-+ (NSURLSessionConfiguration *)autoDot_ephemeralSessionConfiguration{
-    NSURLSessionConfiguration *configuration = [self autoDot_ephemeralSessionConfiguration];
++ (NSURLSessionConfiguration *)prism_AutoDot_ephemeralSessionConfiguration{
+    NSURLSessionConfiguration *configuration = [self prism_AutoDot_ephemeralSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
     [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
     configuration.protocolClasses = [protocolClasses copy];
