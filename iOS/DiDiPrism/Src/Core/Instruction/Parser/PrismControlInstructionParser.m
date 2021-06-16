@@ -13,7 +13,7 @@
 #import "UIImage+PrismIntercept.h"
 #import "NSArray+PrismExtends.h"
 // Util
-#import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionAreaInfoUtil.h"
 
 @interface PrismControlInstructionParser()
 
@@ -78,14 +78,20 @@
 
     NSString *areaInfo = [viewQuadrantArray prism_stringWithIndex:1];
     if (viewRepresentativeContentArray.count && viewFunctionArray.count) {
-        NSString *representativeContent = [viewRepresentativeContentArray prism_stringWithIndex:1];
+        NSMutableString *representativeContent = [NSMutableString string];
+        for (NSInteger index = 1; index < viewRepresentativeContentArray.count; index++) {
+            if (index > 1) {
+                [representativeContent appendString:kConnectorFlag];
+            }
+            [representativeContent appendString:[viewRepresentativeContentArray prism_stringWithIndex:index]];
+        }
         Class targetClass = NSClassFromString([viewFunctionArray prism_objectAtIndex:1]);
         NSString *targetAction = [viewFunctionArray prism_stringWithIndex:2];
-        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
+        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:[representativeContent copy] withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
         // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
         if (!targetControl && lastScrollView) {
             for (UIView *subview in lastScrollView.subviews) {
-                UIControl *resultControl = [self searchControlWithArea:areaInfo withRepresentativeContent:representativeContent withTargetClass:targetClass withAction:targetAction fromSuperView:subview];
+                UIControl *resultControl = [self searchControlWithArea:areaInfo withRepresentativeContent:[representativeContent copy] withTargetClass:targetClass withAction:targetAction fromSuperView:subview];
                 if (resultControl) {
                     targetControl = resultControl;
                     break;
@@ -113,12 +119,18 @@
     }
     // title or image
     else if (viewRepresentativeContentArray.count) {
-        NSString *viewContent = [viewRepresentativeContentArray prism_objectAtIndex:1];
-        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:viewContent fromSuperView:targetView];
+        NSMutableString *viewContent = [NSMutableString string];
+        for (NSInteger index = 1; index < viewRepresentativeContentArray.count; index++) {
+            if (index > 1) {
+                [viewContent appendString:kConnectorFlag];
+            }
+            [viewContent appendString:[viewRepresentativeContentArray prism_stringWithIndex:index]];
+        }
+        targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:[viewContent copy] fromSuperView:targetView];
         // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
         if (!targetControl && lastScrollView) {
             for (UIView *subview in lastScrollView.subviews) {
-                targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:viewContent fromSuperView:subview];
+                targetControl = [self searchControlWithArea:areaInfo withRepresentativeContent:[viewContent copy] fromSuperView:subview];
                 if (targetControl) {
                     break;
                 }
@@ -153,11 +165,8 @@
                       fromSuperView:(UIView*)superView {
     if ([superView isKindOfClass:[UIControl class]]) {
         UIControl *control = (UIControl*)superView;
-        NSString *controlAreaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:control];
+        NSString *controlAreaInfo = [[PrismInstructionAreaInfoUtil getAreaInfoWithElement:control] prism_stringWithIndex:1];
         NSString *controlViewContent = [PrismControlInstructionGenerator getViewContentOfControl:control];
-        PrismInstructionFormatter *controlFormatter = [[PrismInstructionFormatter alloc] initWithInstruction:[NSString stringWithFormat:@"%@%@", controlAreaInfo, controlViewContent]];
-        controlAreaInfo = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewQuadrant] prism_stringWithIndex:1];
-        controlViewContent = [[controlFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewRepresentativeContent] prism_stringWithIndex:1];
         control.highlighted = YES;
         NSString *highlightedImageName = nil;
         if ([control isKindOfClass:[UIButton class]]) {

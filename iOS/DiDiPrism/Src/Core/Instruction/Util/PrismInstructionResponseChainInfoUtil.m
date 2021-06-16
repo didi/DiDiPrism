@@ -5,19 +5,18 @@
 //  Created by hulk on 2019/6/27.
 //
 
-#import "PrismInstructionResponseChainUtil.h"
-#import "PrismInstructionDefines.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
 // Category
 #import "UIResponder+PrismIntercept.h"
 #import "UIView+PrismExtends.h"
 
-@implementation PrismInstructionResponseChainUtil
+@implementation PrismInstructionResponseChainInfoUtil
 #pragma mark - public method
 + (NSString*)getResponseChainInfoWithElement:(UIView*)element {
     if (!element || ![element superview]) {
         return nil;
     }
-    NSMutableString *description = [NSMutableString stringWithString:kBeginOfViewPathFlag];
+    NSMutableString *description = [NSMutableString string];
     NSArray<UIViewController*> *viewControllers = [self getParentViewControllersOfView:element];
     if (viewControllers.count) {
         [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -33,10 +32,6 @@
                 [description appendFormat:@"%@_&_", mark];
             }];
         }
-    }
-    
-    if ([description isEqualToString:kBeginOfViewPathFlag]) {
-        return nil;
     }
     return [description copy];
 }

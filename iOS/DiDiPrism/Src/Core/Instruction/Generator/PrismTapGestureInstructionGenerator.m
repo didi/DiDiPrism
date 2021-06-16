@@ -8,13 +8,14 @@
 #import "PrismTapGestureInstructionGenerator.h"
 #import "PrismInstructionDefines.h"
 // Util
-#import "PrismInstructionResponseChainUtil.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
 // Category
 #import "UITapGestureRecognizer+PrismIntercept.h"
 #import "UIResponder+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
 #import "UIView+PrismExtends.h"
+#import "NSArray+PrismExtends.h"
 
 @interface PrismTapGestureInstructionGenerator()
 
@@ -34,15 +35,18 @@
     }
     
     NSString *responseChainInfo = [tapGesture autoDotResponseChainInfo];
-    NSString *areaInfo = [tapGesture autoDotAreaInfo];
+    NSArray *areaInfo = [tapGesture autoDotAreaInfo];
+    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
+    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
     // 屏蔽Native侧的H5页面点击指令
-    if (([areaInfo containsString:@"WKScrollView"] || [areaInfo containsString:@"WKContentView"])) {
+    if (([listInfo containsString:@"WKScrollView"] || [listInfo containsString:@"WKContentView"])) {
         return nil;
     }
+    NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
     NSString *functionName = [self getFunctionNameOfTapGesture:tapGesture];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionTapGestureFlag, responseChainInfo, areaInfo, functionName];
+    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionTapGestureFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
     // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if ([areaInfo containsString:kBeginOfViewListFlag]) {
+    if (listInfo.length) {
         return instruction;
     }
     else {
@@ -51,8 +55,25 @@
     }
 }
 
++ (PrismInstructionModel *)getInstructionModelOfTapGesture:(UITapGestureRecognizer *)tapGesture {
+    UIView *view = tapGesture.view;
+    if (!view) {
+        return nil;
+    }
+    PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
+    model.vm = kViewMotionTapGestureFlag;
+    model.vp = [tapGesture autoDotResponseChainInfo];
+    NSArray *areaInfo = [tapGesture autoDotAreaInfo];
+    model.vl = [areaInfo prism_stringWithIndex:0];
+    model.vq = [areaInfo prism_stringWithIndex:1];
+    model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
+    model.vf = [self getFunctionNameOfTapGesture:tapGesture];
+    return model;
+}
+
 + (NSString*)getFunctionNameOfTapGesture:(UITapGestureRecognizer*)tapGesture {
     UIView *view = tapGesture.view;
+    
     // WEEX
     id wxComponent = [view prism_wxComponent];
     if (wxComponent && [wxComponent isKindOfClass:NSClassFromString(@"WXComponent")]) {
@@ -60,46 +81,29 @@
         NSDictionary *wxAttributes = [wxComponent valueForKey:@"attributes"];
         NSString *wxFunctionName = [wxAttributes valueForKey:@"prismFunctionName"];
         NSString *wxClassName = [wxAttributes valueForKey:@"prismClassName"];
-        NSString *representativeContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-        if (representativeContent.length) {
-            [functionName appendFormat:@"%@", representativeContent];
-        }
         if (([wxFunctionName isKindOfClass:[NSString class]] && wxFunctionName.length)
             || ([wxClassName isKindOfClass:[NSString class]] && wxClassName.length)) {
-            
-            if (functionName.length) {
-                [functionName insertString:kBeginOfViewRepresentativeContentFlag atIndex:0];
-            }
-            NSMutableString *mutableFunctionName = [NSMutableString stringWithString:kBeginOfViewFunctionFlag];
             if ([wxFunctionName isKindOfClass:[NSString class]] && wxFunctionName.length) {
-                [mutableFunctionName appendString:wxFunctionName];
+                [functionName appendString:wxFunctionName];
             }
             if ([wxClassName isKindOfClass:[NSString class]] && wxClassName.length) {
-                if (mutableFunctionName.length) {
-                    [mutableFunctionName appendString:@"-"];
+                if (functionName.length) {
+                    [functionName appendString:@"-"];
                 }
-                [mutableFunctionName appendString:wxClassName];
-            }
-            if (![mutableFunctionName isEqualToString:kBeginOfViewFunctionFlag]) {
-                [functionName appendString:[mutableFunctionName copy]];
+                [functionName appendString:wxClassName];
             }
         }
-        else {
-            if (functionName.length) {
-                [functionName insertString:kBeginOfViewFunctionFlag atIndex:0];
-            }
-        }
-        
         if (functionName.length) {
             return [NSString stringWithFormat:@"%@_&_%@", functionName, tapGesture.autoDotTargetAndSelector];
         }
+        else {
+            return tapGesture.autoDotTargetAndSelector;
+        }
     }
-    // 获取有代表性的内容便于更好的定位view
-    NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-    if (viewContent.length) {
-        return [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewRepresentativeContentFlag, viewContent, kBeginOfViewFunctionFlag, tapGesture.autoDotTargetAndSelector];
+    // Native
+    else {
+        return tapGesture.autoDotTargetAndSelector;
     }
-    return [NSString stringWithFormat:@"%@%@", kBeginOfViewFunctionFlag, tapGesture.autoDotTargetAndSelector];
 }
 
 #pragma mark - private method

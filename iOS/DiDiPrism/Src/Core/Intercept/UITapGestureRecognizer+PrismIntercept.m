@@ -10,8 +10,8 @@
 #import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
-#import "PrismInstructionAreaUtil.h"
-#import "PrismInstructionResponseChainUtil.h"
+#import "PrismInstructionAreaInfoUtil.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
 // Category
 #import "UIResponder+PrismIntercept.h"
 
@@ -34,12 +34,12 @@
         //注1：没有选择在setState阶段直接进行event id的收集，是因为类似于WEEX场景中一次操作可以识别到多个手势（区别于实际起作用的手势）。
         //注2：选择在setState阶段先收集响应链信息和区位信息，是因为有些场景下点击事件触发后view.superview可能为nil，需提前捕捉。
         if ([self.view superview]) {
-            NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:self.view];
+            NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:self.view];
             if (responseChainInfo.length) {
                 [self setAutoDotResponseChainInfo:responseChainInfo];
             }
-            NSString *areaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:self.view];
-            if (areaInfo.length) {
+            NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:self.view];
+            if (areaInfo.count) {
                 [self setAutoDotAreaInfo:areaInfo];
             }
         }
@@ -102,10 +102,10 @@
     objc_setAssociatedObject(self, @selector(autoDotResponseChainInfo), autoDotResponseChainInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSString *)autoDotAreaInfo {
+- (NSArray *)autoDotAreaInfo {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotAreaInfo:(NSString *)autoDotAreaInfo {
+- (void)setAutoDotAreaInfo:(NSArray *)autoDotAreaInfo {
     objc_setAssociatedObject(self, @selector(autoDotAreaInfo), autoDotAreaInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end

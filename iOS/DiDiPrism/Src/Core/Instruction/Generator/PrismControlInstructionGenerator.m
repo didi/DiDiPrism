@@ -11,9 +11,10 @@
 #import "UIControl+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
 #import "UIResponder+PrismIntercept.h"
+#import "NSArray+PrismExtends.h"
 // Util
-#import "PrismInstructionResponseChainUtil.h"
-#import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
+#import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
 
 @interface PrismControlInstructionGenerator()
@@ -29,13 +30,15 @@
     if (control.autoDotFinalMark.length) {
         return control.autoDotFinalMark;
     }
-    NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:control];
-    NSString *areaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:control];
+    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
+    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
+    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
+    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
     NSString *viewContent = [self getViewContentOfControl:control];
     NSString *functionName = [self getFunctionNameOfControl:control];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, responseChainInfo, areaInfo, viewContent, functionName];
+    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
     // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if ([areaInfo containsString:kBeginOfViewListFlag]) {
+    if (listInfo.length) {
         return instruction;
     }
     else {
@@ -44,8 +47,20 @@
     }
 }
 
++ (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control {
+    PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
+    model.vm = kViewMotionControlFlag;
+    model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
+    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
+    model.vl = [areaInfo prism_stringWithIndex:0];
+    model.vq = [areaInfo prism_stringWithIndex:1];
+    model.vr = [self getViewContentOfControl:control];
+    model.vf = [self getFunctionNameOfControl:control];
+    return model;
+}
+
 + (NSString*)getViewContentOfControl:(UIControl*)control {
-    NSString *viewContent = nil;
+    NSString *viewContent = @"";
     if ([control isKindOfClass:[UIButton class]]) {
         viewContent = [self getViewContentOfButton:(UIButton *)control];
     }
@@ -59,17 +74,11 @@
         // 获取有代表性的内容便于更好的定位view
         viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
     }
-    if (viewContent.length) {
-        return [NSString stringWithFormat:@"%@%@", kBeginOfViewRepresentativeContentFlag, viewContent];
-    }
-    return @"";
+    return viewContent;
 }
 
 + (NSString*)getFunctionNameOfControl:(UIControl*)control {
-    if (control.autoDotTargetAndSelector.length) {
-        return [NSString stringWithFormat:@"%@%@", kBeginOfViewFunctionFlag, control.autoDotTargetAndSelector];
-    }
-    return @"";
+    return control.autoDotTargetAndSelector;
 }
 
 #pragma mark - private method

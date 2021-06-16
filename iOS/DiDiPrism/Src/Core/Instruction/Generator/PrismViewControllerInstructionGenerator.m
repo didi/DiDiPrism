@@ -20,23 +20,18 @@
     if ([self isSystemKeyboardOfViewController:viewController]) {
         return nil;
     }
-    
-    NSMutableString *vrContent = [NSMutableString stringWithString:NSStringFromClass([viewController class])];
-    NSString *url = nil;
-    SEL urlSelector = @selector(getUrl);
-    if ([viewController respondsToSelector:urlSelector]) {
-        url = [viewController performSelector:urlSelector];;
-        if ([url isKindOfClass:[NSString class]] && url.length) {
-            [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
-        }
+    NSString *viewContent = [self getViewContentOfViewController:viewController];
+    return [NSString stringWithFormat:@"%@%@%@", kUIViewControllerDidAppear, kBeginOfViewRepresentativeContentFlag, viewContent ?: @""];
+}
+
++ (PrismInstructionModel *)getInstructionModelOfViewController:(UIViewController *)viewController {
+    if ([self isSystemKeyboardOfViewController:viewController]) {
+        return nil;
     }
-    if (!url && [viewController title].length) {
-        [vrContent appendFormat:@"%@%@", kConnectorFlag, [viewController title]];
-    }
-    else {
-        [vrContent appendFormat:@"%@%@", kConnectorFlag, NSStringFromClass([viewController class])];
-    }
-    return [NSString stringWithFormat:@"%@%@%@", kUIViewControllerDidAppear, kBeginOfViewRepresentativeContentFlag, [vrContent copy]];
+    PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
+    model.vm = kUIViewControllerDidAppear;
+    model.vr = [self getViewContentOfViewController:viewController];
+    return model;
 }
 
 #pragma mark - private method
@@ -46,6 +41,28 @@
     [viewController isKindOfClass:NSClassFromString(@"UIPredictionViewController")] ||
     [viewController isKindOfClass:NSClassFromString(@"UIInputWindowController")] ||
     [viewController isKindOfClass:NSClassFromString(@"UISystemKeyboardDockController")];
+}
+
++ (NSString*)getViewContentOfViewController:(UIViewController*)viewController {
+    NSMutableString *vrContent = [NSMutableString stringWithString:NSStringFromClass([viewController class])];
+    NSString *url = nil;
+    if ([viewController respondsToSelector:@selector(getUrl)]) {
+        url = [viewController performSelector:@selector(getUrl)];;
+        if ([url isKindOfClass:[NSString class]] && url.length) {
+            [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
+        }
+    }
+    else if ([viewController respondsToSelector:@selector(url)]) {
+        url = [viewController performSelector:@selector(url)];;
+        if ([url isKindOfClass:[NSString class]] && url.length) {
+            [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
+        }
+    }
+    
+    if (!url.length && [viewController title].length) {
+        [vrContent appendFormat:@"%@%@", kConnectorFlag, [viewController title]];
+    }
+    return [vrContent copy];
 }
 
 #pragma mark - setters

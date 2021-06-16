@@ -1,24 +1,26 @@
 //
-//  AutoDotAreaUtil.m
+//  PrismInstructionAreaInfoUtil.m
 //  DiDiPrism
 //
 //  Created by hulk on 2019/7/1.
 //
 
-#import "PrismInstructionAreaUtil.h"
-#import "PrismInstructionDefines.h"
+#import "PrismInstructionAreaInfoUtil.h"
 // Category
 #import "UIView+PrismExtends.h"
 
-@implementation PrismInstructionAreaUtil
+@implementation PrismInstructionAreaInfoUtil
 #pragma mark - public method
-+ (NSString*)getAreaInfoWithElement:(UIView *)element {
+/*
+ @return 数组，[0]为vl，[1]为vq
+ */
++ (NSArray<NSString*>*)getAreaInfoWithElement:(UIView *)element {
     if (!element || ![element superview]) {
-        return [NSString stringWithFormat:@"%@%ld", kBeginOfViewQuadrantFlag, PrismInstructionAreaUnknown];
+        return @[@"", [NSString stringWithFormat:@"%ld", PrismInstructionAreaUnknown]];
     }
     BOOL isAllPagingEnabled = YES;
     // 列表信息
-    NSMutableString *scrollInfo = [NSMutableString string];
+    NSMutableString *listInfo = [NSMutableString string];
     UIResponder *temporaryView = element;
     UIResponder *temporarySuperview = temporaryView.nextResponder;
     while (temporaryView && ![temporaryView isKindOfClass:[UIViewController class]]) {
@@ -31,7 +33,7 @@
                 indexPath = [tableView indexPathForRowAtPoint:tableViewCell.center];
             }
             NSString *thisScrollInfo = [NSString stringWithFormat:@"%@_&_%@_&_%ld_&_%ld_&_", NSStringFromClass([tableView class]), NSStringFromClass([tableViewCell class]), (long)indexPath.section, (long)indexPath.row];
-            [scrollInfo insertString:thisScrollInfo atIndex:0];
+            [listInfo insertString:thisScrollInfo atIndex:0];
         }
         else if ([temporaryView isKindOfClass:[UICollectionViewCell class]]) {
             UICollectionViewCell *collectionViewCell = (UICollectionViewCell*)temporaryView;
@@ -42,23 +44,19 @@
                 indexPath = [collectionView indexPathForItemAtPoint:collectionViewCell.center];
             }
             NSString *thisScrollInfo = [NSString stringWithFormat:@"%@_&_%@_&_%ld_&_%ld_&_", NSStringFromClass([collectionView class]), NSStringFromClass([collectionViewCell class]), (long)indexPath.section, (long)indexPath.row];
-            [scrollInfo insertString:thisScrollInfo atIndex:0];
+            [listInfo insertString:thisScrollInfo atIndex:0];
         }
         else if ([temporarySuperview isKindOfClass:[UIScrollView class]]) {
             UIScrollView *scrollView = (UIScrollView*)temporarySuperview;
             isAllPagingEnabled = !scrollView.isPagingEnabled ? NO : isAllPagingEnabled;
             NSInteger index = [self getIndexOf:(UIView*)temporaryView fromScrollView:scrollView];
             NSString *thisScrollInfo = [NSString stringWithFormat:@"%@_&_%@_&_%ld_&_%ld_&_", NSStringFromClass([scrollView class]), NSStringFromClass([temporaryView class]), index, index];
-            [scrollInfo insertString:thisScrollInfo atIndex:0];
+            [listInfo insertString:thisScrollInfo atIndex:0];
         }
         
         temporaryView = temporaryView.nextResponder;
         temporarySuperview = temporaryView.nextResponder;
     }
-    if (scrollInfo.length) {
-        [scrollInfo insertString:kBeginOfViewListFlag atIndex:0];
-    }
-    NSString *areaInfo = [scrollInfo copy];
     
     // 区位信息
     UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
@@ -85,11 +83,9 @@
     else {
         verticalValue = PrismInstructionAreaBottom;
     }
-    
     NSInteger coordAtScreen = isAllPagingEnabled == NO ? PrismInstructionAreaCanScroll : horizontalValue * verticalValue;
-    areaInfo = [NSString stringWithFormat:@"%@%@%ld", areaInfo, kBeginOfViewQuadrantFlag, coordAtScreen];
     
-    return areaInfo;
+    return @[listInfo.length ? [listInfo copy] : @"", [NSString stringWithFormat:@"%ld", coordAtScreen]];
 }
 
 + (NSInteger)getIndexOf:(UIView*)element fromScrollView:(UIScrollView*)scrollView {
