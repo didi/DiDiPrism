@@ -15,12 +15,12 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithFrame:configuration:) swizzledSelector:@selector(prism_AutoDot_initWithFrame:configuration:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithFrame:configuration:) swizzledSelector:@selector(prism_autoDot_initWithFrame:configuration:)];
     });
 }
 
-- (instancetype)prism_AutoDot_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    WKWebView *webView = [self prism_AutoDot_initWithFrame:frame configuration:configuration];
+- (instancetype)prism_autoDot_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
+    WKWebView *webView = [self prism_autoDot_initWithFrame:frame configuration:configuration];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     if (configuration) {
@@ -31,7 +31,7 @@
     return webView;
 }
 
-- (void)prism_AutoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration {
+- (void)prism_autoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration {
     if(!customScript.length) return;
     
     NSArray *scripts = [configuration.userContentController userScripts];

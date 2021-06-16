@@ -17,41 +17,41 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(prism_AutoDot_initWithTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(prism_AutoDot_addTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(prism_AutoDot_removeTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(prism_autoDot_initWithTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(prism_autoDot_addTarget:action:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:)];
     });
 }
 
-- (instancetype)prism_AutoDot_initWithTarget:(id)target action:(SEL)action {
+- (instancetype)prism_autoDot_initWithTarget:(id)target action:(SEL)action {
     //原始逻辑
-    UIScreenEdgePanGestureRecognizer *gesture = [self prism_AutoDot_initWithTarget:target action:action];
+    UIScreenEdgePanGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
     
-    [gesture addTarget:self action:@selector(prism_AutoDot_edgePanAction:)];
+    [gesture addTarget:self action:@selector(prism_autoDot_edgePanAction:)];
     
     return gesture;
 }
 
-- (void)prism_AutoDot_addTarget:(id)target action:(SEL)action {
+- (void)prism_autoDot_addTarget:(id)target action:(SEL)action {
     //原始逻辑
-    [self prism_AutoDot_addTarget:target action:action];
+    [self prism_autoDot_addTarget:target action:action];
     
-    [self prism_AutoDot_addTarget:self action:@selector(prism_AutoDot_edgePanAction:)];
+    [self prism_autoDot_addTarget:self action:@selector(prism_autoDot_edgePanAction:)];
 }
 
-- (void)prism_AutoDot_removeTarget:(id)target action:(SEL)action {
+- (void)prism_autoDot_removeTarget:(id)target action:(SEL)action {
     //原始逻辑
-    [self prism_AutoDot_removeTarget:target action:action];
+    [self prism_autoDot_removeTarget:target action:action];
     
-    [self prism_AutoDot_removeTarget:self action:@selector(prism_AutoDot_edgePanAction:)];
+    [self prism_autoDot_removeTarget:self action:@selector(prism_autoDot_edgePanAction:)];
 }
 
 
 #pragma mark - actions
-- (void)prism_AutoDot_edgePanAction:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer {
+- (void)prism_autoDot_edgePanAction:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = self;
-    params[@"action"] = NSStringFromSelector(@selector(prism_AutoDot_edgePanAction:));
+    params[@"action"] = NSStringFromSelector(@selector(prism_autoDot_edgePanAction:));
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIScreenEdgePanGestureRecognizerAction withSender:self params:[params copy]];
 }
 

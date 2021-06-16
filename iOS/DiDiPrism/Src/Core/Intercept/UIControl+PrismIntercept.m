@@ -15,25 +15,25 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(prism_AutoDot_sendAction:to:forEvent:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(prism_AutoDot_addTarget:action:forControlEvents:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(prism_AutoDot_removeTarget:action:forControlEvents:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(prism_autoDot_sendAction:to:forEvent:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_addTarget:action:forControlEvents:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:forControlEvents:)];
     });
 }
 
-- (void)prism_AutoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
+- (void)prism_autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = target;
     params[@"action"] = NSStringFromSelector(action);
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendAction_Start withSender:self params:[params copy]];
     
     //原始逻辑
-    [self prism_AutoDot_sendAction:action to:target forEvent:event];
+    [self prism_autoDot_sendAction:action to:target forEvent:event];
 }
 
-- (void)prism_AutoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
+- (void)prism_autoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     //原始逻辑
-    [self prism_AutoDot_addTarget:target action:action forControlEvents:controlEvents];
+    [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
     
     // 忽略用户输入过程
     BOOL isEditingChangedEvent = controlEvents == UIControlEventEditingChanged;
@@ -47,9 +47,9 @@
     }
 }
 
-- (void)prism_AutoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
+- (void)prism_autoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     //原始逻辑
-    [self prism_AutoDot_removeTarget:target action:action forControlEvents:controlEvents];
+    [self prism_autoDot_removeTarget:target action:action forControlEvents:controlEvents];
     
     self.autoDotTargetAndSelector = @"";
 }

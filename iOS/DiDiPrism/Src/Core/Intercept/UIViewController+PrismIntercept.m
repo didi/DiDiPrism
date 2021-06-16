@@ -15,13 +15,13 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(viewDidAppear:) swizzledSelector:@selector(prism_AutoDot_viewDidAppear:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(viewDidAppear:) swizzledSelector:@selector(prism_autoDot_viewDidAppear:)];
     });
 }
 
-- (void)prism_AutoDot_viewDidAppear:(BOOL)animated {
+- (void)prism_autoDot_viewDidAppear:(BOOL)animated {
     //原始逻辑
-    [self prism_AutoDot_viewDidAppear:animated];
+    [self prism_autoDot_viewDidAppear:animated];
     
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewControllerViewDidAppear withSender:self params:nil];
 }
