@@ -30,12 +30,12 @@
     if (!view) {
         return nil;
     }
-    if (view.autoDotFinalMark.length) {
-        return view.autoDotFinalMark;
+    if (view.prismAutoDotFinalMark.length) {
+        return view.prismAutoDotFinalMark;
     }
     
-    NSString *responseChainInfo = [tapGesture autoDotResponseChainInfo];
-    NSArray *areaInfo = [tapGesture autoDotAreaInfo];
+    NSString *responseChainInfo = [tapGesture prismAutoDotResponseChainInfo];
+    NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
     NSString *listInfo = [areaInfo prism_stringWithIndex:0];
     NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
     // 屏蔽Native侧的H5页面点击指令
@@ -50,8 +50,8 @@
         return instruction;
     }
     else {
-        view.autoDotFinalMark = instruction;
-        return view.autoDotFinalMark;
+        view.prismAutoDotFinalMark = instruction;
+        return view.prismAutoDotFinalMark;
     }
 }
 
@@ -62,10 +62,14 @@
     }
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionTapGestureFlag;
-    model.vp = [tapGesture autoDotResponseChainInfo];
-    NSArray *areaInfo = [tapGesture autoDotAreaInfo];
+    model.vp = [tapGesture prismAutoDotResponseChainInfo];
+    NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];
+    // 屏蔽Native侧的H5页面点击指令
+    if (([model.vl containsString:@"WKScrollView"] || [model.vl containsString:@"WKContentView"])) {
+        return nil;
+    }
     model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
     model.vf = [self getFunctionNameOfTapGesture:tapGesture];
     return model;
@@ -94,15 +98,15 @@
             }
         }
         if (functionName.length) {
-            return [NSString stringWithFormat:@"%@_&_%@", functionName, tapGesture.autoDotTargetAndSelector];
+            return [NSString stringWithFormat:@"%@_&_%@", functionName, tapGesture.prismAutoDotTargetAndSelector];
         }
         else {
-            return tapGesture.autoDotTargetAndSelector;
+            return tapGesture.prismAutoDotTargetAndSelector;
         }
     }
     // Native
     else {
-        return tapGesture.autoDotTargetAndSelector;
+        return tapGesture.prismAutoDotTargetAndSelector;
     }
 }
 

@@ -29,8 +29,8 @@
     NSString *listInfo = [areaInfo prism_stringWithIndex:0];
     NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
     NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
-    cell.autoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionCellFlag, kBeginOfViewPathFlag, responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @""];
-    return cell.autoDotFinalMark;
+    cell.prismAutoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionCellFlag, kBeginOfViewPathFlag, responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @""];
+    return cell.prismAutoDotFinalMark;
 }
 
 + (PrismInstructionModel *)getInstructionModelOfCell:(UIView *)cell {

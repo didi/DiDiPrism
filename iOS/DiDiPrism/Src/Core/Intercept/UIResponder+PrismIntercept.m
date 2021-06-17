@@ -12,24 +12,24 @@
 @implementation UIResponder (PrismIntercept)
 
 #pragma mark - property
-- (NSString *)autoDotItemName {
+- (NSString *)prismAutoDotItemName {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotItemName:(NSString *)autoDotItemName {
-    objc_setAssociatedObject(self, @selector(autoDotItemName), autoDotItemName, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotItemName:(NSString *)prismAutoDotItemName {
+    objc_setAssociatedObject(self, @selector(prismAutoDotItemName), prismAutoDotItemName, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSString *)autoDotSpecialMark {
+- (NSString *)prismAutoDotSpecialMark {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotSpecialMark:(NSString *)autoDotSpecialMark {
-    objc_setAssociatedObject(self, @selector(autoDotSpecialMark), autoDotSpecialMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotSpecialMark:(NSString *)prismAutoDotSpecialMark {
+    objc_setAssociatedObject(self, @selector(prismAutoDotSpecialMark), prismAutoDotSpecialMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSString *)autoDotFinalMark {
+- (NSString *)prismAutoDotFinalMark {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotFinalMark:(NSString *)autoDotFinalMark {
-    objc_setAssociatedObject(self, @selector(autoDotFinalMark), autoDotFinalMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotFinalMark:(NSString *)prismAutoDotFinalMark {
+    objc_setAssociatedObject(self, @selector(prismAutoDotFinalMark), prismAutoDotFinalMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end

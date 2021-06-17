@@ -20,7 +20,7 @@
     NSArray<UIViewController*> *viewControllers = [self getParentViewControllersOfView:element];
     if (viewControllers.count) {
         [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *mark = obj.autoDotSpecialMark.length ? obj.autoDotSpecialMark : NSStringFromClass([obj class]);
+            NSString *mark = obj.prismAutoDotSpecialMark.length ? obj.prismAutoDotSpecialMark : NSStringFromClass([obj class]);
             [description appendFormat:@"%@_&_", mark];
         }];
     }
@@ -28,7 +28,7 @@
         NSArray<UIView*> *views = [self getParentViewOfView:element];
         if (views.count) {
             [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSString *mark = obj.autoDotSpecialMark.length ? obj.autoDotSpecialMark : NSStringFromClass([obj class]);
+                NSString *mark = obj.prismAutoDotSpecialMark.length ? obj.prismAutoDotSpecialMark : NSStringFromClass([obj class]);
                 [description appendFormat:@"%@_&_", mark];
             }];
         }

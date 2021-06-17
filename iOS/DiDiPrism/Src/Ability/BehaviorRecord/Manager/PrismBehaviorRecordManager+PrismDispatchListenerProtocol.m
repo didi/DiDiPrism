@@ -32,7 +32,7 @@
         NSObject *target = [params objectForKey:@"target"];
         NSString *action = [params objectForKey:@"action"];
         NSString *targetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), action];
-        if ([targetAndSelector isEqualToString:control.autoDotTargetAndSelector]) {
+        if ([targetAndSelector isEqualToString:control.prismAutoDotTargetAndSelector]) {
             NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:control];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:control];
@@ -48,9 +48,9 @@
         if (edgePanGestureRecognizer.state == UIGestureRecognizerStateBegan) {
             UIViewController *viewController = [edgePanGestureRecognizer.view prism_viewController];
             UINavigationController *navigationController = [viewController isKindOfClass:[UINavigationController class]] ? (UINavigationController*)viewController : viewController.navigationController;
-            [edgePanGestureRecognizer setAutoDotNavigationController:navigationController];
+            [edgePanGestureRecognizer setPrismAutoDotNavigationController:navigationController];
             NSInteger viewControllerCount = navigationController.viewControllers.count;
-            [edgePanGestureRecognizer setAutoDotViewControllerCount:[NSNumber numberWithInteger:viewControllerCount]];
+            [edgePanGestureRecognizer setPrismAutoDotViewControllerCount:[NSNumber numberWithInteger:viewControllerCount]];
         }
         // 输入后退手势时，如果手指始终未离开屏幕，state会变为UIGestureRecognizerStateCancelled
         if (edgePanGestureRecognizer.state != UIGestureRecognizerStateEnded &&
@@ -63,9 +63,9 @@
             return;
         }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            UINavigationController *navigationController = [edgePanGestureRecognizer autoDotNavigationController];
+            UINavigationController *navigationController = [edgePanGestureRecognizer prismAutoDotNavigationController];
             NSInteger viewControllerCount = navigationController.viewControllers.count;
-            if (navigationController && (viewControllerCount <= [edgePanGestureRecognizer autoDotViewControllerCount].integerValue)) {
+            if (navigationController && (viewControllerCount <= [edgePanGestureRecognizer prismAutoDotViewControllerCount].integerValue)) {
                 [self addInstruction:instruction];
             }
         });

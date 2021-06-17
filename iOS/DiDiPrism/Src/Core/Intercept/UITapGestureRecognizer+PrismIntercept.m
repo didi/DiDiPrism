@@ -36,11 +36,11 @@
         if ([self.view superview]) {
             NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:self.view];
             if (responseChainInfo.length) {
-                [self setAutoDotResponseChainInfo:responseChainInfo];
+                [self setPrismAutoDotResponseChainInfo:responseChainInfo];
             }
             NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:self.view];
             if (areaInfo.count) {
-                [self setAutoDotAreaInfo:areaInfo];
+                [self setPrismAutoDotAreaInfo:areaInfo];
             }
         }
     }
@@ -52,7 +52,7 @@
     UITapGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
     
     [gesture addTarget:self action:@selector(prism_autoDot_tapAction:)];
-    gesture.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
+    gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     
     return gesture;
 }
@@ -62,8 +62,8 @@
     [self prism_autoDot_addTarget:target action:action];
     
     [self prism_autoDot_addTarget:self action:@selector(prism_autoDot_tapAction:)];
-    if (!self.autoDotTargetAndSelector.length) {
-        self.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
+    if (!self.prismAutoDotTargetAndSelector.length) {
+        self.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     }
 }
 
@@ -72,7 +72,7 @@
     [self prism_autoDot_removeTarget:target action:action];
     
     [self prism_autoDot_removeTarget:self action:@selector(prism_autoDot_tapAction:)];
-    self.autoDotTargetAndSelector = @"";
+    self.prismAutoDotTargetAndSelector = @"";
 }
 
 #pragma mark - actions
@@ -88,24 +88,24 @@
 #pragma mark - private method
 
 #pragma mark - property
-- (NSString *)autoDotTargetAndSelector {
+- (NSString *)prismAutoDotTargetAndSelector {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotTargetAndSelector:(NSString *)autoDotTargetAndSelector {
-    objc_setAssociatedObject(self, @selector(autoDotTargetAndSelector), autoDotTargetAndSelector, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotTargetAndSelector:(NSString *)prismAutoDotTargetAndSelector {
+    objc_setAssociatedObject(self, @selector(prismAutoDotTargetAndSelector), prismAutoDotTargetAndSelector, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSString *)autoDotResponseChainInfo {
+- (NSString *)prismAutoDotResponseChainInfo {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotResponseChainInfo:(NSString *)autoDotResponseChainInfo {
-    objc_setAssociatedObject(self, @selector(autoDotResponseChainInfo), autoDotResponseChainInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotResponseChainInfo:(NSString *)prismAutoDotResponseChainInfo {
+    objc_setAssociatedObject(self, @selector(prismAutoDotResponseChainInfo), prismAutoDotResponseChainInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSArray *)autoDotAreaInfo {
+- (NSArray *)prismAutoDotAreaInfo {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotAreaInfo:(NSArray *)autoDotAreaInfo {
-    objc_setAssociatedObject(self, @selector(autoDotAreaInfo), autoDotAreaInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotAreaInfo:(NSArray *)prismAutoDotAreaInfo {
+    objc_setAssociatedObject(self, @selector(prismAutoDotAreaInfo), prismAutoDotAreaInfo, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end

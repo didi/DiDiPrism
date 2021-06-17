@@ -58,20 +58,20 @@
 #pragma mark - private method
 
 #pragma mark - property
-- (NSNumber*)autoDotViewControllerCount {
+- (NSNumber*)prismAutoDotViewControllerCount {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotViewControllerCount:(NSNumber*)autoDotViewControllerCount {
-    objc_setAssociatedObject(self, @selector(autoDotViewControllerCount), autoDotViewControllerCount, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setPrismAutoDotViewControllerCount:(NSNumber*)prismAutoDotViewControllerCount {
+    objc_setAssociatedObject(self, @selector(prismAutoDotViewControllerCount), prismAutoDotViewControllerCount, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UINavigationController*)autoDotNavigationController {
-    UINavigationController* (^block)(void) = objc_getAssociatedObject(self, @selector(autoDotNavigationController));
+- (UINavigationController*)prismAutoDotNavigationController {
+    UINavigationController* (^block)(void) = objc_getAssociatedObject(self, @selector(prismAutoDotNavigationController));
     return (block ? block() : nil);
 }
-- (void)setAutoDotNavigationController:(UINavigationController*)autoDotNavigationController {
-    __weak UINavigationController *weakController = autoDotNavigationController;
+- (void)setPrismAutoDotNavigationController:(UINavigationController*)prismAutoDotNavigationController {
+    __weak UINavigationController *weakController = prismAutoDotNavigationController;
     UINavigationController* (^block)(void) = ^{ return weakController; };
-    objc_setAssociatedObject(self, @selector(autoDotNavigationController), block, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, @selector(prismAutoDotNavigationController), block, OBJC_ASSOCIATION_COPY);
 }
 @end

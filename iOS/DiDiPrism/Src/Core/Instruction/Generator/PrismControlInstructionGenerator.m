@@ -27,8 +27,8 @@
 #pragma mark - public method
 + (NSString*)getInstructionOfControl:(UIControl*)control {
     // 避免重复生成，但会出现被复用控件标识不变的问题。
-    if (control.autoDotFinalMark.length) {
-        return control.autoDotFinalMark;
+    if (control.prismAutoDotFinalMark.length) {
+        return control.prismAutoDotFinalMark;
     }
     NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
     NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
@@ -42,8 +42,8 @@
         return instruction;
     }
     else {
-        control.autoDotFinalMark = instruction;
-        return control.autoDotFinalMark;
+        control.prismAutoDotFinalMark = instruction;
+        return control.prismAutoDotFinalMark;
     }
 }
 
@@ -78,36 +78,36 @@
 }
 
 + (NSString*)getFunctionNameOfControl:(UIControl*)control {
-    return control.autoDotTargetAndSelector;
+    return control.prismAutoDotTargetAndSelector;
 }
 
 #pragma mark - private method
 + (NSString*)getViewContentOfButton:(UIButton*)button {
     if (button.titleLabel.text.length) {
-        return button.titleLabel.text;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.text];
     }
     else if (button.titleLabel.attributedText.length) {
-        return button.titleLabel.attributedText.string;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.attributedText.string];
     }
     else if (button.imageView.image) {
-        return button.imageView.image.autoDotImageName;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, button.imageView.image.prismAutoDotImageName];
     }
     return nil;
 }
 
 + (NSString*)getViewContentOfSwitch:(UISwitch*)switchControl {
-    if (switchControl.onImage.autoDotImageName.length) {
-        return switchControl.onImage.autoDotImageName;
+    if (switchControl.onImage.prismAutoDotImageName.length) {
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, switchControl.onImage.prismAutoDotImageName];
     }
-    else if (switchControl.offImage.autoDotImageName.length) {
-        return switchControl.offImage.autoDotImageName;
+    else if (switchControl.offImage.prismAutoDotImageName.length) {
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, switchControl.offImage.prismAutoDotImageName];
     }
     return nil;
 }
 
 + (NSString*)getViewContentOfTextField:(UITextField*)textField {
     if (textField.placeholder.length) {
-        return textField.placeholder;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, textField.placeholder];
     }
     return nil;
 }

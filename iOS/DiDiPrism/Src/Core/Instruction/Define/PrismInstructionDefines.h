@@ -43,4 +43,9 @@
 #define kViewMotionTapGestureFlag @"tapGesture"
 #define kViewMotionCellFlag @"cell"
 
+
+// View RepresentativeContent
+#define kViewRepresentativeContentTypeText @"[_text]"
+#define kViewRepresentativeContentTypeLocalImage @"[_l_image]"
+#define kViewRepresentativeContentTypeNetworkImage @"[_n_image]"
 #endif /* PrismInstructionDefines_h */

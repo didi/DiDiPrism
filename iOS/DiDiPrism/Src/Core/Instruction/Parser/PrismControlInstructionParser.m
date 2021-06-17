@@ -170,7 +170,7 @@
         control.highlighted = YES;
         NSString *highlightedImageName = nil;
         if ([control isKindOfClass:[UIButton class]]) {
-            highlightedImageName = ((UIButton*)control).imageView.image.autoDotImageName;
+            highlightedImageName = ((UIButton*)control).imageView.image.prismAutoDotImageName;
         }
         control.highlighted = NO;
         for (NSObject *target in control.allTargets) {

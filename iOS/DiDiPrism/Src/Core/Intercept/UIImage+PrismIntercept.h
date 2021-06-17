@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (PrismIntercept)
 
-@property (nonatomic, copy) NSString *autoDotImageName;
+@property (nonatomic, copy) NSString *prismAutoDotImageName;
 
 @end
 

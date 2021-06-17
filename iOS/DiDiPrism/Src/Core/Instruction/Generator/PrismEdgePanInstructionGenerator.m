@@ -26,13 +26,13 @@
     if (!view) {
         return nil;
     }
-    if (view.autoDotFinalMark.length) {
-        return view.autoDotFinalMark;
+    if (view.prismAutoDotFinalMark.length) {
+        return view.prismAutoDotFinalMark;
     }
     
     NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:view];
-    view.autoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, kBeginOfViewPathFlag, responseChainInfo];
-    return view.autoDotFinalMark;
+    view.prismAutoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, kBeginOfViewPathFlag, responseChainInfo];
+    return view.prismAutoDotFinalMark;
 }
 
 + (PrismInstructionModel *)getInstructionModelOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer *)edgePanGesture {

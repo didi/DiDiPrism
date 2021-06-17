@@ -25,7 +25,7 @@
 + (UIImage *)prism_autoDot_imageNamed:(NSString *)name {
     UIImage *image = [self prism_autoDot_imageNamed:name];
     
-    image.autoDotImageName = [self getImageNameFromPath:name];
+    image.prismAutoDotImageName = [self getImageNameFromPath:name];
     
     return image;
 }
@@ -33,7 +33,7 @@
 + (UIImage *)prism_autoDot_imageNamed:(NSString *)name inBundle:(NSBundle *)bundle compatibleWithTraitCollection:(UITraitCollection *)traitCollection {
     UIImage *image = [self prism_autoDot_imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
     
-    image.autoDotImageName = [self getImageNameFromPath:name];
+    image.prismAutoDotImageName = [self getImageNameFromPath:name];
     
     return image;
 }
@@ -41,7 +41,7 @@
 + (UIImage *)prism_autoDot_imageWithContentsOfFile:(NSString *)path {
     UIImage *image = [self prism_autoDot_imageWithContentsOfFile:path];
     
-    image.autoDotImageName = [self getImageNameFromPath:path];
+    image.prismAutoDotImageName = [self getImageNameFromPath:path];
     
     return image;
 }
@@ -49,18 +49,18 @@
 - (instancetype)prism_autoDot_initWithContentsOfFile:(NSString *)path {
     UIImage *image = [self prism_autoDot_initWithContentsOfFile:path];
     
-    image.autoDotImageName = [UIImage getImageNameFromPath:path];
+    image.prismAutoDotImageName = [UIImage getImageNameFromPath:path];
     
     return image;
 }
 
 #pragma mark - property
-- (NSString *)autoDotImageName {
+- (NSString *)prismAutoDotImageName {
     NSString *name = objc_getAssociatedObject(self, _cmd);
     return name;
 }
-- (void)setAutoDotImageName:(NSString *)autoDotImageName {
-    objc_setAssociatedObject(self, @selector(autoDotImageName), autoDotImageName, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotImageName:(NSString *)prismAutoDotImageName {
+    objc_setAssociatedObject(self, @selector(prismAutoDotImageName), prismAutoDotImageName, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 #pragma mark - private method

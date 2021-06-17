@@ -37,11 +37,11 @@
     
     // 忽略用户输入过程
     BOOL isEditingChangedEvent = controlEvents == UIControlEventEditingChanged;
-    if (!isEditingChangedEvent && !self.autoDotTargetAndSelector.length) {
+    if (!isEditingChangedEvent && !self.prismAutoDotTargetAndSelector.length) {
         NSString *classString = NSStringFromClass([target class]);
         NSString *actionString = NSStringFromSelector(action);
         if (classString.length && actionString.length) {
-            self.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
+            self.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
             
         }
     }
@@ -51,7 +51,7 @@
     //原始逻辑
     [self prism_autoDot_removeTarget:target action:action forControlEvents:controlEvents];
     
-    self.autoDotTargetAndSelector = @"";
+    self.prismAutoDotTargetAndSelector = @"";
 }
 
 #pragma mark - actions
@@ -61,10 +61,10 @@
 #pragma mark - private method
 
 #pragma mark - property
-- (NSString *)autoDotTargetAndSelector {
+- (NSString *)prismAutoDotTargetAndSelector {
     return objc_getAssociatedObject(self, _cmd);
 }
-- (void)setAutoDotTargetAndSelector:(NSString *)autoDotTargetAndSelector {
-    objc_setAssociatedObject(self, @selector(autoDotTargetAndSelector), autoDotTargetAndSelector, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotTargetAndSelector:(NSString *)prismAutoDotTargetAndSelector {
+    objc_setAssociatedObject(self, @selector(prismAutoDotTargetAndSelector), prismAutoDotTargetAndSelector, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end
