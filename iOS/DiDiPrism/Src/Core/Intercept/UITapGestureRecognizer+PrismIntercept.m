@@ -6,6 +6,7 @@
 //
 
 #import "UITapGestureRecognizer+PrismIntercept.h"
+#import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
 // Util
@@ -19,7 +20,21 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setState:) swizzledSelector:@selector(prism_autoDot_setState:)];
+        RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(setState:),
+                                RSSWReturnType(void),
+                                RSSWArguments(UIGestureRecognizerState state),
+                                RSSWReplacement({
+            RSSWCallOriginal(state);
+            SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_setState:");
+            Method swizzleMethod = class_getInstanceMethod([UITapGestureRecognizer class], swizzleSelector);
+            IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
+            void (*functionPointer)(id, SEL, UIGestureRecognizerState) = (void (*)(id, SEL, UIGestureRecognizerState))swizzleMethodImp;
+            functionPointer(self, _cmd, state);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+
+        
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(prism_autoDot_initWithTarget:action:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(prism_autoDot_addTarget:action:)];
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:)];
@@ -27,8 +42,6 @@
 }
 
 - (void)prism_autoDot_setState:(UIGestureRecognizerState)state {
-    [self prism_autoDot_setState:state];
-    
     // set逻辑后 state 和 self.state 应一致，某些场景下self.state依然为UIGestureRecognizerStateFailed不符合预期。
     if (state == UIGestureRecognizerStateRecognized && self.state == UIGestureRecognizerStateRecognized) {
         //注1：没有选择在setState阶段直接进行event id的收集，是因为类似于WEEX场景中一次操作可以识别到多个手势（区别于实际起作用的手势）。
