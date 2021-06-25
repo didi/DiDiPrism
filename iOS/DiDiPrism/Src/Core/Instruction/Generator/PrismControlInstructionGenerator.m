@@ -25,29 +25,18 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfControl:(UIControl*)control {
-    // 避免重复生成，但会出现被复用控件标识不变的问题。
-    if (control.prismAutoDotFinalMark.length) {
-        return control.prismAutoDotFinalMark;
-    }
++ (NSString *)getInstructionOfControl:(UIControl *)control withTargetAndSelector:(NSString *)targetAndSelector {
     NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
     NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
     NSString *listInfo = [areaInfo prism_stringWithIndex:0];
     NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
     NSString *viewContent = [self getViewContentOfControl:control];
-    NSString *functionName = [self getFunctionNameOfControl:control];
+    NSString *functionName = targetAndSelector;
     NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
-    // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if (listInfo.length) {
-        return instruction;
-    }
-    else {
-        control.prismAutoDotFinalMark = instruction;
-        return control.prismAutoDotFinalMark;
-    }
+    return instruction;
 }
 
-+ (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control {
++ (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control withTargetAndSelector:(NSString *)targetAndSelector {
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionControlFlag;
     model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
@@ -55,7 +44,7 @@
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];
     model.vr = [self getViewContentOfControl:control];
-    model.vf = [self getFunctionNameOfControl:control];
+    model.vf = targetAndSelector;
     return model;
 }
 
@@ -75,10 +64,6 @@
         viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
     }
     return viewContent;
-}
-
-+ (NSString*)getFunctionNameOfControl:(UIControl*)control {
-    return control.prismAutoDotTargetAndSelector;
 }
 
 #pragma mark - private method

@@ -72,6 +72,6 @@
 - (void)setPrismAutoDotNavigationController:(UINavigationController*)prismAutoDotNavigationController {
     __weak UINavigationController *weakController = prismAutoDotNavigationController;
     UINavigationController* (^block)(void) = ^{ return weakController; };
-    objc_setAssociatedObject(self, @selector(prismAutoDotNavigationController), block, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, @selector(prismAutoDotNavigationController), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 @end

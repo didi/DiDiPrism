@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIControl (PrismIntercept)
 
-@property (nonatomic, copy) NSString *prismAutoDotTargetAndSelector;
+@property (nonatomic, strong) NSMutableDictionary<NSString*,NSString*> *prismAutoDotTargetAndSelector;
 
 @end
 

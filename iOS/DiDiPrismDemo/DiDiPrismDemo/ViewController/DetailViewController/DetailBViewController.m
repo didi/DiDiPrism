@@ -36,6 +36,16 @@
     [self.testTextField resignFirstResponder];
 }
 
+- (void)testDownAction:(UIButton*)sender {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = sender.titleLabel.text;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+}
+
 - (void)testAction:(UIButton*)sender {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
@@ -242,6 +252,7 @@
         [_testButton setTitle:@"测试按钮" forState:UIControlStateNormal];
         _testButton.layer.borderColor = [UIColor grayColor].CGColor;
         _testButton.layer.borderWidth = 1.0;
+        [_testButton addTarget:self action:@selector(testDownAction:) forControlEvents:UIControlEventTouchDown];
         [_testButton addTarget:self action:@selector(testAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _testButton;
