@@ -41,6 +41,7 @@
 #define kViewMotionControlFlag @"control"
 #define kViewMotionEdgePanGestureFlag @"edgePanGesture"
 #define kViewMotionTapGestureFlag @"tapGesture"
+#define kViewMotionLongPressGestureFlag @"longPressGesture"
 #define kViewMotionCellFlag @"cell"
 
 

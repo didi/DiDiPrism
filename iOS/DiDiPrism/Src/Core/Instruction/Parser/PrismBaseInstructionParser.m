@@ -16,6 +16,7 @@
 #import "PrismTagInstructionParser.h"
 #import "PrismEdgePanGestureInstructionParser.h"
 #import "PrismH5InstructionParser.h"
+#import "PrismLongPressGestureInstructionParser.h"
 
 @interface PrismBaseInstructionParser()
 
@@ -44,6 +45,9 @@
     }
     else if ([viewMotion isEqualToString:kViewMotionEdgePanGestureFlag]) {
         return [[PrismEdgePanGestureInstructionParser alloc] init];
+    }
+    else if ([viewMotion isEqualToString:kViewMotionLongPressGestureFlag]) {
+        return [[PrismLongPressGestureInstructionParser alloc] init];
     }
     
     return [[PrismBaseInstructionParser alloc] init];

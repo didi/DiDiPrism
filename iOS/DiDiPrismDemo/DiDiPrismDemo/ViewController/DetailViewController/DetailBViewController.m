@@ -14,8 +14,10 @@
 @property (nonatomic, strong) UILabel *buttonLabel;
 @property (nonatomic, strong) UILabel *textfieldLabel;
 @property (nonatomic, strong) UILabel *switchLabel;
-@property (nonatomic, strong) UILabel *gestureLabel;
-@property (nonatomic, strong) UIView *testView;
+@property (nonatomic, strong) UILabel *testTapLabel;
+@property (nonatomic, strong) UIView *testTapView;
+@property (nonatomic, strong) UILabel *testLongPressLabel;
+@property (nonatomic, strong) UIView *testLongPressView;
 @property (nonatomic, strong) UIButton *testButton;
 @property (nonatomic, strong) UITextField *testTextField;
 @property (nonatomic, strong) UISwitch *testSwitch;
@@ -47,7 +49,17 @@
 - (void)testTapAction:(UITapGestureRecognizer*)gesture {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.label.text = @"手势触发";
+    hud.label.text = @"点击手势触发";
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+}
+
+- (void)testLongPressAction:(UILongPressGestureRecognizer*)gesture {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = @"长按手势触发";
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -78,8 +90,10 @@
     [self.view addSubview:self.testTextField];
     [self.view addSubview:self.switchLabel];
     [self.view addSubview:self.testSwitch];
-    [self.view addSubview:self.gestureLabel];
-    [self.view addSubview:self.testView];
+    [self.view addSubview:self.testTapLabel];
+    [self.view addSubview:self.testTapView];
+    [self.view addSubview:self.testLongPressLabel];
+    [self.view addSubview:self.testLongPressView];
     
     [self.buttonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(15);
@@ -109,13 +123,23 @@
         make.left.equalTo(self.switchLabel.mas_right).offset(30);
         make.width.mas_equalTo(100);
     }];
-    [self.gestureLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.testTapLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(15);
         make.top.equalTo(self.switchLabel.mas_bottom).offset(50);
     }];
-    [self.testView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.gestureLabel);
-        make.left.equalTo(self.gestureLabel.mas_right).offset(30);
+    [self.testTapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.testTapLabel);
+        make.left.equalTo(self.testTapLabel.mas_right).offset(30);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(50);
+    }];
+    [self.testLongPressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(15);
+        make.top.equalTo(self.testTapLabel.mas_bottom).offset(50);
+    }];
+    [self.testLongPressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.testLongPressLabel);
+        make.left.equalTo(self.testLongPressLabel.mas_right).offset(30);
         make.width.mas_equalTo(100);
         make.height.mas_equalTo(50);
     }];
@@ -154,32 +178,60 @@
     return _switchLabel;
 }
 
-- (UILabel *)gestureLabel {
-    if (!_gestureLabel) {
-        _gestureLabel = [[UILabel alloc] init];
-        _gestureLabel.font = [UIFont systemFontOfSize:15];
-        _gestureLabel.textColor = [UIColor blackColor];
-        _gestureLabel.text = @"手势示例：";
+- (UILabel *)testTapLabel {
+    if (!_testTapLabel) {
+        _testTapLabel = [[UILabel alloc] init];
+        _testTapLabel.font = [UIFont systemFontOfSize:15];
+        _testTapLabel.textColor = [UIColor blackColor];
+        _testTapLabel.text = @"点击手势示例：";
     }
-    return _gestureLabel;
+    return _testTapLabel;
 }
 
-- (UIView *)testView {
-    if (!_testView) {
-        _testView = [[UIView alloc] init];
-        _testView.backgroundColor = [UIColor blueColor];
+- (UIView *)testTapView {
+    if (!_testTapView) {
+        _testTapView = [[UIView alloc] init];
+        _testTapView.backgroundColor = [UIColor blueColor];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testTapAction:)];
-        [_testView addGestureRecognizer:tapGesture];
+        [_testTapView addGestureRecognizer:tapGesture];
         UILabel *label = [[UILabel alloc] init];
         label.font = [UIFont systemFontOfSize:15];
         label.textColor = [UIColor whiteColor];
-        label.text = @"测试手势";
-        [_testView addSubview:label];
+        label.text = @"测试点击手势";
+        [_testTapView addSubview:label];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(_testView);
+            make.center.equalTo(_testTapView);
         }];
     }
-    return _testView;
+    return _testTapView;
+}
+
+- (UILabel *)testLongPressLabel {
+    if (!_testLongPressLabel) {
+        _testLongPressLabel = [[UILabel alloc] init];
+        _testLongPressLabel.font = [UIFont systemFontOfSize:15];
+        _testLongPressLabel.textColor = [UIColor blackColor];
+        _testLongPressLabel.text = @"长按手势示例：";
+    }
+    return _testLongPressLabel;
+}
+
+- (UIView *)testLongPressView {
+    if (!_testLongPressView) {
+        _testLongPressView = [[UIView alloc] init];
+        _testLongPressView.backgroundColor = [UIColor blueColor];
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(testLongPressAction:)];
+        [_testLongPressView addGestureRecognizer:longPressGesture];
+        UILabel *label = [[UILabel alloc] init];
+        label.font = [UIFont systemFontOfSize:15];
+        label.textColor = [UIColor whiteColor];
+        label.text = @"测试长按手势";
+        [_testLongPressView addSubview:label];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.equalTo(_testLongPressView);
+        }];
+    }
+    return _testLongPressView;
 }
 
 - (UIButton *)testButton {

@@ -1,33 +1,28 @@
 //
-//  PrismTapGestureInstructionGenerator.m
+//  PrismLongPressGestureInstructionGenerator.m
 //  DiDiPrism
 //
-//  Created by hulk on 2020/9/24.
+//  Created by hulk on 2021/6/25.
 //
 
-#import "PrismTapGestureInstructionGenerator.h"
+#import "PrismLongPressGestureInstructionGenerator.h"
 #import "PrismInstructionDefines.h"
 // Util
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
 // Category
-#import "UITapGestureRecognizer+PrismIntercept.h"
 #import "UIResponder+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
 #import "UIView+PrismExtends.h"
 #import "NSArray+PrismExtends.h"
 #import "UIGestureRecognizer+PrismExtends.h"
 
-@interface PrismTapGestureInstructionGenerator()
-
-@end
-
-@implementation PrismTapGestureInstructionGenerator
+@implementation PrismLongPressGestureInstructionGenerator
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfTapGesture:(UITapGestureRecognizer*)tapGesture {
-    UIView *view = tapGesture.view;
++ (NSString*)getInstructionOfLongPressGesture:(UILongPressGestureRecognizer*)longPressGesture {
+    UIView *view = longPressGesture.view;
     if (!view) {
         return nil;
     }
@@ -35,17 +30,13 @@
         return view.prismAutoDotFinalMark;
     }
     
-    NSString *responseChainInfo = [tapGesture prismAutoDotResponseChainInfo];
-    NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
+    NSString *responseChainInfo = [longPressGesture prismAutoDotResponseChainInfo];
+    NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
     NSString *listInfo = [areaInfo prism_stringWithIndex:0];
     NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
-    // 屏蔽Native侧的H5页面点击指令
-    if (([listInfo containsString:@"WKScrollView"] || [listInfo containsString:@"WKContentView"])) {
-        return nil;
-    }
     NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-    NSString *functionName = [self getFunctionNameOfTapGesture:tapGesture];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionTapGestureFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
+    NSString *functionName = [self getFunctionNameOfLongPressGesture:longPressGesture];
+    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionLongPressGestureFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
     // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
     if (listInfo.length) {
         return instruction;
@@ -56,28 +47,24 @@
     }
 }
 
-+ (PrismInstructionModel *)getInstructionModelOfTapGesture:(UITapGestureRecognizer *)tapGesture {
-    UIView *view = tapGesture.view;
++ (PrismInstructionModel *)getInstructionModelOfLongPressGesture:(UILongPressGestureRecognizer *)longPressGesture {
+    UIView *view = longPressGesture.view;
     if (!view) {
         return nil;
     }
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
-    model.vm = kViewMotionTapGestureFlag;
-    model.vp = [tapGesture prismAutoDotResponseChainInfo];
-    NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
+    model.vm = kViewMotionLongPressGestureFlag;
+    model.vp = [longPressGesture prismAutoDotResponseChainInfo];
+    NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];
-    // 屏蔽Native侧的H5页面点击指令
-    if (([model.vl containsString:@"WKScrollView"] || [model.vl containsString:@"WKContentView"])) {
-        return nil;
-    }
     model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-    model.vf = [self getFunctionNameOfTapGesture:tapGesture];
+    model.vf = [self getFunctionNameOfLongPressGesture:longPressGesture];
     return model;
 }
 
-+ (NSString*)getFunctionNameOfTapGesture:(UITapGestureRecognizer*)tapGesture {
-    UIView *view = tapGesture.view;
++ (NSString*)getFunctionNameOfLongPressGesture:(UILongPressGestureRecognizer*)longPressGesture {
+    UIView *view = longPressGesture.view;
     
     // WEEX
     id wxComponent = [view prism_wxComponent];
@@ -99,11 +86,11 @@
             }
         }
         if (functionName.length) {
-            return [NSString stringWithFormat:@"%@_&_%@", functionName, tapGesture.prismAutoDotTargetAndSelector];
+            return [NSString stringWithFormat:@"%@_&_%@", functionName, longPressGesture.prismAutoDotTargetAndSelector];
         }
     }
     
-    return tapGesture.prismAutoDotTargetAndSelector;
+    return longPressGesture.prismAutoDotTargetAndSelector;
 }
 
 #pragma mark - private method

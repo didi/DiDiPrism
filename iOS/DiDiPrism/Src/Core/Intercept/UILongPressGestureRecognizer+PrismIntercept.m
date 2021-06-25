@@ -1,11 +1,11 @@
 //
-//  UITapGestureRecognizer+PrismIntercept.m
+//  UILongPressGestureRecognizer+PrismIntercept.m
 //  DiDiPrism
 //
-//  Created by hulk on 2019/6/27.
+//  Created by hulk on 2021/6/23.
 //
 
-#import "UITapGestureRecognizer+PrismIntercept.h"
+#import "UILongPressGestureRecognizer+PrismIntercept.h"
 #import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
@@ -17,17 +17,17 @@
 #import "UIResponder+PrismIntercept.h"
 #import "UIGestureRecognizer+PrismExtends.h"
 
-@implementation UITapGestureRecognizer (PrismIntercept)
+@implementation UILongPressGestureRecognizer (PrismIntercept)
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(setState:),
+        RSSwizzleInstanceMethod(UILongPressGestureRecognizer, @selector(setState:),
                                 RSSWReturnType(void),
                                 RSSWArguments(UIGestureRecognizerState state),
                                 RSSWReplacement({
             RSSWCallOriginal(state);
             SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_setState:");
-            Method swizzleMethod = class_getInstanceMethod([UITapGestureRecognizer class], swizzleSelector);
+            Method swizzleMethod = class_getInstanceMethod([UILongPressGestureRecognizer class], swizzleSelector);
             IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
             void (*functionPointer)(id, SEL, UIGestureRecognizerState) = (void (*)(id, SEL, UIGestureRecognizerState))swizzleMethodImp;
             functionPointer(self, _cmd, state);
@@ -63,9 +63,9 @@
 
 - (instancetype)prism_autoDot_initWithTarget:(id)target action:(SEL)action {
     //原始逻辑
-    UITapGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
+    UILongPressGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
     
-    [gesture addTarget:self action:@selector(prism_autoDot_tapAction:)];
+    [gesture addTarget:self action:@selector(prism_autoDot_longPressAction:)];
     gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     
     return gesture;
@@ -75,7 +75,7 @@
     //原始逻辑
     [self prism_autoDot_addTarget:target action:action];
     
-    [self prism_autoDot_addTarget:self action:@selector(prism_autoDot_tapAction:)];
+    [self prism_autoDot_addTarget:self action:@selector(prism_autoDot_longPressAction:)];
     if (!self.prismAutoDotTargetAndSelector.length) {
         self.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     }
@@ -85,22 +85,17 @@
     //原始逻辑
     [self prism_autoDot_removeTarget:target action:action];
     
-    [self prism_autoDot_removeTarget:self action:@selector(prism_autoDot_tapAction:)];
+    [self prism_autoDot_removeTarget:self action:@selector(prism_autoDot_longPressAction:)];
     self.prismAutoDotTargetAndSelector = @"";
 }
 
 #pragma mark - actions
-- (void)prism_autoDot_tapAction:(UITapGestureRecognizer*)tapGestureRecognizer {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"target"] = self;
-    params[@"action"] = NSStringFromSelector(@selector(prism_autoDot_tapAction:));
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUITapGestureRecognizerAction withSender:self params:[params copy]];
+- (void)prism_autoDot_longPressAction:(UILongPressGestureRecognizer*)longPressGestureRecognizer {
+    if (longPressGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"target"] = self;
+        params[@"action"] = NSStringFromSelector(@selector(prism_autoDot_longPressAction:));
+        [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUILongPressGestureRecognizerAction withSender:self params:[params copy]];
+    }
 }
-
-#pragma mark - public method
-
-#pragma mark - private method
-
-#pragma mark - property
-
 @end

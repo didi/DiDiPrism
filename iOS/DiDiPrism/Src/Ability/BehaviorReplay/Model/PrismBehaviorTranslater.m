@@ -70,6 +70,9 @@
         textModel.descType = PrismBehaviorDescTypeText;
         textModel.descContent = @"列表";
     }
+    else if ([viewMotionType isEqualToString:kViewMotionLongPressGestureFlag]) {
+        textModel.operationName = @"长按";
+    }
     // 翻译参考信息
     NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
     [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

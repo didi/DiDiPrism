@@ -17,6 +17,7 @@
 #import "PrismControlInstructionGenerator.h"
 #import "PrismEdgePanInstructionGenerator.h"
 #import "PrismTapGestureInstructionGenerator.h"
+#import "PrismLongPressGestureInstructionGenerator.h"
 #import "PrismCellInstructionGenerator.h"
 #import "PrismViewControllerInstructionGenerator.h"
 
@@ -75,6 +76,14 @@
         NSString *instruction = [PrismTapGestureInstructionGenerator getInstructionOfTapGesture:tapGestureRecognizer];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:tapGestureRecognizer.view];
+            [self addInstruction:instruction withEventParams:eventParams];
+        }
+    }
+    else if (event == PrismDispatchEventUILongPressGestureRecognizerAction) {
+        UILongPressGestureRecognizer *longPressGesture = (UILongPressGestureRecognizer*)sender;
+        NSString *instruction = [PrismLongPressGestureInstructionGenerator getInstructionOfLongPressGesture:longPressGesture];
+        if (instruction.length) {
+            NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:longPressGesture.view];
             [self addInstruction:instruction withEventParams:eventParams];
         }
     }
