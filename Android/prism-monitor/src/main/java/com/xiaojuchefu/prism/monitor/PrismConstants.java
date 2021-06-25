@@ -11,7 +11,8 @@ public class PrismConstants {
         public final static int DIALOG_SHOW = 4;
         public final static int DIALOG_CLOSE = 5;
         public final static int ACTIVITY_START = 6;
-
+        public final static int ACTIVITY_RESUME = 7;
+        public final static int ACTIVITY_PAUSE = 8;
     }
 
     public class Symbol {

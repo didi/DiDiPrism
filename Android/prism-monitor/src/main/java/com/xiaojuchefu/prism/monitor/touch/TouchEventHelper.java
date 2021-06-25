@@ -2,6 +2,9 @@ package com.xiaojuchefu.prism.monitor.touch;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -19,11 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.xiaojuchefu.prism.monitor.PrismConstants;
+import com.xiaojuchefu.prism.monitor.R;
 import com.xiaojuchefu.prism.monitor.model.EventData;
 import com.xiaojuchefu.prism.monitor.model.ViewContainer;
 import com.xiaojuchefu.prism.monitor.model.ViewContent;
 import com.xiaojuchefu.prism.monitor.model.ViewPath;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,49 +55,58 @@ public class TouchEventHelper {
             return null;
         }
         StringBuilder eventId = new StringBuilder();
-        getWindowInfo(window, eventId);
-        ViewPath viewPath = getViewPathInfo(touchView, touchRecord, eventId);
+        EventData eventData = new EventData(PrismConstants.Event.TOUCH);
+        eventData.view = touchView;
+        getWindowInfo(window, eventId, eventData);
+        ViewPath viewPath = getViewPathInfo(touchView, touchRecord, eventId, eventData);
         if (viewPath.viewContainer != null) { // containerView
             ViewContainer viewContainer = viewPath.viewContainer;
             eventId.append(PrismConstants.Symbol.DIVIDER).append(viewContainer.symbol).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewContainer.url);
         } else if (!TextUtils.isEmpty(viewPath.webUrl)) { // webview
             eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.WEB_URL).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.webUrl);
+            eventData.wu = viewPath.webUrl;
         } else { // native
-            getViewId(touchView, eventId);
+            getViewId(touchView, eventId, eventData);
         }
 
         eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_PATH).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.path);
+        eventData.vp = viewPath.path;
         if (!TextUtils.isEmpty(viewPath.listInfo)) { // in list container view
             eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_LIST).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.listInfo);
+            eventData.vl = viewPath.listInfo;
         }
 
         // view content
         if (touchRecord.isClick && TextUtils.isEmpty(viewPath.webUrl)) {
-            getViewContent(touchView, eventId);
+            getViewContent(touchView, eventId, eventData);
         }
         // quadrant
-        getQuadrant(touchView.getContext(), touchView, viewPath.inScrollableContainer,touchRecord, eventId);
+        getQuadrant(touchView.getContext(), touchView, viewPath.inScrollableContainer,touchRecord, eventId, eventData);
 
-        EventData eventData = new EventData(PrismConstants.Event.TOUCH);
         eventData.eventId = eventId.toString();
         return eventData;
     }
 
-    private static void getWindowInfo(Window window, StringBuilder eventId) {
+    private static void getWindowInfo(Window window, StringBuilder eventId, EventData eventData) {
+        StringBuilder w = new StringBuilder();
         eventId.append(PrismConstants.Symbol.WINDOW);
         eventId.append(PrismConstants.Symbol.DIVIDER_INNER);
         // window title
         String title = window.getAttributes().getTitle().toString().trim();
-        eventId.append(title.substring(title.indexOf("/") + 1));
-        eventId.append(PrismConstants.Symbol.DIVIDER_INNER);
+        w.append(title.substring(title.indexOf("/") + 1));
+        w.append(PrismConstants.Symbol.DIVIDER_INNER);
         // window type
-        eventId.append(window.getAttributes().type);
+        w.append(window.getAttributes().type);
+        String ws = w.toString();
+        eventId.append(ws);
+        eventData.w = ws;
     }
 
-    private static void getViewId(View touchView, StringBuilder eventId) {
+    private static void getViewId(View touchView, StringBuilder eventId, EventData eventData) {
         String viewIdName = getResourceName(touchView.getContext(), touchView.getId());
         if (viewIdName != null) {
             eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_ID).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewIdName);
+            eventData.vi = viewIdName;
         }
     }
 
@@ -115,7 +130,7 @@ public class TouchEventHelper {
         }
     }
 
-    private static ViewPath getViewPathInfo(View touchView, TouchRecord touchRecord, StringBuilder eventId) {
+    private static ViewPath getViewPathInfo(View touchView, TouchRecord touchRecord, StringBuilder eventId, EventData eventData) {
         ViewPath viewPath = new ViewPath();
         if (touchView instanceof WebView) {
             WebView webView = (WebView) touchView;
@@ -196,7 +211,7 @@ public class TouchEventHelper {
         return viewPath;
     }
 
-    private static void getViewContent(View view, StringBuilder eventId) {
+    private static void getViewContent(View view, StringBuilder eventId, EventData eventData) {
         List<ViewContent> viewInfoList = new ArrayList<>(10);
         getViewContent(view, viewInfoList, 10);
         if (viewInfoList.size() == 0) {
@@ -239,16 +254,21 @@ public class TouchEventHelper {
             if (maxContentInfo == topLeftContentInfo) {
                 eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_REFERENCE)
                         .append(PrismConstants.Symbol.DIVIDER_INNER).append(maxContentInfo.content);
+                eventData.vr = maxContentInfo.content;
             } else {
+                StringBuilder vr = new StringBuilder();
+                vr.append(topLeftContentInfo.content).append(PrismConstants.Symbol.DIVIDER_INNER).append(maxContentInfo.content);
+
                 eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_REFERENCE)
-                        .append(PrismConstants.Symbol.DIVIDER_INNER).append(topLeftContentInfo.content)
-                        .append(PrismConstants.Symbol.DIVIDER_INNER).append(maxContentInfo.content);
+                        .append(PrismConstants.Symbol.DIVIDER_INNER).append(vr.toString());
+                eventData.vr = vr.toString();
             }
         } else if (hasImage) {
             for (ViewContent contentInfo : viewInfoList) {
                 if (contentInfo.type == 2 || contentInfo.type == 3) {
                     eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_REFERENCE)
                             .append(PrismConstants.Symbol.DIVIDER_INNER).append(contentInfo.content);
+                    eventData.vr = contentInfo.content;
                     break;
                 }
             }
@@ -286,12 +306,68 @@ public class TouchEventHelper {
                         count--;
                     }
                 }
+            } else if (view instanceof ImageView) {
+                String resourceName = null;
+                ImageView imageView = (ImageView) view;
+
+                Object mResourceValue = getImageViewFieldValue(imageView,"mResource");
+                if(null != mResourceValue) {
+                    if(mResourceValue instanceof Integer) {
+                        try {
+                            resourceName = imageView.getContext().getResources().getResourceName(((Integer)mResourceValue));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+
+                if(TextUtils.isEmpty(resourceName)) {
+                    Object mUriValue = getImageViewFieldValue(imageView,"mUri");
+                    if(null != mUriValue) {
+                        if(mUriValue instanceof Uri) {
+                            resourceName = ((Uri)mUriValue).toString();
+                        }
+                    }
+                }
+
+                if(TextUtils.isEmpty(resourceName)) {
+                    Object mDrawableValue = getImageViewFieldValue(imageView,"mDrawable");
+                    if(null != mDrawableValue) {
+                        if(mDrawableValue instanceof Drawable) {
+                            Drawable drawable = (Drawable)mDrawableValue;
+                        }
+                    }
+                }
+
+//                imageView.setImageBitmap();
+//                imageView.setImageResource();
+//                imageView.setImageDrawable();
+//                imageView.setImageIcon();
+//                imageView.setImageURI();
+//                Context m1;
+//                BitmapDrawable aa;
+//
+//                Drawable image = m1.getResources().getDrawable(resID);
+//                Drawable m;
+//                R.drawable.class.
+//                        //获取drawable文件名列表，不包含扩展名
+//                        Field[] fields = R.drawable.class.getDeclaredFields();
+//                for(Field field:fields){
+//        	/*获取文件名对应的系统生成的id
+//        	需指定包路径 getClass().getPackage().getName()
+//        	指定资源类型drawable*/
+//                    int resID = getResources().getIdentifier(field.getName(),
+//                            "drawable", getClass().getPackage().getName());
+//                    System.out.println("fileName = " + field.getName()
+//                            + "    resId = " + resID);
+//                }
             }
         }
+
         return count;
     }
 
-    private static void getQuadrant(Context context, View touchView, boolean inScrollableContainer,TouchRecord touchRecord, StringBuilder eventId) {
+    private static void getQuadrant(Context context, View touchView, boolean inScrollableContainer,TouchRecord touchRecord, StringBuilder eventId, EventData eventData) {
         int centreX = getWindowWidth(context) / 2;
         int centreY = getWindowHeight(context) / 2;
 
@@ -329,6 +405,7 @@ public class TouchEventHelper {
             }
 
             eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append(horizontalValue * verticalValue);
+            eventData.vq = String.valueOf(horizontalValue * verticalValue);
 //            float x = touchRecord.mDownX;
 //            float y = touchRecord.mDownY;
 //            if (x > centreX && y <= centreY) {
@@ -342,6 +419,7 @@ public class TouchEventHelper {
 //            }
         } else {
             eventId.append(PrismConstants.Symbol.VIEW_QUADRANT).append(PrismConstants.Symbol.DIVIDER_INNER).append(PRISM_INSTRUCTION_AREA_CANSCROLL);
+            eventData.vq = String.valueOf(PRISM_INSTRUCTION_AREA_CANSCROLL);
         }
     }
 
@@ -367,4 +445,28 @@ public class TouchEventHelper {
         mWindowHeight = outSize.y;
     }
 
+    private static Object getImageViewFieldValue(ImageView imageView,String fName) {
+        Class imageViewClass = imageView.getClass();
+
+        Field field = null;
+        while (imageViewClass != null) {
+            try {
+                field = imageViewClass.getDeclaredField(fName);
+                field.setAccessible(true);
+            } catch (NoSuchFieldException e) {
+//                e.printStackTrace();
+            }
+            if(null != field) break;
+            imageViewClass = imageViewClass.getSuperclass();
+        }
+
+        if(null != field) {
+            try {
+                Object fObject = field.get(imageView);
+                return fObject;
+            } catch (IllegalAccessException e) {
+            }
+        }
+        return null;
+    }
 }

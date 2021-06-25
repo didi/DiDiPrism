@@ -42,6 +42,8 @@ public class PrismMonitorWindowCallbacks extends WindowCallbacks {
                         }
                     }
                 }
+            } else if(action == MotionEvent.ACTION_DOWN) {
+
             }
         }
         return false;

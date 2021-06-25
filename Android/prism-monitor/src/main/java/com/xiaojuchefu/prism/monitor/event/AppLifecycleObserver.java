@@ -17,16 +17,16 @@ public class AppLifecycleObserver implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackground() {
-        if (mPrismMonitor.isMonitoring()) {
-            mPrismMonitor.post(PrismConstants.Event.BACKGROUND);
-        }
+//        if (mPrismMonitor.isMonitoring()) {
+//            mPrismMonitor.post(PrismConstants.Event.BACKGROUND);
+//        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForeground() {
-        if (mPrismMonitor.isMonitoring()) {
-            mPrismMonitor.post(PrismConstants.Event.FOREGROUND);
-        }
+//        if (mPrismMonitor.isMonitoring()) {
+//            mPrismMonitor.post(PrismConstants.Event.FOREGROUND);
+//        }
     }
 
 }
