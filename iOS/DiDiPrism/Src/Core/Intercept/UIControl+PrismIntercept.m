@@ -38,9 +38,12 @@
     [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
     
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
+    BOOL isTouchEvent = controlEvents & UIControlEventAllTouchEvents;
     // 忽略用户输入过程
-    BOOL isEditingChangedEvent = controlEvents == UIControlEventEditingChanged;
-    if (!isEditingChangedEvent && ![[self.prismAutoDotTargetAndSelector prism_stringForKey:controlEventsStr] length]) {
+    BOOL isEditingEvent = (controlEvents & UIControlEventAllEditingEvents) && controlEvents != UIControlEventEditingChanged;
+    BOOL isValueChangedEvent = controlEvents & UIControlEventValueChanged;
+    BOOL isAllowedEvents = isTouchEvent || isEditingEvent || isValueChangedEvent;
+    if (isAllowedEvents && ![[self.prismAutoDotTargetAndSelector prism_stringForKey:controlEventsStr] length]) {
         NSString *classString = NSStringFromClass([target class]);
         NSString *actionString = NSStringFromSelector(action);
         if (classString.length && actionString.length) {
