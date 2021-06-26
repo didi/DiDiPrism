@@ -21,7 +21,10 @@
     if (viewControllers.count) {
         [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *mark = obj.prismAutoDotSpecialMark.length ? obj.prismAutoDotSpecialMark : NSStringFromClass([obj class]);
-            [description appendFormat:@"%@_&_", mark];
+            if (description.length) {
+                [description appendString:@"_&_"];
+            }
+            [description appendString:mark];
         }];
     }
     else {
@@ -29,7 +32,10 @@
         if (views.count) {
             [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 NSString *mark = obj.prismAutoDotSpecialMark.length ? obj.prismAutoDotSpecialMark : NSStringFromClass([obj class]);
-                [description appendFormat:@"%@_&_", mark];
+                if (description.length) {
+                    [description appendString:@"_&_"];
+                }
+                [description appendString:mark];
             }];
         }
     }
