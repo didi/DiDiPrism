@@ -33,8 +33,18 @@
         NSObject *target = [params objectForKey:@"target"];
         NSString *action = [params objectForKey:@"action"];
         NSString *targetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), action];
-        if ([[control.prismAutoDotTargetAndSelector allValues] containsObject:targetAndSelector]) {
-            NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:control withTargetAndSelector:targetAndSelector];
+        NSDictionary<NSString*,NSString*> *prismAutoDotTargetAndSelector = [control.prismAutoDotTargetAndSelector copy];
+        if ([[prismAutoDotTargetAndSelector allValues] containsObject:targetAndSelector]) {
+            NSMutableString *controlEvents = [NSMutableString string];
+            for (NSString *key in [prismAutoDotTargetAndSelector allKeys]) {
+                if ([prismAutoDotTargetAndSelector[key] isEqualToString:targetAndSelector]) {
+                    if (controlEvents.length) {
+                        [controlEvents appendString:@"_&_"];
+                    }
+                    [controlEvents appendString:key];
+                }
+            }
+            NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:control withTargetAndSelector:targetAndSelector withControlEvents:[controlEvents copy]];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:control];
                 [self addInstruction:instruction withEventParams:eventParams];

@@ -37,7 +37,7 @@
     //原始逻辑
     [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
     
-    NSString *controlEventsStr = [NSString stringWithFormat:@"UIControlEvents-%ld", controlEvents];
+    NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     // 忽略用户输入过程
     BOOL isEditingChangedEvent = controlEvents == UIControlEventEditingChanged;
     if (!isEditingChangedEvent && ![[self.prismAutoDotTargetAndSelector prism_stringForKey:controlEventsStr] length]) {
@@ -53,7 +53,7 @@
     //原始逻辑
     [self prism_autoDot_removeTarget:target action:action forControlEvents:controlEvents];
     
-    NSString *controlEventsStr = [NSString stringWithFormat:@"UIControlEvents-%ld", controlEvents];
+    NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     self.prismAutoDotTargetAndSelector[controlEventsStr] = @"";
 }
 
