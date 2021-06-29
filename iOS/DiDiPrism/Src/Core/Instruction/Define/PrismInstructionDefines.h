@@ -11,6 +11,7 @@
 // 基础标识
 #define kFragmentFlag @"_^_"
 #define kConnectorFlag @"_&_"
+#define kDictionaryKeyPrefix @"prism-"
 #define kViewMotionFlag @"vm"
 #define kViewPathFlag @"vp"
 #define kViewListFlag @"vl"

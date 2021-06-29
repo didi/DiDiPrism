@@ -29,7 +29,7 @@
         return nil;
     }
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
-    model.vm = kUIViewControllerDidAppear;
+    model.e = kUIViewControllerDidAppear;
     model.vr = [self getViewContentOfViewController:viewController];
     return model;
 }
@@ -62,6 +62,10 @@
     if (!url.length && [viewController title].length) {
         [vrContent appendFormat:@"%@%@", kConnectorFlag, [viewController title]];
     }
+    else if (!url.length && [[[viewController navigationController] navigationItem] title].length) {
+        [vrContent appendFormat:@"%@%@", kConnectorFlag, [[[viewController navigationController] navigationItem] title]];
+    }
+    
     return [vrContent copy];
 }
 
