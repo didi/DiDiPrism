@@ -33,15 +33,8 @@
     return self;
 }
 
-- (BOOL)canDetect {
-    return YES;
-}
-
 #pragma mark - public method
 - (void)setupWithConfigModel:(PrismBehaviorDetectRuleConfigModel*)configModel {
-    if ([self canDetect] == NO) {
-        return;
-    }
     if (!configModel) {
         return;
     }
@@ -57,7 +50,7 @@
     if (!instruction.length) {
         return;
     }
-    if (!self.ruleConfigModel || [self canDetect] == NO) {
+    if (!self.ruleConfigModel) {
         return;
     }
     NSMutableDictionary *newParams = [NSMutableDictionary dictionaryWithDictionary:params];

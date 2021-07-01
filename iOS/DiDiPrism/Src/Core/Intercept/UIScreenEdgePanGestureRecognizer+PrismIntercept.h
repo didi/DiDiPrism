@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSNumber *prismAutoDotViewControllerCount;
 @property (nonatomic, weak) UINavigationController *prismAutoDotNavigationController;
+
++ (void)setPrismHookEnable:(BOOL)hookEnable;
 @end
 
 NS_ASSUME_NONNULL_END

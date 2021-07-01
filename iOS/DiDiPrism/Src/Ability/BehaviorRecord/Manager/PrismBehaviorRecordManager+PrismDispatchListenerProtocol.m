@@ -7,6 +7,7 @@
 
 #import "PrismBehaviorRecordManager+PrismDispatchListenerProtocol.h"
 #import "PrismInstructionParamUtil.h"
+#import "PrismInstructionDefines.h"
 // Category
 #import "NSDictionary+PrismExtends.h"
 #import "UIView+PrismExtends.h"
@@ -25,9 +26,6 @@
 #pragma mark -delegate
 #pragma mark PrismDispatchListenerProtocol
 - (void)dispatchEvent:(PrismDispatchEvent)event withSender:(NSObject *)sender params:(NSDictionary *)params {
-    if (![self canUpload]) {
-        return;
-    }
     if (event == PrismDispatchEventUIControlSendAction_Start) {
         UIControl *control = (UIControl*)sender;
         NSObject *target = [params objectForKey:@"target"];
@@ -113,9 +111,6 @@
         [self addInstruction:instruction];
     }
     else if (event == PrismDispatchEventWKWebViewInitWithFrame) {
-        if (![self canH5Upload]) {
-            return;
-        }
         WKWebView *webView = (WKWebView*)sender;
         WKWebViewConfiguration *configuration = [params objectForKey:@"configuration"];
         NSString *recordScript = @"!function(){\"use strict\";var e=new(function(){function e(){}return e.prototype.record=function(e){for(var t=this.getContent(e),r=[];e&&\"body\"!==e.nodeName.toLowerCase();){var n=e.nodeName.toLowerCase();if(e.id)n+=\"#\"+e.id;else{for(var i=e,o=1;i.previousElementSibling;)i=i.previousElementSibling,o+=1;o>1&&(n+=\":nth-child(\"+o+\")\")}r.unshift(n),e=e.parentElement}return r.unshift(\"body\"),{instruct:r.join(\">\"),content:t}},e.prototype.getContent=function(e){return e.innerText?this.getText(e):e.getAttribute(\"src\")?e.getAttribute(\"src\"):e.querySelectorAll(\"img\")&&e.querySelectorAll(\"img\").length>0?this.getImgSrc(e):\"\"},e.prototype.getText=function(e){if(!(e.childNodes&&e.childNodes.length>0))return e.innerText||e.nodeValue;for(var t=0;t<e.childNodes.length;t++)if(e.childNodes[t].childNodes){var r=this.getText(e.childNodes[t]);if(r)return r}},e.prototype.getImgSrc=function(e){var t=e.querySelectorAll(\"img\");return t&&t[0]&&t[0].src},e}());document.addEventListener(\"click\",(function(t){if(t.target)try{window.webkit.messageHandlers.prism_record_instruct&&window.webkit.messageHandlers.prism_record_instruct.postMessage(e.record(t.target))}catch(e){}}))}();";
@@ -124,6 +119,17 @@
         NSString *scriptName = @"prism_record_instruct";
         [webView.configuration.userContentController removeScriptMessageHandlerForName:scriptName];
         [webView.configuration.userContentController addScriptMessageHandler:self name:scriptName];
+    }
+    else if (event == PrismDispatchEventUIApplicationLaunchByURL) {
+        NSString *openUrl = [params objectForKey:@"openUrl"];
+        NSString *instruction = [NSString stringWithFormat:@"%@%@%@", kUIApplicationOpenURL, kBeginOfViewRepresentativeContentFlag, openUrl ?: @""];
+        [self addInstruction:instruction];
+    }
+    else if (event == PrismDispatchEventUIApplicationDidBecomeActive) {
+        [self addInstruction:kUIApplicationBecomeActive];
+    }
+    else if (event == PrismDispatchEventUIApplicationWillResignActive) {
+        [self addInstruction:kUIApplicationResignActive];
     }
 }
 @end

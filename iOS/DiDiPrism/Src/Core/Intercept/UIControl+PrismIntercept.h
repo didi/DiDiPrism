@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableDictionary<NSString*,NSString*> *prismAutoDotTargetAndSelector;
 
++ (void)prism_swizzleMethodIMP;
 @end
 
 NS_ASSUME_NONNULL_END

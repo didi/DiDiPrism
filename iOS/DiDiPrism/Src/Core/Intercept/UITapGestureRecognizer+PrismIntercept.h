@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITapGestureRecognizer (PrismIntercept)
 
++ (void)prism_swizzleMethodIMP;
 @end
 
 NS_ASSUME_NONNULL_END

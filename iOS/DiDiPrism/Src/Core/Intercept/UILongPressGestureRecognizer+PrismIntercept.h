@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UILongPressGestureRecognizer (PrismIntercept)
 
++ (void)prism_swizzleMethodIMP;
 @end
 
 NS_ASSUME_NONNULL_END

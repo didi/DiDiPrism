@@ -10,7 +10,8 @@
 #import "PrismRuntimeUtil.h"
 
 @implementation UIImage (PrismIntercept)
-+ (void)load {
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:) swizzledSelector:@selector(prism_autoDot_imageNamed:) isClassMethod:YES];
@@ -22,6 +23,7 @@
     });
 }
 
+#pragma mark - private method
 + (UIImage *)prism_autoDot_imageNamed:(NSString *)name {
     UIImage *image = [self prism_autoDot_imageNamed:name];
     
@@ -54,16 +56,6 @@
     return image;
 }
 
-#pragma mark - property
-- (NSString *)prismAutoDotImageName {
-    NSString *name = objc_getAssociatedObject(self, _cmd);
-    return name;
-}
-- (void)setPrismAutoDotImageName:(NSString *)prismAutoDotImageName {
-    objc_setAssociatedObject(self, @selector(prismAutoDotImageName), prismAutoDotImageName, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-#pragma mark - private method
 + (NSString*)getImageNameFromPath:(NSString*)path {
     static NSString *separator = @"/";
     if ([path containsString:separator]) {
@@ -73,6 +65,15 @@
         }
     }
     return path;
+}
+
+#pragma mark - property
+- (NSString *)prismAutoDotImageName {
+    NSString *name = objc_getAssociatedObject(self, _cmd);
+    return name;
+}
+- (void)setPrismAutoDotImageName:(NSString *)prismAutoDotImageName {
+    objc_setAssociatedObject(self, @selector(prismAutoDotImageName), prismAutoDotImageName, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end

@@ -1,17 +1,16 @@
 //
-//  NSURLSessionConfiguration+PrismRecord.m
+//  NSURLSessionConfiguration+PrismIntercept.m
 //  DiDiPrism
 //
 //  Created by hulk on 2020/4/1.
 //
 
-#import "NSURLSessionConfiguration+PrismRecord.h"
-#import "PrismRecordNSURLProtocol.h"
+#import "NSURLSessionConfiguration+PrismIntercept.h"
 // Util
 #import "PrismRuntimeUtil.h"
 
-@implementation NSURLSessionConfiguration (PrismRecord)
-+ (void)load {
+@implementation NSURLSessionConfiguration (PrismIntercept)
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(defaultSessionConfiguration) swizzledSelector:@selector(prism_autoDot_defaultSessionConfiguration) isClassMethod:YES];
@@ -19,18 +18,24 @@
     });
 }
 
-+ (NSURLSessionConfiguration *)prism_autoDot_defaultSessionConfiguration{
++ (NSURLSessionConfiguration *)prism_autoDot_defaultSessionConfiguration {
     NSURLSessionConfiguration *configuration = [self prism_autoDot_defaultSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
-    [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
+    Class protocolClass = NSClassFromString(@"PrismRecordNSURLProtocol");
+    if (protocolClass) {
+        [protocolClasses insertObject:protocolClass atIndex:0];
+    }
     configuration.protocolClasses = [protocolClasses copy];
     return configuration;
 }
 
-+ (NSURLSessionConfiguration *)prism_autoDot_ephemeralSessionConfiguration{
++ (NSURLSessionConfiguration *)prism_autoDot_ephemeralSessionConfiguration {
     NSURLSessionConfiguration *configuration = [self prism_autoDot_ephemeralSessionConfiguration];
     NSMutableArray * protocolClasses = [NSMutableArray arrayWithArray:configuration.protocolClasses];
-    [protocolClasses insertObject:[PrismRecordNSURLProtocol class] atIndex:0];
+    Class protocolClass = NSClassFromString(@"PrismRecordNSURLProtocol");
+    if (protocolClass) {
+        [protocolClasses insertObject:protocolClass atIndex:0];
+    }
     configuration.protocolClasses = [protocolClasses copy];
     return configuration;
 }

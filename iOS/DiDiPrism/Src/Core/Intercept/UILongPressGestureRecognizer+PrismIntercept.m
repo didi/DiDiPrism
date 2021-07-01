@@ -18,7 +18,8 @@
 #import "UIGestureRecognizer+PrismExtends.h"
 
 @implementation UILongPressGestureRecognizer (PrismIntercept)
-+ (void)load {
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         RSSwizzleInstanceMethod(UILongPressGestureRecognizer, @selector(setState:),
@@ -42,6 +43,7 @@
     });
 }
 
+#pragma mark - private method
 - (void)prism_autoDot_setState:(UIGestureRecognizerState)state {
     // set逻辑后 state 和 self.state 应一致，某些场景下self.state依然为UIGestureRecognizerStateFailed不符合预期。
     if (state == UIGestureRecognizerStateRecognized && self.state == UIGestureRecognizerStateRecognized) {

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *prismAutoDotImageName;
 
++ (void)prism_swizzleMethodIMP;
 @end
 
 NS_ASSUME_NONNULL_END

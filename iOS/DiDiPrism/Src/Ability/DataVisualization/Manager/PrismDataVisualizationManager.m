@@ -31,7 +31,6 @@
 - (void)uninstall {
     [[PrismEventDispatcher sharedInstance] unregisterListener:(id<PrismDispatchListenerProtocol>)self];
     [self setEnable:NO];
-    [self.allComponents removeAllObjects];
 }
 
 - (void)registerComponent:(PrismDataBaseComponent*)component {
@@ -58,6 +57,9 @@
     _enable = enable;
     for (PrismDataBaseComponent *component in self.allComponents) {
         component.enable = _enable;
+    }
+    if (!_enable) {
+        [self.allComponents removeAllObjects];
     }
 }
 

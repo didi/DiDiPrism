@@ -12,7 +12,8 @@
 #import "PrismRuntimeUtil.h"
 
 @implementation UIView (PrismIntercept)
-+ (void)load {
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(touchesEnded:withEvent:) swizzledSelector:@selector(prism_autoDot_touchesEnded:withEvent:)];
@@ -21,6 +22,7 @@
     });
 }
 
+#pragma mark - private method
 // 考虑到可能的手势影响，选择hook touchesEnded:withEvent:更合理。
 - (void)prism_autoDot_touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //原始逻辑

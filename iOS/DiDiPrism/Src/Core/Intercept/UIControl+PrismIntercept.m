@@ -14,7 +14,9 @@
 #import "NSDictionary+PrismExtends.h"
 
 @implementation UIControl (PrismIntercept)
-+ (void)load {
+
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(prism_autoDot_sendAction:to:forEvent:)];
@@ -23,6 +25,7 @@
     });
 }
 
+#pragma mark - private method
 - (void)prism_autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = target;
@@ -38,7 +41,7 @@
     [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
     
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
-    BOOL isTouchEvent = controlEvents & UIControlEventAllTouchEvents;
+    BOOL isTouchEvent = (controlEvents & UIControlEventAllTouchEvents) || (controlEvents & UIControlEventPrimaryActionTriggered);
     // 忽略用户输入过程
     BOOL isEditingEvent = (controlEvents & UIControlEventAllEditingEvents) && controlEvents != UIControlEventEditingChanged;
     BOOL isValueChangedEvent = controlEvents & UIControlEventValueChanged;
@@ -59,12 +62,6 @@
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     self.prismAutoDotTargetAndSelector[controlEventsStr] = @"";
 }
-
-#pragma mark - actions
-
-#pragma mark - public method
-
-#pragma mark - private method
 
 #pragma mark - property
 - (NSMutableDictionary<NSString *,NSString *> *)prismAutoDotTargetAndSelector {

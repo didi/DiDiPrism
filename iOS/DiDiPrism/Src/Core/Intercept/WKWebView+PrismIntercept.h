@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (PrismIntercept)
 
++ (void)prism_swizzleMethodIMP;
 - (void)prism_autoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration;
 
 @end
