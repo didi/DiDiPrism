@@ -60,7 +60,7 @@
 #pragma mark - setters
 - (void)setIndex:(NSInteger)index {
     _index = index;
-    self.autoDotItemName = [NSString stringWithFormat:@"%ld", _index];
+    self.prismAutoDotItemName = [NSString stringWithFormat:@"%ld", _index];
     self.titleLabel.text = [NSString stringWithFormat:@"Cell %ld\n点击前往详情页-A", _index];
     [self.goButton setTitle:[self buttonTitleOfIndex:_index % 4] forState:UIControlStateNormal];
 }

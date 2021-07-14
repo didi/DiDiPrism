@@ -11,8 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIScreenEdgePanGestureRecognizer (PrismIntercept)
 
-@property (nonatomic, strong) NSNumber *autoDotViewControllerCount;
-@property (nonatomic, weak) UINavigationController *autoDotNavigationController;
+@property (nonatomic, strong) NSNumber *prismAutoDotViewControllerCount;
+@property (nonatomic, weak) UINavigationController *prismAutoDotNavigationController;
+
++ (void)setPrismHookEnable:(BOOL)hookEnable;
 @end
 
 NS_ASSUME_NONNULL_END

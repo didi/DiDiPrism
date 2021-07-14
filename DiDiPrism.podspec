@@ -136,6 +136,7 @@ Pod::Spec.new do |spec|
   
   spec.subspec 'Core' do |ss| 
     ss.source_files = ['iOS/DiDiPrism/Src/Core/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Category/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Util/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Protocol/**/*{.h,.m}']
+    ss.dependency 'RSSwizzle'
   end
 
   spec.subspec 'WithBehaviorRecord' do |ss| 

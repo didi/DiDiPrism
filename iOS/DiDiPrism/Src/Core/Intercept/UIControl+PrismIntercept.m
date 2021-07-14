@@ -10,61 +10,69 @@
 #import "PrismEventDispatcher.h"
 // Util
 #import "PrismRuntimeUtil.h"
+// Category
+#import "NSDictionary+PrismExtends.h"
 
 @implementation UIControl (PrismIntercept)
-+ (void)load {
+
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(autoDot_sendAction:to:forEvent:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(autoDot_addTarget:action:forControlEvents:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(autoDot_removeTarget:action:forControlEvents:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(prism_autoDot_sendAction:to:forEvent:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_addTarget:action:forControlEvents:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:forControlEvents:)];
     });
 }
 
-- (void)autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
+#pragma mark - private method
+- (void)prism_autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"target"] = target;
     params[@"action"] = NSStringFromSelector(action);
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendAction_Start withSender:self params:[params copy]];
     
     //原始逻辑
-    [self autoDot_sendAction:action to:target forEvent:event];
+    [self prism_autoDot_sendAction:action to:target forEvent:event];
 }
 
-- (void)autoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
+- (void)prism_autoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     //原始逻辑
-    [self autoDot_addTarget:target action:action forControlEvents:controlEvents];
+    [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
     
+    NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
+    BOOL isTouchEvent = (controlEvents & UIControlEventAllTouchEvents) || (controlEvents & UIControlEventPrimaryActionTriggered);
     // 忽略用户输入过程
-    BOOL isEditingChangedEvent = controlEvents == UIControlEventEditingChanged;
-    if (!isEditingChangedEvent && !self.autoDotTargetAndSelector.length) {
+    BOOL isEditingEvent = (controlEvents & UIControlEventAllEditingEvents) && controlEvents != UIControlEventEditingChanged;
+    BOOL isValueChangedEvent = controlEvents & UIControlEventValueChanged;
+    BOOL isAllowedEvents = isTouchEvent || isEditingEvent || isValueChangedEvent;
+    if (isAllowedEvents && ![[self.prismAutoDotTargetAndSelector prism_stringForKey:controlEventsStr] length]) {
         NSString *classString = NSStringFromClass([target class]);
         NSString *actionString = NSStringFromSelector(action);
         if (classString.length && actionString.length) {
-            self.autoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
-            
+            self.prismAutoDotTargetAndSelector[controlEventsStr] = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
         }
     }
 }
 
-- (void)autoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
+- (void)prism_autoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     //原始逻辑
-    [self autoDot_removeTarget:target action:action forControlEvents:controlEvents];
+    [self prism_autoDot_removeTarget:target action:action forControlEvents:controlEvents];
     
-    self.autoDotTargetAndSelector = @"";
+    NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
+    self.prismAutoDotTargetAndSelector[controlEventsStr] = @"";
 }
-
-#pragma mark - actions
-
-#pragma mark - public method
-
-#pragma mark - private method
 
 #pragma mark - property
-- (NSString *)autoDotTargetAndSelector {
-    return objc_getAssociatedObject(self, _cmd);
+- (NSMutableDictionary<NSString *,NSString *> *)prismAutoDotTargetAndSelector {
+    NSMutableDictionary *result = objc_getAssociatedObject(self, _cmd);
+    if (!result) {
+        result = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, @selector(prismAutoDotTargetAndSelector), result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return result;
 }
-- (void)setAutoDotTargetAndSelector:(NSString *)autoDotTargetAndSelector {
-    objc_setAssociatedObject(self, @selector(autoDotTargetAndSelector), autoDotTargetAndSelector, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setPrismAutoDotTargetAndSelector:(NSMutableDictionary<NSString *,NSString *> *)prismAutoDotTargetAndSelector {
+    objc_setAssociatedObject(self, @selector(prismAutoDotTargetAndSelector), prismAutoDotTargetAndSelector, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 @end

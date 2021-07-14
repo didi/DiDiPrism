@@ -9,7 +9,7 @@
 // Category
 #import "UIView+PrismExtends.h"
 // Util
-#import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionAreaInfoUtil.h"
 
 @implementation PrismBaseInstructionParser (Protected)
 - (UIResponder*)searchRootResponderWithClassName:(NSString*)className {
@@ -166,7 +166,7 @@
                 for (UIView *subview in scrollView.subviews) {
                     if ([subview isKindOfClass:NSClassFromString(cellClassName)]) {
                         
-                        NSInteger subviewIndex = [PrismInstructionAreaUtil getIndexOf:subview fromScrollView:scrollView];
+                        NSInteger subviewIndex = [PrismInstructionAreaInfoUtil getIndexOf:subview fromScrollView:scrollView];
                         if (subviewIndex == cellSectionOrOriginX) {
                             CGPoint offset = CGPointMake(subview.frame.origin.x > 50 ? subview.frame.origin.x - 50 : subview.frame.origin.x, subview.frame.origin.y > 100 ? subview.frame.origin.y - 100 : subview.frame.origin.y);
                             [scrollView setContentOffset:offset animated:NO];

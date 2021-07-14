@@ -8,7 +8,7 @@
 #import "UIColor+PrismExtends.h"
 
 @implementation UIColor (PrismExtends)
-CGFloat colorComponentFrom(NSString *string, NSUInteger start, NSUInteger length) {
+CGFloat prism_colorComponentFrom(NSString *string, NSUInteger start, NSUInteger length) {
     NSString *substring = [string substringWithRange:NSMakeRange(start, length)];
     NSString *fullHex = length == 2 ? substring : [NSString stringWithFormat:@"%@%@", substring, substring];
 
@@ -25,30 +25,30 @@ CGFloat colorComponentFrom(NSString *string, NSUInteger start, NSUInteger length
     switch ([colorString length]) {
         case 3: // #RGB
             alpha = 1.0f;
-            red = colorComponentFrom(colorString, 0, 1);
-            green = colorComponentFrom(colorString, 1, 1);
-            blue = colorComponentFrom(colorString, 2, 1);
+            red = prism_colorComponentFrom(colorString, 0, 1);
+            green = prism_colorComponentFrom(colorString, 1, 1);
+            blue = prism_colorComponentFrom(colorString, 2, 1);
             break;
 
         case 4: // #ARGB
-            alpha = colorComponentFrom(colorString, 0, 1);
-            red = colorComponentFrom(colorString, 1, 1);
-            green = colorComponentFrom(colorString, 2, 1);
-            blue = colorComponentFrom(colorString, 3, 1);
+            alpha = prism_colorComponentFrom(colorString, 0, 1);
+            red = prism_colorComponentFrom(colorString, 1, 1);
+            green = prism_colorComponentFrom(colorString, 2, 1);
+            blue = prism_colorComponentFrom(colorString, 3, 1);
             break;
 
         case 6: // #RRGGBB
             alpha = 1.0f;
-            red = colorComponentFrom(colorString, 0, 2);
-            green = colorComponentFrom(colorString, 2, 2);
-            blue = colorComponentFrom(colorString, 4, 2);
+            red = prism_colorComponentFrom(colorString, 0, 2);
+            green = prism_colorComponentFrom(colorString, 2, 2);
+            blue = prism_colorComponentFrom(colorString, 4, 2);
             break;
 
         case 8: // #AARRGGBB
-            alpha = colorComponentFrom(colorString, 0, 2);
-            red = colorComponentFrom(colorString, 2, 2);
-            green = colorComponentFrom(colorString, 4, 2);
-            blue = colorComponentFrom(colorString, 6, 2);
+            alpha = prism_colorComponentFrom(colorString, 0, 2);
+            red = prism_colorComponentFrom(colorString, 2, 2);
+            green = prism_colorComponentFrom(colorString, 4, 2);
+            blue = prism_colorComponentFrom(colorString, 6, 2);
             break;
 
         default:

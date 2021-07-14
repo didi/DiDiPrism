@@ -11,9 +11,10 @@
 #import "UIControl+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
 #import "UIResponder+PrismIntercept.h"
+#import "NSArray+PrismExtends.h"
 // Util
-#import "PrismInstructionResponseChainUtil.h"
-#import "PrismInstructionAreaUtil.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
+#import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
 
 @interface PrismControlInstructionGenerator()
@@ -24,77 +25,78 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfControl:(UIControl*)control {
-    // 避免重复生成，但会出现被复用控件标识不变的问题。
-    if (control.autoDotFinalMark.length) {
-        return control.autoDotFinalMark;
-    }
-    NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:control];
-    NSString *areaInfo = [PrismInstructionAreaUtil getAreaInfoWithElement:control];
-    NSString *functionName = [self getFunctionNameOfControl:control];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, responseChainInfo, areaInfo, functionName];
-    // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if ([areaInfo containsString:kBeginOfViewListFlag]) {
-        return instruction;
-    }
-    else {
-        control.autoDotFinalMark = instruction;
-        return control.autoDotFinalMark;
-    }
++ (NSString *)getInstructionOfControl:(UIControl *)control
+                withTargetAndSelector:(NSString *)targetAndSelector
+                    withControlEvents:(NSString*)controlEvents {
+    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
+    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
+    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
+    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
+    NSString *viewContent = [self getViewContentOfControl:control];
+    NSString *functionName = [NSString stringWithFormat:@"%@%@%@", targetAndSelector ?: @"", kConnectorFlag, controlEvents ?: @""];
+    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
+    return instruction;
 }
 
-+ (NSString*)getFunctionNameOfControl:(UIControl*)control {
-    NSString *functionName = nil;
++ (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control
+                                  withTargetAndSelector:(NSString *)targetAndSelector
+                                      withControlEvents:(NSString*)controlEvents {
+    PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
+    model.vm = kViewMotionControlFlag;
+    model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
+    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
+    model.vl = [areaInfo prism_stringWithIndex:0];
+    model.vq = [areaInfo prism_stringWithIndex:1];
+    model.vr = [self getViewContentOfControl:control];
+    model.vf = [NSString stringWithFormat:@"%@%@%@", targetAndSelector ?: @"", kConnectorFlag, controlEvents ?: @""];
+    return model;
+}
+
++ (NSString*)getViewContentOfControl:(UIControl*)control {
+    NSString *viewContent = @"";
     if ([control isKindOfClass:[UIButton class]]) {
-        functionName = [self getFunctionNameOfButton:(UIButton *)control];
+        viewContent = [self getViewContentOfButton:(UIButton *)control];
     }
     else if ([control isKindOfClass:[UISwitch class]]) {
-        functionName = [self getFunctionNameOfSwitch:(UISwitch *)control];
+        viewContent = [self getViewContentOfSwitch:(UISwitch *)control];
     }
     else if ([control isKindOfClass:[UITextField class]]) {
-        functionName = [self getFunctionNameOfTextField:(UITextField *)control];
+        viewContent = [self getViewContentOfTextField:(UITextField *)control];
     }
-    
-    if (!functionName.length) {
+    if (!viewContent.length) {
         // 获取有代表性的内容便于更好的定位view
-        NSString *subviewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
-        if (subviewContent.length) {
-            functionName = [NSString stringWithFormat:@"%@_&_%@", subviewContent, control.autoDotTargetAndSelector];
-        }
-        else {
-            functionName = control.autoDotTargetAndSelector;
-        }
+        viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
     }
-    return [NSString stringWithFormat:@"%@%@", kBeginOfViewFunctionFlag, functionName];
+    return viewContent;
 }
 
 #pragma mark - private method
-+ (NSString*)getFunctionNameOfButton:(UIButton*)button {
++ (NSString*)getViewContentOfButton:(UIButton*)button {
     if (button.titleLabel.text.length) {
-        return button.titleLabel.text;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.text];
     }
     else if (button.titleLabel.attributedText.length) {
-        return button.titleLabel.attributedText.string;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.attributedText.string];
     }
     else if (button.imageView.image) {
-        return button.imageView.image.autoDotImageName;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, button.imageView.image.prismAutoDotImageName];
     }
     return nil;
 }
 
-+ (NSString*)getFunctionNameOfSwitch:(UISwitch*)switchControl {
-    if (switchControl.onImage.autoDotImageName.length) {
-        return switchControl.onImage.autoDotImageName;
++ (NSString*)getViewContentOfSwitch:(UISwitch*)switchControl {
+    if (switchControl.onImage.prismAutoDotImageName.length) {
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, switchControl.onImage.prismAutoDotImageName];
     }
-    else if (switchControl.offImage.autoDotImageName.length) {
-        return switchControl.offImage.autoDotImageName;
+    else if (switchControl.offImage.prismAutoDotImageName.length) {
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, switchControl.offImage.prismAutoDotImageName];
     }
     return nil;
 }
 
-+ (NSString*)getFunctionNameOfTextField:(UITextField*)textField {
++ (NSString*)getViewContentOfTextField:(UITextField*)textField {
     if (textField.placeholder.length) {
-        return textField.placeholder;
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, textField.placeholder];
     }
     return nil;
 }

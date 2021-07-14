@@ -10,6 +10,7 @@ target 'DiDiPrismDemo' do
   pod 'Masonry'
   pod 'SDWebImage', '~> 5.0'
   pod 'MBProgressHUD', '~> 1.2.0'
+  pod 'RSSwizzle'
 end
 
 post_install do |installer_representation|

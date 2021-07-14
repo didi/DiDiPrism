@@ -6,6 +6,7 @@
 //
 
 #import "PrismInstructionContentUtil.h"
+#import "PrismInstructionDefines.h"
 // Category
 #import "UIImage+PrismIntercept.h"
 #import "NSArray+PrismExtends.h"
@@ -27,26 +28,26 @@
     if ([view isKindOfClass:[UILabel class]]) {
         UILabel *label = (UILabel*)view;
         if (label.text.length) {
-            return label.text;
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, label.text];
         }
     }
     id wxComponent = [view prism_wxComponent];
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
         NSString *text = [wxComponent valueForKey:@"text"];
         if ([text isKindOfClass:[NSString class]] && text.length) {
-            return text;
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, text];
         }
     }
     if ([view isKindOfClass:[UIImageView class]]) {
         UIImageView *imageView = (UIImageView*)view;
-        if (imageView.image.autoDotImageName.length) {
-            return imageView.image.autoDotImageName;
+        if (imageView.image.prismAutoDotImageName.length) {
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, imageView.image.prismAutoDotImageName];
         }
     }
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")]) {
         NSString *src = [[wxComponent valueForKey:@"attributes"] valueForKey:@"src"];
         if ([src isKindOfClass:[NSString class]] && src.length) {
-            return src;
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, src];
         }
     }
     if (!needRecursive) {
@@ -65,12 +66,15 @@
     if (firstTextView) {
         NSString *firstText = [self getRepresentativeContentOfView:firstTextView needRecursive:NO];
         if (firstText.length) {
-            [functionName appendFormat:@"%@_&_", firstText];
+            [functionName appendString:firstText];
         }
     }
     if (bigTextView && bigTextView != firstTextView) {
         NSString *bigText = [self getRepresentativeContentOfView:bigTextView needRecursive:NO];
         if (bigText.length) {
+            if (functionName.length) {
+                [functionName appendString:@"_&_"];
+            }
             [functionName appendString:bigText];
         }
     }

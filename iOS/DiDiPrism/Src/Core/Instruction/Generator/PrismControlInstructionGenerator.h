@@ -6,13 +6,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PrismInstructionModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismControlInstructionGenerator : NSObject
 
-+ (NSString*)getInstructionOfControl:(UIControl*)control;
-+ (NSString*)getFunctionNameOfControl:(UIControl*)control;
++ (NSString *)getInstructionOfControl:(UIControl *)control
+                withTargetAndSelector:(NSString *)targetAndSelector
+                    withControlEvents:(NSString*)controlEvents;
++ (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control
+                                  withTargetAndSelector:(NSString *)targetAndSelector
+                                      withControlEvents:(NSString*)controlEvents;
++ (NSString*)getViewContentOfControl:(UIControl*)control;
 
 @end
 

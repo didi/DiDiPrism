@@ -26,7 +26,6 @@
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     NSArray<NSString*> *viewMotionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
-    NSArray<NSString*> *viewFunctionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewFunction];
     NSArray<NSString*> *viewRepresentativeContentArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewRepresentativeContent];
     NSArray<NSString*> *viewPathArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     
@@ -71,33 +70,25 @@
         textModel.descType = PrismBehaviorDescTypeText;
         textModel.descContent = @"列表";
     }
-    // 翻译参考信息和功能信息
-    NSArray<NSString*> *contentArray = [[[NSArray array] arrayByAddingObjectsFromArray:viewFunctionArray] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
-    [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([self hasChinese:obj]) {
-            textModel.descType = PrismBehaviorDescTypeText;
-            textModel.descContent = obj;
-            *stop = YES;
-        }
-        else if ([self isOnlyNumber:obj]) {
-            textModel.descType = PrismBehaviorDescTypeText;
-            textModel.descContent = obj;
-            *stop = YES;
-        }
-        else if ([self hasNetworkImage:obj]) {
-            textModel.descType = PrismBehaviorDescTypeNetworkImage;
-            textModel.descContent = obj;
-            *stop = YES;
-        }
-    }];
-    if (textModel.descType != PrismBehaviorDescTypeNone) {
-        return textModel;
+    else if ([viewMotionType isEqualToString:kViewMotionLongPressGestureFlag]) {
+        textModel.operationName = @"长按";
     }
-
-    [viewFunctionArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([self hasLocalImage:obj]) {
+    // 翻译参考信息
+    NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
+    [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj containsString:kViewRepresentativeContentTypeText]) {
+            textModel.descType = PrismBehaviorDescTypeText;
+            textModel.descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""];
+            *stop = YES;
+        }
+        else if ([obj containsString:kViewRepresentativeContentTypeLocalImage]) {
             textModel.descType = PrismBehaviorDescTypeLocalImage;
-            textModel.descContent = obj;
+            textModel.descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeLocalImage withString:@""];
+            *stop = YES;
+        }
+        else if ([obj containsString:kViewRepresentativeContentTypeNetworkImage]) {
+            textModel.descType = PrismBehaviorDescTypeNetworkImage;
+            textModel.descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeNetworkImage withString:@""];
             *stop = YES;
         }
     }];
@@ -118,50 +109,11 @@
 }
 
 #pragma mark - private method
-+ (BOOL)hasChinese:(NSString *)str {
-    for(int i=0; i< [str length];i++){
-        int a = [str characterAtIndex:i];
-        if( a > 0x4e00 && a < 0x9fff)
-        {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-+ (BOOL)isOnlyNumber:(NSString *)str {
-    if ([[str prism_trimmingWhitespace] isEqualToString:@"0"] || str.integerValue) {
-        return YES;
-    }
-    return NO;
-}
-
 + (BOOL)hasNetworkImage:(NSString *)str {
     if (([str containsString:@"http://"] || [str containsString:@"https://"])
         && ([str containsString:@".png"] || [str containsString:@".jpg"] || [str containsString:@".jpeg"])) {
         return YES;
     }
-    return NO;
-}
-
-+ (BOOL)hasLocalImage:(NSString *)str {
-    NSString *lastStr = nil;
-    NSArray<NSString*> *result = [str componentsSeparatedByString:@"/"];
-    if (result.lastObject) {
-        lastStr = result.lastObject;
-    }
-    
-    if ([UIImage imageNamed:str] || [UIImage imageNamed:lastStr]) {
-        return YES;
-    }
-    
-    for (NSBundle *bundle in [NSBundle allBundles]) {
-        UIImage *image = [UIImage imageNamed:lastStr inBundle:bundle compatibleWithTraitCollection:nil];
-        if (image) {
-            return YES;
-        }
-    }
-    
     return NO;
 }
 

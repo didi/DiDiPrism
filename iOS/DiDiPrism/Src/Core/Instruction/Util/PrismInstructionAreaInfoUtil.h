@@ -1,5 +1,5 @@
 //
-//  PrismInstructionAreaUtil.h
+//  PrismInstructionAreaInfoUtil.h
 //  DiDiPrism
 //
 //  Created by hulk on 2019/7/1.
@@ -23,9 +23,11 @@ typedef NS_ENUM(NSUInteger, PrismInstructionArea) {
     PrismInstructionAreaCanScroll = 100,
 };
 
-@interface PrismInstructionAreaUtil : NSObject
-
-+ (NSString*)getAreaInfoWithElement:(UIView *)element;
+@interface PrismInstructionAreaInfoUtil : NSObject
+/*
+ @return 数组，[0]为vl，[1]为vq
+ */
++ (NSArray<NSString*>*)getAreaInfoWithElement:(UIView *)element;
 + (NSInteger)getIndexOf:(UIView*)element fromScrollView:(UIScrollView*)scrollView;
 @end
 

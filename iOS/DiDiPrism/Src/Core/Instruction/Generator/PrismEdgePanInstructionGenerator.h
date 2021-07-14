@@ -6,12 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PrismInstructionModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismEdgePanInstructionGenerator : NSObject
-
 + (NSString*)getInstructionOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGesture;
++ (PrismInstructionModel*)getInstructionModelOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGesture;
 @end
 
 NS_ASSUME_NONNULL_END

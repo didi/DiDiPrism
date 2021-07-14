@@ -11,6 +11,7 @@
 // 基础标识
 #define kFragmentFlag @"_^_"
 #define kConnectorFlag @"_&_"
+#define kDictionaryKeyPrefix @"prism-"
 #define kViewMotionFlag @"vm"
 #define kViewPathFlag @"vp"
 #define kViewListFlag @"vl"
@@ -40,7 +41,13 @@
 // View Motion具体标识
 #define kViewMotionControlFlag @"control"
 #define kViewMotionEdgePanGestureFlag @"edgePanGesture"
-#define kViewMotionGestureFlag @"gesture"
+#define kViewMotionTapGestureFlag @"tapGesture"
+#define kViewMotionLongPressGestureFlag @"longPressGesture"
 #define kViewMotionCellFlag @"cell"
 
+
+// View RepresentativeContent
+#define kViewRepresentativeContentTypeText @"[_text]"
+#define kViewRepresentativeContentTypeLocalImage @"[_l_image]"
+#define kViewRepresentativeContentTypeNetworkImage @"[_n_image]"
 #endif /* PrismInstructionDefines_h */

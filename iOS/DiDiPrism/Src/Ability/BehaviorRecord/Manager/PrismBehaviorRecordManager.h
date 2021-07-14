@@ -14,29 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedManager;
 
 /*
- 定制用于提取网络请求信息的逻辑。
- */
-@property (nonatomic, strong) NSString*(^urlFlagPickBlock)(NSURLRequest*);
-@property (nonatomic, strong) NSString*(^traceIdPickBlock)(NSURLRequest*);
-
-/*
  初始化
  */
 - (void)install;
 - (void)uninstall;
-
-/*
- 是否可以Hook。
- */
-- (BOOL)canHook;
-/*
- 是否可以上报指令。
- */
-- (BOOL)canUpload;
-/*
- 是否可以上报H5页面指令。
-*/
-- (BOOL)canH5Upload;
 
 - (void)addInstruction:(NSString*)instruction;
 - (void)addInstruction:(NSString*)instruction withEventParams:(NSDictionary*)eventParams;

@@ -7,6 +7,7 @@
 //
 
 #import "EntranceViewController.h"
+#import "PrismEngine.h"
 #import "BehaviorReplayViewController.h"
 #import "BehaviorDetectViewController.h"
 #import "DataVisualizationViewController.h"
@@ -19,6 +20,7 @@
 #pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [PrismEngine startEngineWithEventCategorys:PrismEventCategoryAll];
     [self _initView];
     
 }

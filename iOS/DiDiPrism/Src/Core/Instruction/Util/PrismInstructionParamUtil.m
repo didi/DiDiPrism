@@ -38,7 +38,7 @@
     }
     // Native
     else {
-        itemName = view.autoDotItemName;
+        itemName = view.prismAutoDotItemName;
     }
     
     if (itemName.length) {

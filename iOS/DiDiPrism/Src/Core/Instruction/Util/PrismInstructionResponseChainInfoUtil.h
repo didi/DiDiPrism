@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PrismInstructionResponseChainUtil : NSObject
+@interface PrismInstructionResponseChainInfoUtil : NSObject
 
 + (NSString*)getResponseChainInfoWithElement:(UIView*)element;
 @end

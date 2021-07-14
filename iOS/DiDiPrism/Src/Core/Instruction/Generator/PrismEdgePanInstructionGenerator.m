@@ -11,7 +11,7 @@
 #import "UIResponder+PrismIntercept.h"
 #import "UIView+PrismExtends.h"
 // Util
-#import "PrismInstructionResponseChainUtil.h"
+#import "PrismInstructionResponseChainInfoUtil.h"
 
 @interface PrismEdgePanInstructionGenerator()
 
@@ -26,13 +26,24 @@
     if (!view) {
         return nil;
     }
-    if (view.autoDotFinalMark.length) {
-        return view.autoDotFinalMark;
+    if (view.prismAutoDotFinalMark.length) {
+        return view.prismAutoDotFinalMark;
     }
     
-    NSString *responseChainInfo = [PrismInstructionResponseChainUtil getResponseChainInfoWithElement:view];
-    view.autoDotFinalMark = [NSString stringWithFormat:@"%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, responseChainInfo];
-    return view.autoDotFinalMark;
+    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:view];
+    view.prismAutoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, kBeginOfViewPathFlag, responseChainInfo];
+    return view.prismAutoDotFinalMark;
+}
+
++ (PrismInstructionModel *)getInstructionModelOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer *)edgePanGesture {
+    UIView *view = edgePanGesture.view;
+    if (!view) {
+        return nil;
+    }
+    PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
+    model.vm = kViewMotionEdgePanGestureFlag;
+    model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:view];
+    return model;
 }
 
 #pragma mark - private method

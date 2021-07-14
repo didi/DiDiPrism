@@ -12,26 +12,15 @@
 #import "PrismRuntimeUtil.h"
 
 @implementation WKWebView (PrismIntercept)
-+ (void)load {
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithFrame:configuration:) swizzledSelector:@selector(autoDot_initWithFrame:configuration:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithFrame:configuration:) swizzledSelector:@selector(prism_autoDot_initWithFrame:configuration:)];
     });
 }
 
-- (instancetype)autoDot_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    WKWebView *webView = [self autoDot_initWithFrame:frame configuration:configuration];
-    
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if (configuration) {
-        params[@"configuration"] = configuration;
-    }
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventWKWebViewInitWithFrame withSender:self params:[params copy]];
-    
-    return webView;
-}
-
-- (void)autoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration {
+- (void)prism_autoDot_addCustomScript:(NSString *)customScript withConfiguration:(WKWebViewConfiguration *)configuration {
     if(!customScript.length) return;
     
     NSArray *scripts = [configuration.userContentController userScripts];
@@ -42,5 +31,18 @@
     
     WKUserScript *script = [[WKUserScript alloc] initWithSource:customScript injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
     [configuration.userContentController addUserScript:script];
+}
+
+#pragma mark - private method
+- (instancetype)prism_autoDot_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
+    WKWebView *webView = [self prism_autoDot_initWithFrame:frame configuration:configuration];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (configuration) {
+        params[@"configuration"] = configuration;
+    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventWKWebViewInitWithFrame withSender:self params:[params copy]];
+    
+    return webView;
 }
 @end

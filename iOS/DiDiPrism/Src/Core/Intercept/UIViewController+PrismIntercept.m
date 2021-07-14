@@ -12,16 +12,18 @@
 #import "PrismRuntimeUtil.h"
 
 @implementation UIViewController (PrismIntercept)
-+ (void)load {
+#pragma mark - public method
++ (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(viewDidAppear:) swizzledSelector:@selector(autoDot_viewDidAppear:)];
+        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(viewDidAppear:) swizzledSelector:@selector(prism_autoDot_viewDidAppear:)];
     });
 }
 
-- (void)autoDot_viewDidAppear:(BOOL)animated {
+#pragma mark - private method
+- (void)prism_autoDot_viewDidAppear:(BOOL)animated {
     //原始逻辑
-    [self autoDot_viewDidAppear:animated];
+    [self prism_autoDot_viewDidAppear:animated];
     
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewControllerViewDidAppear withSender:self params:nil];
 }
