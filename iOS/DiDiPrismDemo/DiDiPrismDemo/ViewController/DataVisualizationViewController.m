@@ -88,6 +88,7 @@
     PrismDataBubbleComponent *bubbleComponent = [[PrismDataBubbleComponent alloc] init];
     bubbleComponent.dataProvider = self;
     [[PrismDataVisualizationManager sharedManager] registerComponent:bubbleComponent];
+    
     [PrismDataVisualizationManager sharedManager].enable = YES;
     
     [self initView];
