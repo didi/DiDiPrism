@@ -11,6 +11,8 @@ import com.xiaojuchefu.prism.monitor.model.EventData;
 public class ActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
     PrismMonitor mPrismMonitor;
+    // 前台计数
+    private static volatile int mFrontCount = 0;
 
     public ActivityLifecycleCallbacks() {
         mPrismMonitor = PrismMonitor.getInstance();
@@ -19,28 +21,45 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         EventData eventData = new EventData(PrismConstants.Event.ACTIVITY_START);
+        eventData.activity = activity;
         eventData.eventId = PrismConstants.Symbol.ACTIVITY_NAME + PrismConstants.Symbol.DIVIDER_INNER + activity.getClass().getName();
         mPrismMonitor.post(eventData);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (0 == mFrontCount++) {
+            EventData eventData = new EventData(PrismConstants.Event.FOREGROUND);
+            eventData.activity = activity;
+            eventData.eventId = PrismConstants.Symbol.ACTIVITY_NAME + PrismConstants.Symbol.DIVIDER_INNER + activity.getClass().getName();
+            mPrismMonitor.post(eventData);
+        }
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+        EventData eventData = new EventData(PrismConstants.Event.ACTIVITY_RESUME);
+        eventData.activity = activity;
+        eventData.eventId = PrismConstants.Symbol.ACTIVITY_NAME + PrismConstants.Symbol.DIVIDER_INNER + activity.getClass().getName();
+        mPrismMonitor.post(eventData);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
+        EventData eventData = new EventData(PrismConstants.Event.ACTIVITY_PAUSE);
+        eventData.activity = activity;
+        eventData.eventId = PrismConstants.Symbol.ACTIVITY_NAME + PrismConstants.Symbol.DIVIDER_INNER + activity.getClass().getName();
+        mPrismMonitor.post(eventData);
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-
+        if (1 == mFrontCount--) {
+            EventData eventData = new EventData(PrismConstants.Event.BACKGROUND);
+            eventData.activity = activity;
+            eventData.eventId = PrismConstants.Symbol.ACTIVITY_NAME + PrismConstants.Symbol.DIVIDER_INNER + activity.getClass().getName();
+            mPrismMonitor.post(eventData);
+        }
     }
 
     @Override
