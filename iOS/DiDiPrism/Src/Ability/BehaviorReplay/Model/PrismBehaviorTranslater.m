@@ -33,7 +33,8 @@
     if (eventArray.count) {
         textModel.operationName = @"标记";
         textModel.descType = PrismBehaviorDescTypeText;
-        NSMutableString *content = [NSMutableString stringWithString:[self descriptionOfEvent:model.instruction]];
+        NSString *description = [self descriptionOfEvent:model.instruction] ?: @"";
+        NSMutableString *content = [NSMutableString stringWithString:description];
         if (viewRepresentativeContentArray.count > 0 && [viewRepresentativeContentArray[viewRepresentativeContentArray.count - 1] prism_trimmingWhitespaceAndNewlines].length > 0) {
             [content appendFormat:@" %@", viewRepresentativeContentArray[viewRepresentativeContentArray.count - 1]];
         }

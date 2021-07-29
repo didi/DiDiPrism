@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  非接口返回
  */
+@property (nonatomic, copy, class) NSDictionary *customKeyMapper; // 自定义Dictionary->Model字段映射
 @property (nonatomic, copy, readonly) NSArray<PrismBehaviorVideoModel*> *instructionArray; //对instructions的加工
 @property (nonatomic, copy, readonly) NSArray<PrismBehaviorTextModel *>* instructionTextArray; //对instructions的加工，转化为可读文本。
 @property (nonatomic, assign) BOOL canReplay; //是否可视频回放
@@ -53,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  非接口返回
  */
+@property (nonatomic, copy, class) NSDictionary *customKeyMapper; // 自定义Dictionary->Model字段映射
 @property (nonatomic, strong) PrismInstructionFormatter *instructionFormatter;
 @end
 
@@ -69,6 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
  2、也支持直接传入准备好的数据源。
  */
 @property (nonatomic, copy) NSDictionary *result;
+
+/*
+ 非接口返回
+ */
+@property (nonatomic, copy, class) NSDictionary *customKeyMapper; // 自定义Dictionary->Model字段映射
 @end
 
 NS_ASSUME_NONNULL_END

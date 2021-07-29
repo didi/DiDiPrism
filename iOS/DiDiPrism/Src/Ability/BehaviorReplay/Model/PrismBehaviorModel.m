@@ -10,6 +10,10 @@
 #import "PrismBehaviorTranslater.h"
 #import "PrismInstructionFormatter.h"
 
+static NSDictionary *list_customKeyMapper = nil;
+static NSDictionary *item_customKeyMapper = nil;
+static NSDictionary *itemRequest_customKeyMapper = nil;
+
 #pragma mark - PrismBehaviorListModel
 @interface PrismBehaviorListModel ()
 @property (nonatomic, copy) NSArray<PrismBehaviorVideoModel*> *instructionArray; //对instructions的封装
@@ -23,6 +27,18 @@
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
     return YES;
 }
+
++ (JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:[self customKeyMapper]];
+}
+
++ (void)setCustomKeyMapper:(NSDictionary *)customKeyMapper {
+    list_customKeyMapper = customKeyMapper;
+}
++ (NSDictionary *)customKeyMapper {
+    return list_customKeyMapper;
+}
+
 
 - (instancetype)init {
     self = [super init];
@@ -138,6 +154,18 @@
     return YES;
 }
 
++ (JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:[self customKeyMapper]];
+}
+
++ (void)setCustomKeyMapper:(NSDictionary *)customKeyMapper {
+    item_customKeyMapper = customKeyMapper;
+}
++ (NSDictionary *)customKeyMapper {
+    return item_customKeyMapper;
+}
+
+
 - (PrismInstructionFormatter *)instructionFormatter {
     if (!_instructionFormatter) {
         _instructionFormatter = [[PrismInstructionFormatter alloc] initWithInstruction:self.instruction];
@@ -151,6 +179,17 @@
 @implementation PrismBehaviorItemRequestInfoModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
     return YES;
+}
+
++ (JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:[self customKeyMapper]];
+}
+
++ (void)setCustomKeyMapper:(NSDictionary *)customKeyMapper {
+    itemRequest_customKeyMapper = customKeyMapper;
+}
++ (NSDictionary *)customKeyMapper {
+    return itemRequest_customKeyMapper;
 }
 
 @end
