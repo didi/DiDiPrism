@@ -53,6 +53,8 @@
             self.prismAutoDotTargetAndSelector[controlEventsStr] = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
         }
     }
+    
+    [self prism_autoDot_addTarget:self action:[self prism_autoDot_selectorForControlEvents:controlEvents] forControlEvents:controlEvents];
 }
 
 - (void)prism_autoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
@@ -61,6 +63,8 @@
     
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     self.prismAutoDotTargetAndSelector[controlEventsStr] = @"";
+    
+    [self prism_autoDot_removeTarget:self action:[self prism_autoDot_selectorForControlEvents:controlEvents] forControlEvents:controlEvents];
 }
 
 #pragma mark - property
@@ -75,4 +79,31 @@
 - (void)setPrismAutoDotTargetAndSelector:(NSMutableDictionary<NSString *,NSString *> *)prismAutoDotTargetAndSelector {
     objc_setAssociatedObject(self, @selector(prismAutoDotTargetAndSelector), prismAutoDotTargetAndSelector, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
+#pragma mark - actions
+- (void)prism_autoDot_otherTouchAction:(UIControl*)control {
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchAction withSender:self params:nil];
+}
+
+- (void)prism_autoDot_touchAction:(UIControl*)control {
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchAction withSender:self params:nil];
+}
+
+
+#pragma mark - private method
+- (SEL)prism_autoDot_selectorForControlEvents:(UIControlEvents)controlEvents {
+    switch (controlEvents) {
+        case UIControlEventTouchDown:
+        case UIControlEventTouchDragInside:
+        case UIControlEventTouchDragOutside:
+        case UIControlEventTouchUpInside:
+        case UIControlEventTouchUpOutside:
+            return @selector(prism_autoDot_touchAction:);
+            break;
+        default:
+            return @selector(prism_autoDot_otherTouchAction:);
+            break;
+    }
+}
+
 @end

@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
     /*
      UITapGestureRecognizer
      */
+    PrismDispatchEventUITapGestureRecognizerSetState,
     PrismDispatchEventUITapGestureRecognizerAction,
     /*
      UILongPressGestureRecognizer

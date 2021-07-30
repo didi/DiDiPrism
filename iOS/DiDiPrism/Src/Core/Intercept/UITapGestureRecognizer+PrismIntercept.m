@@ -60,6 +60,8 @@
                 [self setPrismAutoDotAreaInfo:areaInfo];
             }
         }
+        
+        [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUITapGestureRecognizerSetState withSender:self params:nil];
     }
 }
 

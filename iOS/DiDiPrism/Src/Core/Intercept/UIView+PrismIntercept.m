@@ -31,7 +31,12 @@
     void (*functionPointer)(id, SEL, NSSet<UITouch *> *, UIEvent *) = (void (*)(id, SEL, NSSet<UITouch *> *, UIEvent *))original_TouchesEnded_Method_Imp;
     functionPointer(self, _cmd, touches, event);
     
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_End withSender:self params:nil];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    UITouch *touch = [touches anyObject];
+    if (touch) {
+        [params setObject:touch forKey:@"touch"];
+    }
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_End withSender:self params:[params copy]];
 }
 
 - (void)prism_autoDot_didMoveToSuperview {
