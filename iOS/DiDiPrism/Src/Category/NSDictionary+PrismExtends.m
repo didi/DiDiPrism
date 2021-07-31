@@ -9,6 +9,30 @@
 #import "NSDictionary+PrismExtends.h"
 
 @implementation NSDictionary (PrismExtends)
+- (id)prism_objectForKey:(id<NSCopying>)key {
+    if(!key){
+        return nil;
+    }
+    
+    id value = [self objectForKey:key];
+    
+    if(value && [value isKindOfClass:[NSNull class]]){
+        return nil;
+    }
+    
+    return value;
+}
+
+- (NSInteger)prism_integerForKey:(id<NSCopying>)key {
+    id value = [self objectForKey:key];
+    
+    if ([value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSNumber class]]) {
+        return [value integerValue];
+    }
+    
+    return 0;
+}
+
 - (NSString *)prism_stringForKey:(id<NSCopying>)key {
     id value = [self objectForKey:key];
     

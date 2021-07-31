@@ -10,6 +10,8 @@
 
 @interface NSDictionary <KeyType, ObjectType> (PrismExtends)
 
+- (id)prism_objectForKey:(id<NSCopying>)key;
+- (NSInteger)prism_integerForKey:(id<NSCopying>)key;
 - (NSString*)prism_stringForKey:(KeyType <NSCopying>)key;
 - (NSArray*)prism_arrayForKey:(KeyType <NSCopying>)key;
 - (NSNumber *)prism_numberForKey:(id<NSCopying>)key;
