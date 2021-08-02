@@ -116,8 +116,9 @@
                 break;
             }
         }
+        
         id wxComponent = [view prism_wxComponent];
-        if ([wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")] || [view isKindOfClass:[UILabel class]]) {
+        if ([view isKindOfClass:[UILabel class]] || [wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
             if (!*firstTextView) {
                 *firstTextView = view;
             }
@@ -140,10 +141,10 @@
                 }
             }
         }
-        else if ([wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")] || [view isKindOfClass:[UIImageView class]]) {
+        else if ([view isKindOfClass:[UIImageView class]] || [wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")]) {
             [imageViews prism_addObject:view];
         }
-        else if ([view isKindOfClass:[UIButton class]] || viewHasTapGesture) {
+        else if (view.userInteractionEnabled && ([view isKindOfClass:[UIButton class]] || viewHasTapGesture)) {
             // 不提取可交互view的信息，避免混淆。
             continue;
         }

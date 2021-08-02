@@ -98,9 +98,6 @@
                 }
             }
         }
-        if (!targetControl) {
-            targetControl = [self searchControlWithArea:areaInfo withTargetClass:targetClass withAction:targetAction fromSuperView:targetView];
-        }
     }
     // target + selector
     else if (viewFunctionArray.count) {
@@ -184,7 +181,7 @@
             }
             BOOL isAreaInfoEqual = [self isAreaInfoEqualBetween:controlAreaInfo withAnother:areaInfo allowCompatibleMode:NO];
             if (isAreaInfoEqual
-                && (!representativeContent.length || ([representativeContent isEqualToString:controlViewContent] || [representativeContent isEqualToString:highlightedImageName]))
+                && (!representativeContent.length || ([representativeContent isEqualToString:controlViewContent] || [representativeContent isEqualToString:[NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, highlightedImageName]] || [representativeContent isEqualToString:[NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, highlightedImageName]]))
                 && (!targetClass || [target isKindOfClass:targetClass])
                 && (!action.length || [controlActions containsObject:action])) {
                 return control;

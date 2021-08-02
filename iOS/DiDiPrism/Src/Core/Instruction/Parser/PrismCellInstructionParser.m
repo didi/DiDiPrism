@@ -68,11 +68,14 @@
         if ([targetView isKindOfClass:[UITableViewCell class]]) {
             UITableView *tableView = [targetView prism_UITableViewBelow];
             UITableViewCell *targetCell = (UITableViewCell*)targetView;
-            for (UITableViewCell *cell in [tableView visibleCells]) {
-                NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
-                if ([viewContent containsString:representativeContent]) {
-                    targetCell = cell;
-                    break;
+            NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:targetCell needRecursive:YES];
+            if (![viewContent containsString:representativeContent]) {
+                for (UITableViewCell *cell in [tableView visibleCells]) {
+                    viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
+                    if ([viewContent containsString:representativeContent]) {
+                        targetCell = cell;
+                        break;
+                    }
                 }
             }
             NSIndexPath *cellIndexPath = [tableView indexPathForCell:targetCell];
@@ -86,11 +89,14 @@
         else if ([targetView isKindOfClass:[UICollectionViewCell class]]) {
             UICollectionView *collectionView = [targetView prism_UICollectionViewBelow];
             UICollectionViewCell *targetCell = (UICollectionViewCell*)targetView;
-            for (UICollectionViewCell *cell in [collectionView visibleCells]) {
-                NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
-                if ([viewContent containsString:representativeContent]) {
-                    targetCell = cell;
-                    break;
+            NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:targetCell needRecursive:YES];
+            if (![viewContent containsString:representativeContent]) {
+                for (UICollectionViewCell *cell in [collectionView visibleCells]) {
+                    viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
+                    if ([viewContent containsString:representativeContent]) {
+                        targetCell = cell;
+                        break;
+                    }
                 }
             }
             NSIndexPath *cellIndexPath = [collectionView indexPathForCell:targetCell];
