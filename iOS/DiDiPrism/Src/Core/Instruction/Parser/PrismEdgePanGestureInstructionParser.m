@@ -29,32 +29,44 @@
     if (!viewPathArray.lastObject.length) {
         viewPathArray = [viewPathArray subarrayWithRange:NSMakeRange(0, viewPathArray.count - 1)];
     }
+    
+    NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
     NSInteger index = 2;
     for (; index < viewPathArray.count; index++) {
         Class class = NSClassFromString(viewPathArray[index]);
         if (!class) {
             break;
         }
-        UIResponder *result = [self searchResponderWithClassName:viewPathArray[index] superResponder:responder];
-        if (!result) {
+        NSArray<UIResponder*> *result = [self searchRespondersWithClassName:viewPathArray[index] superResponders:allPossibleResponder];
+        if (!result.count) {
             break;
         }
-        responder = result;
+        allPossibleResponder = result;
     }
     if (index < viewPathArray.count) {
         return PrismInstructionParseResultError;
     }
     
+    UIScreenEdgePanGestureRecognizer *edgePanGesture = nil;
     UIViewController *targetViewController = nil;
-    if ([responder isKindOfClass:[UIView class]]) {
-        UIView *view = (UIView*)responder;
-        targetViewController = [view prism_viewController];
+    
+    for (UIResponder *possibleResponder in allPossibleResponder) {
+        
+        if ([possibleResponder isKindOfClass:[UIView class]]) {
+            UIView *view = (UIView*)possibleResponder;
+            targetViewController = [view prism_viewController];
+        }
+        else {
+            targetViewController = (UIViewController*)possibleResponder;
+        }
+        UIView *targetView = targetViewController.view;
+        edgePanGesture = [self searchEdgePanGestureFromSuperView:targetView];
+        
+        if (edgePanGesture) {
+            break;
+        }
     }
-    else {
-        targetViewController = (UIViewController*)responder;
-    }
-    UIView *targetView = targetViewController.view;
-    UIScreenEdgePanGestureRecognizer *edgePanGesture = [self searchEdgePanGestureFromSuperView:targetView];
+    
     if (edgePanGesture) {
         if ([targetViewController isKindOfClass:[UINavigationController class]]) {
             [(UINavigationController*)targetViewController popViewControllerAnimated:YES];

@@ -189,34 +189,37 @@
     return nil;
 }
 
-- (UIResponder*)searchResponderWithClassName:(NSString*)className superResponder:(UIResponder*)superResponder {
-    if ([superResponder isKindOfClass:[UIViewController class]]) {
-        UIViewController *viewController = (UIViewController*)superResponder;
-        for (UIViewController *responder in viewController.childViewControllers) {
-            // 场景：一个viewController下有4个同样的子viewController。
-            if ([responder isKindOfClass:NSClassFromString(className)] && responder.view.superview) {
-                if ([superResponder isKindOfClass:[UINavigationController class]]) {
-                    UINavigationController *navController = (UINavigationController*)superResponder;
-                    if (navController.topViewController == responder
-                        || navController.visibleViewController == responder) {
-                        return responder;
+- (NSArray<UIResponder*>*)searchRespondersWithClassName:(NSString*)className superResponders:(NSArray<UIResponder*>*)superResponders {
+    NSMutableArray *allResponders = [NSMutableArray array];
+    for (UIResponder *superResponder in superResponders) {
+        if ([superResponder isKindOfClass:[UIViewController class]]) {
+            UIViewController *viewController = (UIViewController*)superResponder;
+            for (UIViewController *responder in viewController.childViewControllers) {
+                // 场景：一个viewController下有4个同样的子viewController。
+                if ([responder isKindOfClass:NSClassFromString(className)] && responder.view.superview) {
+                    if ([superResponder isKindOfClass:[UINavigationController class]]) {
+                        UINavigationController *navController = (UINavigationController*)superResponder;
+                        if (navController.topViewController == responder
+                            || navController.visibleViewController == responder) {
+                            [allResponders addObject:responder];
+                        }
+                    }
+                    else {
+                        [allResponders addObject:responder];
                     }
                 }
-                else {
-                    return responder;
+            }
+        }
+        else if ([superResponder isKindOfClass:[UIView class]]) {
+            UIView *view = (UIView*)superResponder;
+            for (UIResponder *responder in [view subviews]) {
+                if ([responder isKindOfClass:NSClassFromString(className)]) {
+                    [allResponders addObject:responder];
                 }
             }
         }
     }
-    else if ([superResponder isKindOfClass:[UIView class]]) {
-        UIView *view = (UIView*)superResponder;
-        for (UIResponder *responder in [view subviews]) {
-            if ([responder isKindOfClass:NSClassFromString(className)]) {
-                return responder;
-            }
-        }
-    }
-    return nil;
+    return [allResponders copy];
 }
 
 - (void)scrollToIdealOffsetWithScrollView:(UIScrollView*)scrollView targetElement:(UIView*)targetElement {

@@ -29,36 +29,47 @@
         return PrismInstructionParseResultFail;
     }
     
+    NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
     for (NSInteger index = 2; index < viewPathArray.count; index++) {
         Class class = NSClassFromString(viewPathArray[index]);
         if (!class) {
             break;
         }
-        UIResponder *result = [self searchResponderWithClassName:viewPathArray[index] superResponder:responder];
-        if (!result) {
+        NSArray<UIResponder*> *result = [self searchRespondersWithClassName:viewPathArray[index] superResponders:allPossibleResponder];
+        if (!result.count) {
             break;
         }
-        responder = result;
+        allPossibleResponder = result;
     }
     
-    // 解析列表信息
-    NSArray<NSString*> *viewListArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewList];
-    UIView *targetView = [responder isKindOfClass:[UIViewController class]] ? [(UIViewController*)responder view] : (UIView*)responder;
-    for (NSInteger index = 1; index < viewListArray.count; index = index + 4) {
-        if ([NSClassFromString(viewListArray[index]) isSubclassOfClass:[UIScrollView class]]) {
-            NSString *scrollViewClassName = viewListArray[index];
-            NSString *cellClassName = viewListArray[index + 1];
-            CGFloat cellSectionOrOriginX = viewListArray[index + 2].floatValue;
-            CGFloat cellRowOrOriginY = viewListArray[index + 3].floatValue;
-            UIView *scrollViewCell = [self searchScrollViewCellWithScrollViewClassName:scrollViewClassName
-                                                                         cellClassName:cellClassName
-                                                                  cellSectionOrOriginX:cellSectionOrOriginX
-                                                                      cellRowOrOriginY:cellRowOrOriginY
-                                                                         fromSuperView:targetView];
-            if (!scrollViewCell) {
-                return PrismInstructionParseResultFail;
+    UIView *targetView = nil;
+    
+    for (UIResponder *possibleResponder in allPossibleResponder) {
+        
+        // 解析列表信息
+        NSArray<NSString*> *viewListArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewList];
+        targetView = [possibleResponder isKindOfClass:[UIViewController class]] ? [(UIViewController*)possibleResponder view] : (UIView*)possibleResponder;
+        for (NSInteger index = 1; index < viewListArray.count; index = index + 4) {
+            if ([NSClassFromString(viewListArray[index]) isSubclassOfClass:[UIScrollView class]]) {
+                NSString *scrollViewClassName = viewListArray[index];
+                NSString *cellClassName = viewListArray[index + 1];
+                CGFloat cellSectionOrOriginX = viewListArray[index + 2].floatValue;
+                CGFloat cellRowOrOriginY = viewListArray[index + 3].floatValue;
+                UIView *scrollViewCell = [self searchScrollViewCellWithScrollViewClassName:scrollViewClassName
+                                                                             cellClassName:cellClassName
+                                                                      cellSectionOrOriginX:cellSectionOrOriginX
+                                                                          cellRowOrOriginY:cellRowOrOriginY
+                                                                             fromSuperView:targetView];
+                if (!scrollViewCell) {
+                    targetView = nil;
+                    break;
+                }
+                targetView = scrollViewCell;
             }
-            targetView = scrollViewCell;
+        }
+        
+        if (targetView) {
+            break;
         }
     }
     
