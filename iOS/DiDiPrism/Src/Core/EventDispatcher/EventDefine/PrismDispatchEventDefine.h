@@ -23,14 +23,20 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
     /*
      UIView
      */
+    PrismDispatchEventUIViewTouchesEnded_Start,
     PrismDispatchEventUIViewTouchesEnded_End,
     PrismDispatchEventUIViewDidMoveToSuperview,
     PrismDispatchEventUIViewDidMoveToWindow,
+    PrismDispatchEventUIViewSetFrame,
+    PrismDispatchEventUIViewSetHidden,
     /*
      UIControl
      */
     PrismDispatchEventUIControlSendAction_Start,
-    PrismDispatchEventUIControlTouchAction,
+    PrismDispatchEventUIControlTouchDownAction,
+    PrismDispatchEventUIControlTouchUpInsideAction,
+    PrismDispatchEventUIControlTouchUpOutsideAction,
+    PrismDispatchEventUIControlOtherAction,
     /*
      UIScreenEdgePanGestureRecognizer
      */
@@ -69,6 +75,10 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
     PrismDispatchEventUIApplicationDidBecomeActive,
     PrismDispatchEventUIApplicationWillResignActive,
     PrismDispatchEventUIApplicationLaunchByURL,
+    /*
+     UIScrollView
+     */
+    PrismDispatchEventUIScrollViewSetContentOffset,
 };
 
 #endif /* PrismDispatchEventDefine_h */

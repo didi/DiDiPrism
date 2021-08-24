@@ -81,24 +81,33 @@
 }
 
 #pragma mark - actions
+- (void)prism_autoDot_touchDownAction:(UIControl*)control {
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchDownAction withSender:self params:nil];
+}
+
+- (void)prism_autoDot_touchUpInsideAction:(UIControl*)control {
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchUpInsideAction withSender:self params:nil];
+}
+
+- (void)prism_autoDot_touchUpOutsideAction:(UIControl*)control {
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchUpOutsideAction withSender:self params:nil];
+}
+
 - (void)prism_autoDot_otherTouchAction:(UIControl*)control {
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchAction withSender:self params:nil];
+    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlOtherAction withSender:self params:nil];
 }
-
-- (void)prism_autoDot_touchAction:(UIControl*)control {
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlTouchAction withSender:self params:nil];
-}
-
 
 #pragma mark - private method
 - (SEL)prism_autoDot_selectorForControlEvents:(UIControlEvents)controlEvents {
     switch (controlEvents) {
         case UIControlEventTouchDown:
-        case UIControlEventTouchDragInside:
-        case UIControlEventTouchDragOutside:
+            return @selector(prism_autoDot_touchDownAction:);
+            break;
         case UIControlEventTouchUpInside:
+            return @selector(prism_autoDot_touchUpInsideAction:);
+            break;
         case UIControlEventTouchUpOutside:
-            return @selector(prism_autoDot_touchAction:);
+            return @selector(prism_autoDot_touchUpOutsideAction:);
             break;
         default:
             return @selector(prism_autoDot_otherTouchAction:);

@@ -17,6 +17,7 @@
 #import "WKWebView+PrismIntercept.h"
 #import "NSURLSessionConfiguration+PrismIntercept.h"
 #import "UIScreenEdgePanGestureRecognizer+PrismIntercept.h"
+#import "UIScrollView+PrismIntercept.h"
 
 @implementation PrismEngine
 #pragma mark public method
@@ -33,6 +34,7 @@
     
     if (eventCategorys & PrismEventCategorySlip) {
         [UIScreenEdgePanGestureRecognizer setPrismHookEnable:YES];
+        [UIScrollView prism_swizzleMethodIMP];
     }
     
     if (eventCategorys & PrismEventCategoryPageSwitch) {
