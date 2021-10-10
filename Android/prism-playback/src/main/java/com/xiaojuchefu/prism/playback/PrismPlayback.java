@@ -154,6 +154,12 @@ public class PrismPlayback {
         } else if (eventInfo.eventType == PrismConstants.Event.ACTIVITY_START) {
             Toast.makeText(mContext, "页面跳转", Toast.LENGTH_SHORT).show();
             mHandler.sendEmptyMessage(1);
+        } else if (eventInfo.eventType == PrismConstants.Event.ACTIVITY_RESUME) {
+            Toast.makeText(mContext, "页面resume", Toast.LENGTH_SHORT).show();
+            mHandler.sendEmptyMessage(1);
+        } else if (eventInfo.eventType == PrismConstants.Event.ACTIVITY_PAUSE) {
+            Toast.makeText(mContext, "页面pause", Toast.LENGTH_SHORT).show();
+            mHandler.sendEmptyMessage(1);
         } else if (eventInfo.eventType == PrismConstants.Event.BACK) {
             Toast.makeText(mContext, "返回", Toast.LENGTH_SHORT).show();
             MotionHelper.simulateBack();
