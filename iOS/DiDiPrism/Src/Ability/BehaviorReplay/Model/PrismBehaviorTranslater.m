@@ -31,7 +31,7 @@
     
     // 翻译通用事件
     if (eventArray.count) {
-        textModel.operationName = @"标记";
+        textModel.operationName = [model.instruction containsString:kUIApplicationJump] ? @"跳转" : @"标记";
         textModel.descType = PrismBehaviorDescTypeText;
         NSString *description = [self descriptionOfEvent:model.instruction] ?: @"";
         NSMutableString *content = [NSMutableString stringWithString:description];
@@ -53,7 +53,7 @@
                 textModel.descContent = content;
             }
             else {
-                textModel.descContent = [NSString stringWithFormat:@"[H5页面] %@", content];
+                textModel.descContent = [NSString stringWithFormat:@"[H5页面] %@", [content stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""]];
             }
         }
         return textModel;
@@ -126,7 +126,10 @@
 }
 
 + (NSString*)descriptionOfEvent:(NSString*)event {
-    if ([event isEqualToString:kUIApplicationBecomeActive]) {
+    if ([event isEqualToString:kUIApplicationInit]) {
+        return @"APP启动";
+    }
+    else if ([event isEqualToString:kUIApplicationBecomeActive]) {
         return @"APP回到前台";
     }
     else if ([event isEqualToString:kUIApplicationResignActive]) {
