@@ -22,6 +22,7 @@
     textModel.operationName = @"点击";
     textModel.descType = PrismBehaviorDescTypeNone;
     textModel.descTime = model.descTime.length ? model.descTime : @"        ";
+    textModel.areaInfo = [model.instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewQuadrant].integerValue;
 
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
