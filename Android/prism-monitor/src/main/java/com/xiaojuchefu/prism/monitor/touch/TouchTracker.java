@@ -10,6 +10,8 @@ import android.widget.ScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TouchTracker {
 
@@ -31,6 +33,36 @@ public class TouchTracker {
         return location != null ? filterView(target, location) : target;
     }
 
+    public static List<View> findTargetViewList(ViewGroup rootView, int[] location) {
+        List<View> list = new ArrayList<>();
+        List<View> rList = new ArrayList<>();
+        View nextTarget, target = null;
+        if (ensureTargetField() && rootView != null) {
+            nextTarget = getTargetView(rootView);
+            do {
+                target = nextTarget;
+                nextTarget = null;
+                if(null != target) {
+                    list.add(target);
+                }
+                if (target instanceof ViewGroup) {
+                    nextTarget = getTargetView((ViewGroup) target);
+                }
+            } while (nextTarget != null);
+        }
+        if(location != null) {
+            for (int i=0;i<list.size();i++) {
+                View view = list.get(i);
+                View newView = filterView(view, location);
+                if(null != newView) {
+                    rList.add(newView);
+                }
+            }
+            return rList;
+        }
+        return list;
+    }
+
     private static boolean ensureTargetField() {
         if (sTouchTargetField == null) {
             try {
@@ -40,7 +72,7 @@ public class TouchTracker {
                     sTouchTargetField.setAccessible(true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             try {
                 if (sTouchTargetField != null) {
@@ -48,7 +80,7 @@ public class TouchTracker {
                     sTouchTargetChildField.setAccessible(true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
         return sTouchTargetField != null && sTouchTargetChildField != null;
@@ -64,7 +96,7 @@ public class TouchTracker {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return null;
     }

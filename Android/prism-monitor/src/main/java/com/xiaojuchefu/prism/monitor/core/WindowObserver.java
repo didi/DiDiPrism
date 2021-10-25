@@ -20,7 +20,7 @@ public class WindowObserver extends ArrayList<View> {
         try {
             mDecorClass = Class.forName("com.android.internal.policy.DecorView");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -85,7 +85,7 @@ public class WindowObserver extends ArrayList<View> {
                 sWindowField = decorView.getClass().getDeclaredField("mWindow");
                 sWindowField.setAccessible(true);
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
 
@@ -94,7 +94,7 @@ public class WindowObserver extends ArrayList<View> {
             try {
                 window = (Window) sWindowField.get(decorView);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
         return window;

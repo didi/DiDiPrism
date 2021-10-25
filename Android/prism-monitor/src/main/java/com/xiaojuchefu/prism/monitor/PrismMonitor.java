@@ -6,13 +6,10 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
 
-import androidx.lifecycle.ProcessLifecycleOwner;
-
 import com.xiaojuchefu.prism.monitor.core.GlobalWindowManager;
 import com.xiaojuchefu.prism.monitor.core.WindowCallbacks;
 import com.xiaojuchefu.prism.monitor.core.WindowObserver;
 import com.xiaojuchefu.prism.monitor.event.ActivityLifecycleCallbacks;
-import com.xiaojuchefu.prism.monitor.event.AppLifecycleObserver;
 import com.xiaojuchefu.prism.monitor.event.PrismMonitorWindowCallbacks;
 import com.xiaojuchefu.prism.monitor.model.EventData;
 
@@ -32,7 +29,6 @@ public class PrismMonitor {
 
     private List<OnPrismMonitorListener> mListeners;
 
-    private AppLifecycleObserver mAppLifecycleObserver;
     private ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
 
     private WindowObserver.WindowObserverListener mWindowObserverListener;
@@ -69,9 +65,6 @@ public class PrismMonitor {
 
         ViewConfiguration vc = ViewConfiguration.get(context);
         sTouchSlop = vc.getScaledTouchSlop();
-
-        mAppLifecycleObserver = new AppLifecycleObserver();
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(mAppLifecycleObserver);
 
         GlobalWindowManager.getInstance().init(context);
 

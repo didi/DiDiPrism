@@ -28,7 +28,9 @@ public class TouchRecordManager {
                 return;
             }
 
-            if (action == MotionEvent.ACTION_UP) {
+            if (action == MotionEvent.ACTION_MOVE) {
+                mTouchRecord.onActionMove(ev);
+            } else if (action == MotionEvent.ACTION_UP) {
                 mTouchRecord.onActionUp(ev);
             } else if (action == MotionEvent.ACTION_CANCEL) {
                 mTouchRecord = null;

@@ -25,6 +25,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    api 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation project(':prism-monitor')
 }

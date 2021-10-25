@@ -53,9 +53,8 @@ public class GlobalWindowManager {
                 mViewsField.set(windowManagerGlobal, mWindowObserver);
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
         }
     }
 

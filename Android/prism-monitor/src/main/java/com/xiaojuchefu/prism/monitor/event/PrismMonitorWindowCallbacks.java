@@ -38,6 +38,8 @@ public class PrismMonitorWindowCallbacks extends WindowCallbacks {
                     if (targetView != null) {
                         EventData eventData = TouchEventHelper.createEventData(window, targetView, touchRecord);
                         if (eventData != null) {
+                            eventData.mDownX = touchRecord.mDownX;
+                            eventData.mDownY = touchRecord.mDownY;
                             mPrismMonitor.post(eventData);
                         }
                     }

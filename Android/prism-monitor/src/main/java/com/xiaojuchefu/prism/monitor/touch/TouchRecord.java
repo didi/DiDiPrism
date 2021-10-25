@@ -2,6 +2,9 @@ package com.xiaojuchefu.prism.monitor.touch;
 
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.xiaojuchefu.prism.monitor.PrismMonitor.sTouchSlop;
 
 public class TouchRecord {
@@ -16,14 +19,37 @@ public class TouchRecord {
     public float mUpX;
     public float mUpY;
 
+    public List<MoveTouch> mMoveTouch;
+
     public boolean isClick;
+
+    private long mLastTime;
+    private float mLastMoveX;
+    private float mLastMoveY;
 
     public void onActionDown(MotionEvent ev) {
         int pointIndex = ev.getActionIndex();
         mPointerId = ev.getPointerId(pointIndex);
-        mDownTime = ev.getDownTime();
-        mDownX = ev.getX(pointIndex);
-        mDownY = ev.getY(pointIndex);
+        mDownTime = mLastTime = ev.getDownTime();
+        mDownX = mLastMoveX = ev.getX(pointIndex);
+        mDownY = mLastMoveY = ev.getY(pointIndex);
+    }
+
+    public void onActionMove(MotionEvent ev) {
+        if (mMoveTouch == null) {
+            mMoveTouch = new ArrayList<>();
+        }
+        MoveTouch moveTouch = new MoveTouch();
+        moveTouch.mMoveTime = ev.getEventTime() - mLastTime;
+        mLastTime = moveTouch.mMoveTime + mLastTime;
+        int pointIndex = ev.getActionIndex();
+
+        moveTouch.mMoveX = ev.getX(pointIndex) - mLastMoveX;
+        moveTouch.mMoveY = ev.getY(pointIndex) - mLastMoveY;
+        mLastMoveX = moveTouch.mMoveX + mLastMoveX;
+        mLastMoveY = moveTouch.mMoveY + mLastMoveY;
+
+        mMoveTouch.add(moveTouch);
     }
 
     public void onActionUp(MotionEvent ev) {

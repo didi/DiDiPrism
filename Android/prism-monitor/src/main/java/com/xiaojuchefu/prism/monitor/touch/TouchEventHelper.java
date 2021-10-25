@@ -377,9 +377,8 @@ public class TouchEventHelper {
             touchView.getLocationInWindow(location);
             int vx = location[0];
             int vy = location[1];
-            touchView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            int vw = touchView.getMeasuredWidth();
-            int vh = touchView.getMeasuredHeight();
+            int vw = touchView.getWidth();
+            int vh = touchView.getHeight();
             int vCentreX = vx + vw / 2;
             int vCentreY = vy + vh / 2;
 

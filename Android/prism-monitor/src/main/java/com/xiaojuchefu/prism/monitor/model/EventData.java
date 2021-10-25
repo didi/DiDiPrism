@@ -9,7 +9,6 @@ import com.xiaojuchefu.prism.monitor.PrismConstants;
 import java.util.HashMap;
 
 public class EventData {
-
     @SerializedName("eventTime")
     public long eventTime;
     @SerializedName("eventType")
@@ -19,7 +18,11 @@ public class EventData {
     @SerializedName("data")
     public HashMap<String, Object> data;
 
-    @SerializedName("w")
+    @SerializedName("downX")
+    public float mDownX;
+    @SerializedName("downY")
+    public float mDownY;
+	@SerializedName("w")
     public String w;
     @SerializedName("vi")
     public String vi;
