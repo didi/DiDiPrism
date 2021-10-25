@@ -10,10 +10,16 @@
 #import <SDWebImage/SDWebImage.h>
 #import "UIColor+PrismExtends.h"
 
+#define kPhoneWidth 22
+#define kPhoneHeight 42
+
 @interface BehaviorTextDescViewCell()
 @property (nonatomic, strong) UILabel *operationLabel;
 @property (nonatomic, strong) UILabel *contentLabel;
 @property (nonatomic, strong) UILabel *timeLabel;
+@property (nonatomic, strong) UILabel *phoneView;
+@property (nonatomic, strong) UIView *phoneBarView;
+@property (nonatomic, strong) UIView *locationView;
 
 @end
 
@@ -79,13 +85,16 @@
     [self.contentView addSubview:self.contentImageView];
     [self.contentView addSubview:self.timeLabel];
     [self.contentView addSubview:self.failFlagLabel];
+    [self.contentView addSubview:self.phoneView];
+    [self.contentView addSubview:self.phoneBarView];
+    [self.contentView addSubview:self.locationView];
     
     [self.indexLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(18);
         make.centerY.equalTo(self.contentView);
     }];
     [self.operationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.indexLabel).offset(55);
+        make.left.equalTo(self.indexLabel).offset(37);
         make.centerY.equalTo(self.contentView);
     }];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -94,6 +103,18 @@
     }];
     [self.failFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.contentView).offset(1);
+    }];
+    [self.phoneView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.operationLabel.mas_right).offset(23);
+        make.centerY.equalTo(self.contentView);
+        make.width.mas_equalTo(kPhoneWidth);
+        make.height.mas_equalTo(kPhoneHeight);
+    }];
+    [self.phoneBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.phoneView);
+        make.centerX.equalTo(self.phoneView);
+        make.width.mas_equalTo(10);
+        make.height.mas_equalTo(4);
     }];
 }
 
@@ -106,7 +127,6 @@
     switch (_textModel.descType) {
         case PrismBehaviorDescTypeNone:
             {
-                self.operationLabel.text = nil;
                 self.contentLabel.text = @"[无法翻译]";
                 self.contentLabel.hidden = NO;
                 self.contentImageView.hidden = YES;
@@ -154,6 +174,112 @@
         default:
             break;
     }
+    
+    
+    CGFloat width = 0;
+    CGFloat height = 0;
+    CGFloat left = 0;
+    CGFloat top = 0;
+    
+    self.phoneView.hidden = NO;
+    self.phoneView.text = nil;
+    self.phoneBarView.hidden = NO;
+    self.locationView.hidden = NO;
+    
+    switch (_textModel.areaInfo) {
+        case PrismInstructionAreaUp:
+        {
+            width = 6;
+            height = kPhoneHeight / 2;
+            left = kPhoneWidth / 2 - 3;
+            top = 0;
+        }
+            break;
+        case PrismInstructionAreaBottom:
+        {
+            width = 6;
+            height = kPhoneHeight / 2;
+            left = kPhoneWidth / 2 - 3;
+            top = kPhoneHeight / 2;
+        }
+            break;
+        case PrismInstructionAreaLeft:
+        {
+            width = kPhoneWidth / 2;
+            height = 6;
+            left = 0;
+            top = kPhoneHeight / 2 - 3;
+        }
+            break;
+        case PrismInstructionAreaRight:
+        {
+            width = kPhoneWidth / 2;
+            height = 6;
+            left = kPhoneWidth / 2;
+            top = kPhoneHeight / 2 - 3;
+        }
+            break;
+        case PrismInstructionAreaCenter:
+        {
+            width = 12;
+            height = 18;
+            left = kPhoneWidth / 2 - 6;
+            top = kPhoneHeight / 2 - 9;
+        }
+            break;
+        case PrismInstructionAreaUpLeft:
+        {
+            width = kPhoneWidth / 2;
+            height = kPhoneHeight / 2;
+            left = 0;
+            top = 0;
+        }
+            break;
+        case PrismInstructionAreaUpRight:
+        {
+            width = kPhoneWidth / 2;
+            height = kPhoneHeight / 2;
+            left = kPhoneWidth / 2;
+            top = 0;
+        }
+            break;
+        case PrismInstructionAreaBottomLeft:
+        {
+            width = kPhoneWidth / 2;
+            height = kPhoneHeight / 2;
+            left = 0;
+            top = kPhoneHeight / 2;
+        }
+            break;
+        case PrismInstructionAreaBottomRight:
+        {
+            width = kPhoneWidth / 2;
+            height = kPhoneHeight / 2;
+            left = kPhoneWidth / 2;
+            top = kPhoneHeight / 2;
+        }
+            break;
+        case PrismInstructionAreaCanScroll:
+        {
+            self.phoneView.text = @"列表";
+        }
+            break;
+        default:
+        {
+            self.phoneView.hidden = YES;
+            self.phoneBarView.hidden = YES;
+            self.locationView.hidden = YES;
+        }
+            break;
+    }
+    
+    [self.locationView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+        make.height.mas_equalTo(height);
+        make.left.equalTo(self.phoneView).offset(left);
+        make.top.equalTo(self.phoneView).offset(top);
+    }];
+    
     
     [self setNeedsUpdateConstraints];
     [self updateConstraintsIfNeeded];
@@ -217,5 +343,36 @@
         _failFlagLabel.hidden = YES;
     }
     return _failFlagLabel;
+}
+
+- (UILabel *)phoneView {
+    if (!_phoneView) {
+        _phoneView = [[UILabel alloc] init];
+        _phoneView.backgroundColor = [UIColor clearColor];
+        _phoneView.layer.borderWidth = 1.0;
+        _phoneView.layer.borderColor = [UIColor prism_colorWithHexString:@"#666666"].CGColor;
+        _phoneView.layer.cornerRadius = 3.0;
+        _phoneView.textColor = [UIColor prism_colorWithHexString:@"#666666"];
+        _phoneView.font = [UIFont systemFontOfSize:8];
+        _phoneView.textAlignment = NSTextAlignmentCenter;
+    }
+    return _phoneView;
+}
+
+- (UIView *)phoneBarView {
+    if (!_phoneBarView) {
+        _phoneBarView = [[UIView alloc] init];
+        _phoneBarView.backgroundColor = [UIColor prism_colorWithHexString:@"#666666"];
+        _phoneBarView.layer.cornerRadius = 1.0;
+    }
+    return _phoneBarView;
+}
+
+- (UIView *)locationView {
+    if (!_locationView) {
+        _locationView = [[UIView alloc] init];
+        _locationView.backgroundColor = [[UIColor prism_colorWithHexString:@"#666666"] colorWithAlphaComponent:0.6];
+    }
+    return _locationView;
 }
 @end

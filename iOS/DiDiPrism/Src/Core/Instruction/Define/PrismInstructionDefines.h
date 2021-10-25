@@ -33,6 +33,8 @@
 
 // 通用事件标识
 #define kUIApplicationOpenURL [NSString stringWithFormat:@"%@[UIApplication]_OpenURL", kBeginOfEventFlag]
+#define kUIApplicationInit [NSString stringWithFormat:@"%@[UIApplication]_Init", kBeginOfEventFlag]
+#define kUIApplicationJump [NSString stringWithFormat:@"%@[UIApplication]_Jump", kBeginOfEventFlag]
 #define kUIApplicationBecomeActive [NSString stringWithFormat:@"%@[UIApplication]_BecomeActive", kBeginOfEventFlag]
 #define kUIApplicationResignActive [NSString stringWithFormat:@"%@[UIApplication]_ResignActive", kBeginOfEventFlag]
 #define kUIViewControllerDidAppear [NSString stringWithFormat:@"%@[UIViewController]_DidAppear", kBeginOfEventFlag]

@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PrismInstructionAreaInfoUtil.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,7 @@ typedef NS_ENUM(NSUInteger, PrismBehaviorDescType) {
 @property (nonatomic, assign) PrismBehaviorDescType descType;
 @property (nonatomic, copy) NSString *descContent;
 @property (nonatomic, copy) NSString *descTime;
+@property (nonatomic, assign) PrismInstructionArea areaInfo;
 @end
 
 NS_ASSUME_NONNULL_END

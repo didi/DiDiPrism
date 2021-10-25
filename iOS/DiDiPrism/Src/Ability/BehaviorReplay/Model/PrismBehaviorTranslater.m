@@ -22,6 +22,7 @@
     textModel.operationName = @"点击";
     textModel.descType = PrismBehaviorDescTypeNone;
     textModel.descTime = model.descTime.length ? model.descTime : @"        ";
+    textModel.areaInfo = [model.instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewQuadrant].integerValue;
 
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
@@ -31,7 +32,7 @@
     
     // 翻译通用事件
     if (eventArray.count) {
-        textModel.operationName = @"标记";
+        textModel.operationName = [model.instruction containsString:kUIApplicationJump] ? @"跳转" : @"标记";
         textModel.descType = PrismBehaviorDescTypeText;
         NSString *description = [self descriptionOfEvent:model.instruction] ?: @"";
         NSMutableString *content = [NSMutableString stringWithString:description];
@@ -53,7 +54,7 @@
                 textModel.descContent = content;
             }
             else {
-                textModel.descContent = [NSString stringWithFormat:@"[H5页面] %@", content];
+                textModel.descContent = [NSString stringWithFormat:@"[H5页面] %@", [content stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""]];
             }
         }
         return textModel;
@@ -126,7 +127,10 @@
 }
 
 + (NSString*)descriptionOfEvent:(NSString*)event {
-    if ([event isEqualToString:kUIApplicationBecomeActive]) {
+    if ([event isEqualToString:kUIApplicationInit]) {
+        return @"APP启动";
+    }
+    else if ([event isEqualToString:kUIApplicationBecomeActive]) {
         return @"APP回到前台";
     }
     else if ([event isEqualToString:kUIApplicationResignActive]) {

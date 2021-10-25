@@ -54,28 +54,26 @@ static NSDictionary *itemRequest_customKeyMapper = nil;
         NSMutableArray<NSString*> *instructionMutaArray = [NSMutableArray array];
         [self.instructions enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             PrismBehaviorItemModel *model = obj;
-            if (model.instruction.length) {
-                PrismBehaviorVideoModel *videoModel = [[PrismBehaviorVideoModel alloc] init];
-                videoModel.instruction = model.instruction;
-                videoModel.instructionFormatter = model.instructionFormatter;
-                if (idx < self.instructions.count - 1) {
-                    NSInteger nextIdx = idx + 1;
-                    NSString *nextInstruction = ((PrismBehaviorItemModel*)self.instructions[nextIdx]).instruction;
-                    //排除同时触发的指令，修正时间。
-                    if ([nextInstruction containsString:kUIViewControllerDidAppear]) {
-                        nextIdx = nextIdx + 1;
-                    }
-                    if (nextIdx < self.instructions.count) {
-                        NSTimeInterval thisTime = model.eventTime.integerValue;
-                        NSTimeInterval nextTime = ((PrismBehaviorItemModel*)self.instructions[nextIdx]).eventTime.integerValue;
-                        NSInteger minutes = (nextTime - thisTime) / 60;
-                        NSInteger seconds = (NSInteger)(nextTime - thisTime) % 60;
-                        videoModel.descTime = [NSString stringWithFormat:@"%ld′%ld″", (long)minutes, (long)seconds];
-                    }
+            PrismBehaviorVideoModel *videoModel = [[PrismBehaviorVideoModel alloc] init];
+            videoModel.instruction = model.instruction;
+            videoModel.instructionFormatter = model.instructionFormatter;
+            if (idx < self.instructions.count - 1) {
+                NSInteger nextIdx = idx + 1;
+                NSString *nextInstruction = ((PrismBehaviorItemModel*)self.instructions[nextIdx]).instruction;
+                //排除同时触发的指令，修正时间。
+                if ([nextInstruction containsString:kUIViewControllerDidAppear]) {
+                    nextIdx = nextIdx + 1;
                 }
-                [instructionMutaArray addObject:model.instruction];
-                [videoModelMutaArray addObject:videoModel];
+                if (nextIdx < self.instructions.count) {
+                    NSTimeInterval thisTime = model.eventTime.integerValue;
+                    NSTimeInterval nextTime = ((PrismBehaviorItemModel*)self.instructions[nextIdx]).eventTime.integerValue;
+                    NSInteger minutes = (nextTime - thisTime) / 60;
+                    NSInteger seconds = (NSInteger)(nextTime - thisTime) % 60;
+                    videoModel.descTime = [NSString stringWithFormat:@"%ld′%ld″", (long)minutes, (long)seconds];
+                }
             }
+            [instructionMutaArray addObject:model.instruction];
+            [videoModelMutaArray addObject:videoModel];
         }];
         _instructionArray = [videoModelMutaArray copy];
         
