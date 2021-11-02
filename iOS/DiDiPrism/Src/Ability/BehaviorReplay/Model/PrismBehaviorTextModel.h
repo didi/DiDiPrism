@@ -15,6 +15,7 @@ typedef NS_ENUM(NSUInteger, PrismBehaviorDescType) {
     PrismBehaviorDescTypeText,
     PrismBehaviorDescTypeNetworkImage,
     PrismBehaviorDescTypeLocalImage,
+    PrismBehaviorDescTypeCode,
 };
 
 @interface PrismBehaviorTextModel : NSObject

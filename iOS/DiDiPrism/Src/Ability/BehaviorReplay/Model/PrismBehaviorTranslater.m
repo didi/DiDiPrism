@@ -28,6 +28,7 @@
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     NSArray<NSString*> *viewMotionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
     NSArray<NSString*> *viewRepresentativeContentArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewRepresentativeContent];
+    NSArray<NSString*> *viewFunctionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewFunction];
     NSArray<NSString*> *viewPathArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     
     // 翻译通用事件
@@ -106,6 +107,12 @@
             *stop = YES;
         }
     }];
+    
+    // 翻译功能信息
+    if (textModel.descType == PrismBehaviorDescTypeNone && viewFunctionArray.count) {
+        textModel.descType = PrismBehaviorDescTypeCode;
+        textModel.descContent = [viewFunctionArray prism_stringWithIndex:2];
+    }
     
     return textModel;
 }
