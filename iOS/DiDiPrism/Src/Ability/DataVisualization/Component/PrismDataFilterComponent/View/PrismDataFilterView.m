@@ -6,10 +6,10 @@
 //
 
 #import "PrismDataFilterView.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 // Util
-#import "PrismIdentifierUtil.h"
-#import "PrismImageUtil.h"
+#import <DiDiPrism/PrismIdentifierUtil.h>
+#import <DiDiPrism/PrismImageUtil.h>
 
 @interface PrismDataFilterView()
 @property (nonatomic, strong) UIButton *foldButton;

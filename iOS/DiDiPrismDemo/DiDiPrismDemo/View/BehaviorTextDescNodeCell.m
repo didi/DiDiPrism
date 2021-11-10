@@ -6,8 +6,8 @@
 //
 
 #import "BehaviorTextDescNodeCell.h"
-#import "Masonry.h"
-#import "UIColor+PrismExtends.h"
+#import <Masonry/Masonry.h>
+#import <DiDiPrism/UIColor+PrismExtends.h>
 
 @interface BehaviorTextDescNodeCell()
 

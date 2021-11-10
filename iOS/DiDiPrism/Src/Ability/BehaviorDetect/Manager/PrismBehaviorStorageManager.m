@@ -6,7 +6,7 @@
 //
 
 #import "PrismBehaviorStorageManager.h"
-#import "NSDate+PrismExtends.h"
+#import <DiDiPrism/NSDate+PrismExtends.h>
 
 @interface PrismBehaviorStorageManager()
 @property (nonatomic, strong) NSMutableArray<NSDictionary*> *currentBehaviors;

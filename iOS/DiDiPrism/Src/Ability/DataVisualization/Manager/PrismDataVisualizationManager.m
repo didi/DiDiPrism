@@ -6,7 +6,7 @@
 //
 
 #import "PrismDataVisualizationManager.h"
-#import "PrismEventDispatcher.h"
+#import <DiDiPrism/PrismEventDispatcher.h>
 
 @interface PrismDataVisualizationManager()
 @property (nonatomic, strong) NSMutableArray<PrismDataBaseComponent*> *allComponents;

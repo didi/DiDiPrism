@@ -7,7 +7,7 @@
 
 #import "PrismDataHeatMapView.h"
 // Category
-#import "UIColor+PrismExtends.h"
+#import <DiDiPrism/UIColor+PrismExtends.h>
 
 @interface PrismDataHeatMapView()
 

@@ -7,7 +7,7 @@
 
 #import "PrismBehaviorReplayManager+PrismDispatchListenerProtocol.h"
 // Category
-#import "WKWebView+PrismIntercept.h"
+#import <DiDiPrism/WKWebView+PrismIntercept.h>
 
 @implementation PrismBehaviorReplayManager (PrismDispatchListenerProtocol)
 #pragma mark -delegate

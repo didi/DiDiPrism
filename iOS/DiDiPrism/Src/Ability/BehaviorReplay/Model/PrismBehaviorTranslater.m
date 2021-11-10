@@ -6,8 +6,8 @@
 //
 
 #import "PrismBehaviorTranslater.h"
-#import "NSString+PrismExtends.h"
-#import "NSArray+PrismExtends.h"
+#import <DiDiPrism/NSString+PrismExtends.h>
+#import <DiDiPrism/NSArray+PrismExtends.h>
 
 @interface PrismBehaviorTranslater()
 

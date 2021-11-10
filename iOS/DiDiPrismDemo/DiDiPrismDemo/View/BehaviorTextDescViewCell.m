@@ -6,9 +6,9 @@
 //
 
 #import "BehaviorTextDescViewCell.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
-#import "UIColor+PrismExtends.h"
+#import <DiDiPrism/UIColor+PrismExtends.h>
 
 #define kPhoneWidth 22
 #define kPhoneHeight 42

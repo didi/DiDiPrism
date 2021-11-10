@@ -6,7 +6,7 @@
 //
 
 #import "PrismBehaviorRecordManager.h"
-#import "PrismEventDispatcher.h"
+#import <DiDiPrism/PrismEventDispatcher.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

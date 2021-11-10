@@ -12,7 +12,7 @@
     if (!name.length) {
         return nil;
     }
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(@"PrismDataVisualizationManager")];
     NSString *bundlePath = [bundle.resourcePath stringByAppendingPathComponent:@"/DiDiPrism.bundle"];
     NSBundle *resourceBundle = [NSBundle bundleWithPath:bundlePath];
     return [UIImage imageNamed:name inBundle:resourceBundle compatibleWithTraitCollection:nil];

@@ -6,13 +6,13 @@
 //
 
 #import "PrismDataFilterEditorView.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 // Util
-#import "PrismIdentifierUtil.h"
-#import "PrismImageUtil.h"
+#import <DiDiPrism/PrismIdentifierUtil.h>
+#import <DiDiPrism/PrismImageUtil.h>
 // Category
-#import "UIButton+PrismExtends.h"
-#import "NSArray+PrismExtends.h"
+#import <DiDiPrism/UIButton+PrismExtends.h>
+#import <DiDiPrism/NSArray+PrismExtends.h>
 // View
 #import "PrismDataPickerView.h"
 

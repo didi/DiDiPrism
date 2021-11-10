@@ -9,7 +9,7 @@
 #import "BehaviorDetectViewController.h"
 #import "MBProgressHUD.h"
 // Category
-#import "NSDictionary+PrismExtends.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
 // ViewController
 #import "DetailViewController.h"
 // Manager

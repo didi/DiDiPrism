@@ -6,21 +6,21 @@
 //
 
 #import "PrismBehaviorRecordManager+PrismDispatchListenerProtocol.h"
-#import "PrismInstructionParamUtil.h"
-#import "PrismInstructionDefines.h"
+#import <DiDiPrism/PrismInstructionParamUtil.h>
+#import <DiDiPrism/PrismInstructionDefines.h>
 // Category
-#import "NSDictionary+PrismExtends.h"
-#import "UIView+PrismExtends.h"
-#import "UIControl+PrismIntercept.h"
-#import "UIScreenEdgePanGestureRecognizer+PrismIntercept.h"
-#import "WKWebView+PrismIntercept.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
+#import <DiDiPrism/UIView+PrismExtends.h>
+#import <DiDiPrism/UIControl+PrismIntercept.h>
+#import <DiDiPrism/UIScreenEdgePanGestureRecognizer+PrismIntercept.h>
+#import <DiDiPrism/WKWebView+PrismIntercept.h>
 // Instruction
-#import "PrismControlInstructionGenerator.h"
-#import "PrismEdgePanInstructionGenerator.h"
-#import "PrismTapGestureInstructionGenerator.h"
-#import "PrismLongPressGestureInstructionGenerator.h"
-#import "PrismCellInstructionGenerator.h"
-#import "PrismViewControllerInstructionGenerator.h"
+#import <DiDiPrism/PrismControlInstructionGenerator.h>
+#import <DiDiPrism/PrismEdgePanInstructionGenerator.h>
+#import <DiDiPrism/PrismTapGestureInstructionGenerator.h>
+#import <DiDiPrism/PrismLongPressGestureInstructionGenerator.h>
+#import <DiDiPrism/PrismCellInstructionGenerator.h>
+#import <DiDiPrism/PrismViewControllerInstructionGenerator.h>
 
 @implementation PrismBehaviorRecordManager (PrismDispatchListenerProtocol)
 #pragma mark -delegate

@@ -7,7 +7,7 @@
 //
 
 #import "DetailAViewController.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "MBProgressHUD.h"
 #import "DetailAViewController.h"
 #import "DetailBViewController.h"

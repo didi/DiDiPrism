@@ -6,9 +6,9 @@
 //
 
 #import "PrismBehaviorModel.h"
-#import "PrismInstructionDefines.h"
+#import <DiDiPrism/PrismInstructionDefines.h>
+#import <DiDiPrism/PrismInstructionFormatter.h>
 #import "PrismBehaviorTranslater.h"
-#import "PrismInstructionFormatter.h"
 
 static NSDictionary *list_customKeyMapper = nil;
 static NSDictionary *item_customKeyMapper = nil;

@@ -7,7 +7,7 @@
 //
 
 #import "DetailBannerACollectionViewCell.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 
 @interface DetailBannerACollectionViewCell()

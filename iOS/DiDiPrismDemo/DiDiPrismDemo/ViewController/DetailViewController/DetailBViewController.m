@@ -7,7 +7,7 @@
 //
 
 #import "DetailBViewController.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "MBProgressHUD.h"
 
 @interface DetailBViewController ()

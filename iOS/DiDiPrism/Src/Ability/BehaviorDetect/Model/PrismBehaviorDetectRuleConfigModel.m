@@ -6,9 +6,9 @@
 //
 
 #import "PrismBehaviorDetectRuleConfigModel.h"
-#import "NSArray+PrismExtends.h"
-#import "NSDictionary+PrismExtends.h"
-#import "NSDate+PrismExtends.h"
+#import <DiDiPrism/NSArray+PrismExtends.h>
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
+#import <DiDiPrism/NSDate+PrismExtends.h>
 
 #define PrismBehaviorDetectBasePointDefaultKey @"[ignore]";
 

@@ -9,7 +9,7 @@
 #import <objc/runtime.h>
 #import "PrismBehaviorRecordManager.h"
 // Category
-#import "NSDictionary+PrismExtends.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
 
 @interface PrismRecordNSURLProtocol() <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession *session;

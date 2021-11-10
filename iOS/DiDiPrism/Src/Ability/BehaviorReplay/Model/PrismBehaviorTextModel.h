@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PrismInstructionAreaInfoUtil.h"
+#import <DiDiPrism/PrismInstructionAreaInfoUtil.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

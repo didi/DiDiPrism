@@ -12,7 +12,7 @@
 // Model
 #import "PrismBehaviorModel.h"
 // Category
-#import "NSDictionary+PrismExtends.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
 // Manager
 #import "PrismBehaviorReplayManager.h"
 #import "PrismBehaviorRecordManager.h"

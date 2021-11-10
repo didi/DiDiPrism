@@ -8,7 +8,7 @@
 #import "NSURLSessionConfiguration+PrismReplay.h"
 #import "PrismReplayNSURLProtocol.h"
 // Util
-#import "PrismRuntimeUtil.h"
+#import <DiDiPrism/PrismRuntimeUtil.h>
 
 @implementation NSURLSessionConfiguration (PrismReplay)
 + (void)load {

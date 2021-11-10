@@ -6,10 +6,10 @@
 //
 
 #import "PrismDataSwitchView.h"
-#import "Masonry.h"
-#import "PrismIdentifierUtil.h"
+#import <Masonry/Masonry.h>
+#import <DiDiPrism/PrismIdentifierUtil.h>
 // Category
-#import "UIButton+PrismExtends.h"
+#import <DiDiPrism/UIButton+PrismExtends.h>
 
 @interface PrismDataSwitchView()
 @property (nonatomic, strong) UIButton *dataModeButton;

@@ -9,7 +9,7 @@
 #import "DetailViewController.h"
 #import "PrismAdapter.h"
 #import "DetailTableViewCell.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "DetailAViewController.h"
 #import "DetailBViewController.h"
 #import "DetailPresentedViewController.h"

@@ -6,12 +6,12 @@
 //
 
 #import "PrismDataFloatingView.h"
-#import "Masonry.h"
-#import "PrismIdentifierUtil.h"
+#import <Masonry/Masonry.h>
+#import <DiDiPrism/PrismIdentifierUtil.h>
 // View
 #import "PrismDataHeatMapView.h"
 // Category
-#import "UIColor+PrismExtends.h"
+#import <DiDiPrism/UIColor+PrismExtends.h>
 
 @interface PrismDataFloatingView()
 @property (nonatomic, strong) UIView *contentView;

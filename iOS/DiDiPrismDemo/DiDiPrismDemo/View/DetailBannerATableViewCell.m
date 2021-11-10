@@ -7,7 +7,7 @@
 //
 
 #import "DetailBannerATableViewCell.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "DetailBannerACollectionViewCell.h"
 
 @interface DetailBannerATableViewCell() <UICollectionViewDelegate, UICollectionViewDataSource>

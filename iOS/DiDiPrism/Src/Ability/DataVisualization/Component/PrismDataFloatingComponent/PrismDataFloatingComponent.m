@@ -6,7 +6,7 @@
 //
 
 #import "PrismDataFloatingComponent.h"
-#import "UIView+PrismExtends.h"
+#import <DiDiPrism/UIView+PrismExtends.h>
 #import "UIView+PrismDataVisualization.h"
 
 @interface PrismDataFloatingComponent()

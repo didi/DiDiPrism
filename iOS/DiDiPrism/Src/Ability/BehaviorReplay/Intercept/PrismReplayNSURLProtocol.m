@@ -9,7 +9,7 @@
 #import "PrismBehaviorReplayManager.h"
 #import "PrismBehaviorModel.h"
 // Category
-#import "NSDictionary+PrismExtends.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
 
 #define PRISM_REQUEST_HAS_INIT @"PrismRequestHasInit"
 #define PRISM_REQUEST_MOCK_RESULT @"PrismRequestMockResult"

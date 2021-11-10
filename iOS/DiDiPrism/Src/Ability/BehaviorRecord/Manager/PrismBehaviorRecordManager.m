@@ -6,11 +6,11 @@
 //
 
 #import "PrismBehaviorRecordManager.h"
-#import "PrismEventDispatcher.h"
+#import <DiDiPrism/PrismEventDispatcher.h>
 // Instruction
-#import "PrismInstructionDefines.h"
+#import <DiDiPrism/PrismInstructionDefines.h>
 // Category
-#import "NSDictionary+PrismExtends.h"
+#import <DiDiPrism/NSDictionary+PrismExtends.h>
 
 @interface PrismBehaviorRecordManager()
 

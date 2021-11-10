@@ -6,7 +6,7 @@
 //
 
 #import "PrismDataFloatingMenuView.h"
-#import "PrismIdentifierUtil.h"
+#import <DiDiPrism/PrismIdentifierUtil.h>
 
 #define PrismDataFloatingMenuViewWidth 130
 #define PrismDataFloatingMenuItemHeight 40

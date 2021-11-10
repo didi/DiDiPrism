@@ -6,9 +6,9 @@
 //
 
 #import "PrismBehaviorDetectManager.h"
-#import "PrismInstructionFormatter.h"
+#import <DiDiPrism/PrismInstructionFormatter.h>
+#import <DiDiPrism/NSDate+PrismExtends.h>
 #import "PrismBehaviorStorageManager.h"
-#import "NSDate+PrismExtends.h"
 
 @interface PrismBehaviorDetectManager()
 @property (nonatomic, strong) PrismBehaviorDetectRuleConfigModel *ruleConfigModel;

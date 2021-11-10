@@ -6,7 +6,7 @@
 //
 
 #import "BehaviorReplayOperationView.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @interface BehaviorReplayOperationView()
 @property (nonatomic, strong) UILabel *titleLabel;

@@ -8,7 +8,7 @@
 
 #import "DetailTableViewCell.h"
 #import "UIResponder+PrismIntercept.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @interface DetailTableViewCell()
 @property (nonatomic, strong) UILabel *titleLabel;

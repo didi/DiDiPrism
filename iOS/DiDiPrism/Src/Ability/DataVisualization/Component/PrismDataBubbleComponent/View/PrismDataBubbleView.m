@@ -6,8 +6,8 @@
 //
 
 #import "PrismDataBubbleView.h"
-#import "Masonry.h"
-#import "PrismIdentifierUtil.h"
+#import <Masonry/Masonry.h>
+#import <DiDiPrism/PrismIdentifierUtil.h>
 
 @interface PrismDataBubbleView()<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UILabel *timeLabel;

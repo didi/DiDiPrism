@@ -6,12 +6,12 @@
 //
 
 #import "PrismBehaviorReplayManager.h"
-#import "PrismEventDispatcher.h"
-#import "PrismBaseInstructionParser.h"
+#import <DiDiPrism/PrismEventDispatcher.h>
+#import <DiDiPrism/PrismBaseInstructionParser.h>
+#import <DiDiPrism/PrismInstructionDefines.h>
 #import "PrismBehaviorReplayOperation.h"
-#import "PrismInstructionDefines.h"
 // Category
-#import "NSArray+PrismExtends.h"
+#import <DiDiPrism/NSArray+PrismExtends.h>
 
 @interface PrismBehaviorReplayManager()
 @property (nonatomic, strong) NSOperationQueue *prismOperationQueue;

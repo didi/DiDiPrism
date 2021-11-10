@@ -6,8 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PrismEventDispatcher.h"
-#import "PrismIdentifierUtil.h"
+#import <DiDiPrism/PrismEventDispatcher.h>
+#import <DiDiPrism/PrismIdentifierUtil.h>
 #import "PrismDataBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

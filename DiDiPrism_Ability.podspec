@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |spec|
-  spec.name         = "DiDiPrism"
+  spec.name         = "DiDiPrism_Ability"
   spec.version      = "0.2.3.1"
   spec.summary      = "一款专注移动端操作行为的工具"
   spec.description  = <<-DESC
@@ -26,11 +26,30 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.default_subspec = 'Core'
+  spec.dependency  'DiDiPrism'
   
-  spec.subspec 'Core' do |ss| 
-    ss.source_files = ['iOS/DiDiPrism/Src/Core/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Category/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Util/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Protocol/**/*{.h,.m}']
-    ss.dependency 'RSSwizzle'
+  spec.default_subspec = 'WithBehaviorRecord', 'WithBehaviorReplay'
+
+  spec.subspec 'WithBehaviorRecord' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorRecord/**/*{.h,.m}'
+  end
+
+  spec.subspec 'WithBehaviorReplay' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorReplay/**/*{.h,.m}'
+    ss.dependency "JSONModel", '~> 1.0'
+  end
+
+  spec.subspec 'WithBehaviorDetect' do |ss| 
+    ss.source_files = 'iOS/DiDiPrism/Src/Ability/BehaviorDetect/**/*{.h,.m}'
+    ss.dependency "JSONModel", '~> 1.0'
+  end
+
+  spec.subspec 'WithDataVisualization' do |ss| 
+    ss.source_files = ['iOS/DiDiPrism/Src/Ability/DataVisualization/**/*{.h,.m}', 'iOS/DiDiPrism/Src/Adapter/**/*{.h,.m}']
+    ss.resource_bundles = {
+      'DiDiPrism' => 'iOS/DiDiPrism/Resource/**/*'
+    }
+    ss.dependency "Masonry"
   end
 
 end

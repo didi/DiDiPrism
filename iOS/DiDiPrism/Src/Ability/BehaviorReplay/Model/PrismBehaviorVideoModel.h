@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PrismInstructionFormatter.h"
+#import <DiDiPrism/PrismInstructionFormatter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

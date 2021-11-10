@@ -6,8 +6,8 @@
 //
 
 #import "PrismDataPickerView.h"
-#import "PrismIdentifierUtil.h"
-#import "Masonry.h"
+#import <DiDiPrism/PrismIdentifierUtil.h>
+#import <Masonry/Masonry.h>
 
 @interface PrismDataPickerView()< UIPickerViewDelegate, UIPickerViewDataSource>
 

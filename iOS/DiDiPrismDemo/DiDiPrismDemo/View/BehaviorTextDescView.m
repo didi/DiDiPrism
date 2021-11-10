@@ -6,8 +6,8 @@
 //
 
 #import "BehaviorTextDescView.h"
-#import "Masonry.h"
-#import "UIColor+PrismExtends.h"
+#import <Masonry/Masonry.h>
+#import <DiDiPrism/UIColor+PrismExtends.h>
 #import "BehaviorTextDescViewCell.h"
 #import "BehaviorTextDescNodeCell.h"
 
