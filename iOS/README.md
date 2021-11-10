@@ -1,7 +1,8 @@
 # iOS 使用手册
 ## 安装说明
 ```
-pod 'DiDiPrism', :subspecs => ['Core', 'WithBehaviorRecord', 'WithBehaviorReplay', 'WithBehaviorDetect', 'WithDataVisualization']
+pod 'DiDiPrism'
+pod 'DiDiPrism_Ability', :subspecs => ['WithBehaviorRecord', 'WithBehaviorReplay', 'WithBehaviorDetect', 'WithDataVisualization']
 
 // 其中：
 // WithBehaviorRecord 为操作采集模块。
