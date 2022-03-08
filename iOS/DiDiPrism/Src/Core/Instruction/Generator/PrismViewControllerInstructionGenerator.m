@@ -50,12 +50,16 @@
         url = [viewController performSelector:@selector(getUrl)];;
         if ([url isKindOfClass:[NSString class]] && url.length) {
             [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
+        } else {
+            url = nil;
         }
     }
     else if ([viewController respondsToSelector:@selector(url)]) {
         url = [viewController performSelector:@selector(url)];;
         if ([url isKindOfClass:[NSString class]] && url.length) {
             [vrContent appendFormat:@"%@%@", kConnectorFlag, url];
+        } else {
+            url = nil;
         }
     }
     
