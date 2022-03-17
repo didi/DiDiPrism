@@ -18,12 +18,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject *)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     // 解析响应链信息
     NSArray<NSString*> *viewPathArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     
     NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
@@ -62,7 +62,7 @@
                                                                               cellRowOrOriginY:cellRowOrOriginY
                                                                                  fromSuperView:targetView];
                     if (!scrollViewCell) {
-                        return PrismInstructionParseResultFail;
+                        return nil;
                     }
                     targetView = scrollViewCell;
                     lastScrollView = scrollViewCell.superview;
@@ -124,12 +124,8 @@
     
     if (longPressGesture) {
         [self scrollToIdealOffsetWithScrollView:(UIScrollView*)lastScrollView targetElement:longPressGesture.view];
-        [self highlightTheElement:longPressGesture.view withCompletion:^{
-            [longPressGesture setState:UIGestureRecognizerStateRecognized];
-        }];
-        return PrismInstructionParseResultSuccess;
     }
-    return PrismInstructionParseResultFail;
+    return longPressGesture;
 }
 
 #pragma mark - private method

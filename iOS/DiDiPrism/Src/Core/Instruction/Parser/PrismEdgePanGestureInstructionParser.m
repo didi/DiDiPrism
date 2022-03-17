@@ -19,12 +19,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject *)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     // 解析响应链信息
     NSArray<NSString*> *viewPathArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     if (!viewPathArray.lastObject.length) {
         viewPathArray = [viewPathArray subarrayWithRange:NSMakeRange(0, viewPathArray.count - 1)];
@@ -44,7 +44,7 @@
         allPossibleResponder = result;
     }
     if (index < viewPathArray.count) {
-        return PrismInstructionParseResultError;
+        return nil;
     }
     
     UIScreenEdgePanGestureRecognizer *edgePanGesture = nil;
@@ -77,9 +77,9 @@
         else if (targetViewController.parentViewController.presentingViewController) {
             [targetViewController.parentViewController dismissViewControllerAnimated:YES completion:nil];
         }
-        return PrismInstructionParseResultSuccess;
     }
-    return PrismInstructionParseResultFail;
+    
+    return edgePanGesture;
 }
 
 #pragma mark - private method

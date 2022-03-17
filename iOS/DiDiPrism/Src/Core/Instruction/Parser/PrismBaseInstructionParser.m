@@ -53,17 +53,9 @@
     return [[PrismBaseInstructionParser alloc] init];
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.needExecute = YES;
-    }
-    return self;
-}
-
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
-    return PrismInstructionParseResultSuccess;
+- (NSObject*)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+    return nil;
 }
 
 #pragma mark - private method

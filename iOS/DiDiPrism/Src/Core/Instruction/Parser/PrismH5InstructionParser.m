@@ -16,25 +16,25 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject *)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     NSArray<NSString*> *h5ViewArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     if (h5ViewArray.count < 2) {
-        return PrismInstructionParseResultError;
+        return nil;
     }
     
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
     UIViewController *viewController = keyWindow.rootViewController;
     WKWebView *webView = (WKWebView*)[self recursiveSearchView:[WKWebView class] fromSuperView:viewController.view];
     if (!webView) {
-        return PrismInstructionParseResultError;
+        return nil;
     }
     if ([webView isLoading]) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     [webView evaluateJavaScript:[NSString stringWithFormat:@"PRISM_PLAYBACK_PLAY('%@')", h5ViewArray[1]] completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         
     }];
-    return PrismInstructionParseResultSuccess;
+    return webView;
 }
 
 #pragma mark - private method

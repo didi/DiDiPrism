@@ -23,13 +23,13 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject *)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     UIControl *targetControl = nil;
     // 解析响应链信息
     NSArray<NSString*> *viewPathArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     
     NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
@@ -149,17 +149,10 @@
             break;
         }
     }
-    
-    
     if (targetControl) {
         [self scrollToIdealOffsetWithScrollView:(UIScrollView*)lastScrollView targetElement:targetControl];
-        [self highlightTheElement:targetControl withCompletion:^{
-            [targetControl sendActionsForControlEvents:UIControlEventAllTouchEvents];
-        }];
-        
-        return PrismInstructionParseResultSuccess;
     }
-    return PrismInstructionParseResultFail;
+    return targetControl;
 }
 
 #pragma mark - private method

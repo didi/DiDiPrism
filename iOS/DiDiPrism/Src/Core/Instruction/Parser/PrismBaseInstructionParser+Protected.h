@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
                                          fromSuperView:(UIView*)superView;
 - (NSArray<UIResponder*>*)searchRespondersWithClassName:(NSString*)className superResponders:(NSArray<UIResponder*>*)superResponders;
 - (void)scrollToIdealOffsetWithScrollView:(UIScrollView*)scrollView targetElement:(UIView*)targetElement;
-- (void)highlightTheElement:(UIView*)element withCompletion:(void(^)(void))block;
 - (BOOL)isAreaInfoEqualBetween:(NSString*)one withAnother:(NSString*)another allowCompatibleMode:(BOOL)allowCompatibleMode;
 @end
 
