@@ -11,9 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismBaseElementTrigger : NSObject
-
 + (instancetype)elementTriggerWithFormatter:(PrismInstructionFormatter*)formatter;
-
 
 @property (nonatomic, assign) BOOL needExecute; //是否真正触发。
 
