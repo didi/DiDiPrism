@@ -8,6 +8,7 @@
 #import "PrismBehaviorRecordManager+PrismDispatchListenerProtocol.h"
 #import <DiDiPrism/PrismInstructionParamUtil.h>
 #import <DiDiPrism/PrismInstructionDefines.h>
+#import <DiDiPrism/PrismInstructionModel.h>
 // Category
 #import <DiDiPrism/NSDictionary+PrismExtends.h>
 #import <DiDiPrism/UIView+PrismExtends.h>
@@ -42,7 +43,8 @@
                     [controlEvents appendString:key];
                 }
             }
-            NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:control withTargetAndSelector:targetAndSelector withControlEvents:[controlEvents copy]];
+            PrismInstructionModel *instructionModel = [PrismControlInstructionGenerator getInstructionModelOfControl:control withTargetAndSelector:targetAndSelector withControlEvents:[controlEvents copy]];
+            NSString *instruction = [instructionModel toString];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:control];
                 [self addInstruction:instruction withEventParams:eventParams];
@@ -67,7 +69,8 @@
             return;
         }
         
-        NSString *instruction = [PrismEdgePanInstructionGenerator getInstructionOfEdgePanGesture:edgePanGestureRecognizer];
+        PrismInstructionModel *instructionModel = [PrismEdgePanInstructionGenerator getInstructionModelOfEdgePanGesture:edgePanGestureRecognizer];
+        NSString *instruction = [instructionModel toString];
         if (!instruction.length) {
             return;
         }
@@ -81,7 +84,8 @@
     }
     else if (event == PrismDispatchEventUITapGestureRecognizerAction) {
         UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer*)sender;
-        NSString *instruction = [PrismTapGestureInstructionGenerator getInstructionOfTapGesture:tapGestureRecognizer];
+        PrismInstructionModel *instructionModel = [PrismTapGestureInstructionGenerator getInstructionModelOfTapGesture:tapGestureRecognizer];
+        NSString *instruction = [instructionModel toString];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:tapGestureRecognizer.view];
             [self addInstruction:instruction withEventParams:eventParams];
@@ -89,7 +93,8 @@
     }
     else if (event == PrismDispatchEventUILongPressGestureRecognizerAction) {
         UILongPressGestureRecognizer *longPressGesture = (UILongPressGestureRecognizer*)sender;
-        NSString *instruction = [PrismLongPressGestureInstructionGenerator getInstructionOfLongPressGesture:longPressGesture];
+        PrismInstructionModel *instructionModel = [PrismLongPressGestureInstructionGenerator getInstructionModelOfLongPressGesture:longPressGesture];
+        NSString *instruction = [instructionModel toString];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:longPressGesture.view];
             [self addInstruction:instruction withEventParams:eventParams];
@@ -98,7 +103,8 @@
     else if (event == PrismDispatchEventUIViewTouchesEnded_End) {
         UIView *view = (UIView*)sender;
         if ([view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionViewCell class]]) {
-            NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:view];
+            PrismInstructionModel *instructionModel = [PrismCellInstructionGenerator getInstructionModelOfCell:view];
+            NSString *instruction = [instructionModel toString];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:view];
                 [self addInstruction:instruction withEventParams:eventParams];
@@ -107,7 +113,8 @@
     }
     else if (event == PrismDispatchEventUIViewControllerViewDidAppear) {
         UIViewController *viewController = (UIViewController*)sender;
-        NSString *instruction = [PrismViewControllerInstructionGenerator getInstructionOfViewController:viewController];
+        PrismInstructionModel *instructionModel = [PrismViewControllerInstructionGenerator getInstructionModelOfViewController:viewController];
+        NSString *instruction = [instructionModel toString];
         [self addInstruction:instruction];
     }
     else if (event == PrismDispatchEventWKWebViewInitWithFrame) {

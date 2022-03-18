@@ -16,14 +16,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfViewController:(UIViewController*)viewController {
-    if ([self isSystemKeyboardOfViewController:viewController]) {
-        return nil;
-    }
-    NSString *viewContent = [self getViewContentOfViewController:viewController];
-    return [NSString stringWithFormat:@"%@%@%@", kUIViewControllerDidAppear, kBeginOfViewRepresentativeContentFlag, viewContent ?: @""];
-}
-
 + (PrismInstructionModel *)getInstructionModelOfViewController:(UIViewController *)viewController {
     if ([self isSystemKeyboardOfViewController:viewController]) {
         return nil;

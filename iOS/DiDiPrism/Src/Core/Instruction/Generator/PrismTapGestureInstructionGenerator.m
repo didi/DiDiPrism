@@ -26,36 +26,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfTapGesture:(UITapGestureRecognizer*)tapGesture {
-    UIView *view = tapGesture.view;
-    if (!view) {
-        return nil;
-    }
-    if (view.prismAutoDotFinalMark.length) {
-        return view.prismAutoDotFinalMark;
-    }
-    
-    NSString *responseChainInfo = [tapGesture prismAutoDotResponseChainInfo];
-    NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
-    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
-    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
-    // 屏蔽Native侧的H5页面点击指令
-    if (([listInfo containsString:@"WKScrollView"] || [listInfo containsString:@"WKContentView"])) {
-        return nil;
-    }
-    NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-    NSString *functionName = [self getFunctionNameOfTapGesture:tapGesture];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionTapGestureFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
-    // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if (listInfo.length) {
-        return instruction;
-    }
-    else {
-        view.prismAutoDotFinalMark = instruction;
-        return view.prismAutoDotFinalMark;
-    }
-}
-
 + (PrismInstructionModel *)getInstructionModelOfTapGesture:(UITapGestureRecognizer *)tapGesture {
     UIView *view = tapGesture.view;
     if (!view) {

@@ -23,16 +23,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfCell:(UIView*)cell {
-    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:cell];
-    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:cell];
-    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
-    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
-    NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
-    cell.prismAutoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionCellFlag, kBeginOfViewPathFlag, responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @""];
-    return cell.prismAutoDotFinalMark;
-}
-
 + (PrismInstructionModel *)getInstructionModelOfCell:(UIView *)cell {
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionCellFlag;

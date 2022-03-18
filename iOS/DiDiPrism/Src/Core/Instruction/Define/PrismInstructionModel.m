@@ -22,6 +22,18 @@
     return [dictionary copy];
 }
 
+- (NSString *)toString {
+    NSMutableString *str = [NSMutableString string];
+    self.e.length ? [str appendString:self.e] : NO;
+    self.vm.length ? [str appendFormat:@"%@%@",kBeginOfViewMotionFlag,self.vm] : NO;
+    self.vp.length ? [str appendFormat:@"%@%@",kBeginOfViewPathFlag,self.vp] : NO;
+    self.vl.length ? [str appendFormat:@"%@%@",kBeginOfViewListFlag,self.vl] : NO;
+    self.vq.length ? [str appendFormat:@"%@%@",kBeginOfViewQuadrantFlag,self.vq] : NO;
+    self.vr.length ? [str appendFormat:@"%@%@",kBeginOfViewRepresentativeContentFlag,self.vr] : NO;
+    self.vf.length ? [str appendFormat:@"%@%@",kBeginOfViewFunctionFlag,self.vf] : NO;
+    return [str copy];
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"Prism: vm:%@ | vp:%@ | vl:%@ | vq:%@ | vr:%@ | vf:%@ | h5:%@", self.vm ?: @"", self.vp ?: @"", self.vl ?: @"", self.vq ?: @"", self.vr ?: @"", self.vf ?: @"", self.h5 ?: @""];
 }

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *h5;
 
 - (NSDictionary*)toDictionary;
+- (NSString*)toString;
 @end
 
 NS_ASSUME_NONNULL_END
