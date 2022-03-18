@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismViewControllerInstructionGenerator : NSObject
-
 + (PrismInstructionModel*)getInstructionModelOfViewController:(UIViewController*)viewController;
 @end
 

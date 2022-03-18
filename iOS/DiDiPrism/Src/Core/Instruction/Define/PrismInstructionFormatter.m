@@ -78,6 +78,9 @@
         case PrismInstructionFragmentTypeViewPath:
             return kViewPathFlag;
             break;
+        case PrismInstructionFragmentTypeViewTree:
+            return kViewTreeFlag;
+            break;
         case PrismInstructionFragmentTypeViewList:
             return kViewListFlag;
             break;

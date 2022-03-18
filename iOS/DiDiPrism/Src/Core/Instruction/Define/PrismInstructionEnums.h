@@ -9,13 +9,14 @@
 #define PrismInstructionEnums_h
 
 typedef NS_ENUM(NSUInteger, PrismInstructionMode) {
-    PrismInstructionModeInclusive,  //包容模式
-    PrismInstructionModeExtreme,  //极端模式
+    PrismInstructionModeInclusive,  //包容模式（默认）
+    PrismInstructionModeStrict,  //严格模式
 };
 
 typedef NS_ENUM(NSUInteger, PrismInstructionFragmentType) {
     PrismInstructionFragmentTypeViewMotion, //触发类型
     PrismInstructionFragmentTypeViewPath, //响应链信息
+    PrismInstructionFragmentTypeViewTree, //页面详细层级信息（仅在严格模式下产生）
     PrismInstructionFragmentTypeViewList, //列表信息
     PrismInstructionFragmentTypeViewQuadrant, //区位信息
     PrismInstructionFragmentTypeViewRepresentativeContent, //参考信息

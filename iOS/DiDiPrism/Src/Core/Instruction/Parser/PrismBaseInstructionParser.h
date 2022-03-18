@@ -7,11 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "PrismInstructionFormatter.h"
+#import "PrismInstructionEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismBaseInstructionParser : NSObject
 + (instancetype)instructionParserWithFormatter:(PrismInstructionFormatter*)formatter;
++ (instancetype)instructionParserWithFormatter:(PrismInstructionFormatter*)formatter withMode:(PrismInstructionMode)mode;
 
 @property (nonatomic, assign) BOOL didScroll; //是否发生了滚动，用于针对滚动效果做优化
 @property (nonatomic, assign) BOOL isCompatibleMode; //是否是兼容模式

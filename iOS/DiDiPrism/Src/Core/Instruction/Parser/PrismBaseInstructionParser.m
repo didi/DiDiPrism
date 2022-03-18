@@ -25,31 +25,39 @@
 @implementation PrismBaseInstructionParser
 #pragma mark - life cycle
 + (instancetype)instructionParserWithFormatter:(PrismInstructionFormatter*)formatter {
-    if ([formatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View].count) {
-        return [[PrismH5InstructionParser alloc] init];
+    return [self instructionParserWithFormatter:formatter withMode:PrismInstructionModeInclusive];
+}
+
++ (instancetype)instructionParserWithFormatter:(PrismInstructionFormatter *)formatter withMode:(PrismInstructionMode)mode {
+    if (mode == PrismInstructionModeInclusive) {
+        if ([formatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View].count) {
+            return [[PrismH5InstructionParser alloc] init];
+        }
+        if ([formatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent].count) {
+            return [[PrismTagInstructionParser alloc] init];
+        }
+        
+        NSArray<NSString*> *viewMotionArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
+        NSString *viewMotion = [viewMotionArray prism_stringWithIndex:1];
+        if ([viewMotion isEqualToString:kViewMotionControlFlag]) {
+            return [[PrismControlInstructionParser alloc] init];
+        }
+        else if ([viewMotion isEqualToString:kViewMotionTapGestureFlag]) {
+            return [[PrismTapGestureInstructionParser alloc] init];
+        }
+        else if ([viewMotion isEqualToString:kViewMotionCellFlag]) {
+            return [[PrismCellInstructionParser alloc] init];
+        }
+        else if ([viewMotion isEqualToString:kViewMotionEdgePanGestureFlag]) {
+            return [[PrismEdgePanGestureInstructionParser alloc] init];
+        }
+        else if ([viewMotion isEqualToString:kViewMotionLongPressGestureFlag]) {
+            return [[PrismLongPressGestureInstructionParser alloc] init];
+        }
     }
-    if ([formatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent].count) {
-        return [[PrismTagInstructionParser alloc] init];
+    else if (mode == PrismInstructionModeStrict) {
+        //TODO:补齐
     }
-    
-    NSArray<NSString*> *viewMotionArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
-    NSString *viewMotion = [viewMotionArray prism_stringWithIndex:1];
-    if ([viewMotion isEqualToString:kViewMotionControlFlag]) {
-        return [[PrismControlInstructionParser alloc] init];
-    }
-    else if ([viewMotion isEqualToString:kViewMotionTapGestureFlag]) {
-        return [[PrismTapGestureInstructionParser alloc] init];
-    }
-    else if ([viewMotion isEqualToString:kViewMotionCellFlag]) {
-        return [[PrismCellInstructionParser alloc] init];
-    }
-    else if ([viewMotion isEqualToString:kViewMotionEdgePanGestureFlag]) {
-        return [[PrismEdgePanGestureInstructionParser alloc] init];
-    }
-    else if ([viewMotion isEqualToString:kViewMotionLongPressGestureFlag]) {
-        return [[PrismLongPressGestureInstructionParser alloc] init];
-    }
-    
     return [[PrismBaseInstructionParser alloc] init];
 }
 
