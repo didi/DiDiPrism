@@ -31,6 +31,10 @@
     model.vp = [longPressGesture prismAutoDotResponseChainInfo];
     NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
+    // 屏蔽Native侧的H5页面点击指令
+    if (([model.vl containsString:@"WKScrollView"] || [model.vl containsString:@"WKContentView"])) {
+        return nil;
+    }
     model.vq = [areaInfo prism_stringWithIndex:1];
     model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
     model.vf = [self getFunctionNameOfLongPressGesture:longPressGesture];
