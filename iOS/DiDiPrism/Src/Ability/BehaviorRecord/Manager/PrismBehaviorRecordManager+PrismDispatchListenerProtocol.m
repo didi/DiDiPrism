@@ -8,6 +8,7 @@
 #import "PrismBehaviorRecordManager+PrismDispatchListenerProtocol.h"
 #import <DiDiPrism/PrismInstructionParamUtil.h>
 #import <DiDiPrism/PrismInstructionDefines.h>
+#import <DiDiPrism/PrismInstructionModel.h>
 // Category
 #import <DiDiPrism/NSDictionary+PrismExtends.h>
 #import <DiDiPrism/UIView+PrismExtends.h>
@@ -42,7 +43,8 @@
                     [controlEvents appendString:key];
                 }
             }
-            NSString *instruction = [PrismControlInstructionGenerator getInstructionOfControl:control withTargetAndSelector:targetAndSelector withControlEvents:[controlEvents copy]];
+            PrismInstructionModel *instructionModel = [PrismControlInstructionGenerator getInstructionModelOfControl:control withTargetAndSelector:targetAndSelector withControlEvents:[controlEvents copy]];
+            NSString *instruction = [instructionModel toString];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:control];
                 [self addInstruction:instruction withEventParams:eventParams];
@@ -67,7 +69,8 @@
             return;
         }
         
-        NSString *instruction = [PrismEdgePanInstructionGenerator getInstructionOfEdgePanGesture:edgePanGestureRecognizer];
+        PrismInstructionModel *instructionModel = [PrismEdgePanInstructionGenerator getInstructionModelOfEdgePanGesture:edgePanGestureRecognizer];
+        NSString *instruction = [instructionModel toString];
         if (!instruction.length) {
             return;
         }
@@ -81,7 +84,8 @@
     }
     else if (event == PrismDispatchEventUITapGestureRecognizerAction) {
         UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer*)sender;
-        NSString *instruction = [PrismTapGestureInstructionGenerator getInstructionOfTapGesture:tapGestureRecognizer];
+        PrismInstructionModel *instructionModel = [PrismTapGestureInstructionGenerator getInstructionModelOfTapGesture:tapGestureRecognizer];
+        NSString *instruction = [instructionModel toString];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:tapGestureRecognizer.view];
             [self addInstruction:instruction withEventParams:eventParams];
@@ -89,7 +93,8 @@
     }
     else if (event == PrismDispatchEventUILongPressGestureRecognizerAction) {
         UILongPressGestureRecognizer *longPressGesture = (UILongPressGestureRecognizer*)sender;
-        NSString *instruction = [PrismLongPressGestureInstructionGenerator getInstructionOfLongPressGesture:longPressGesture];
+        PrismInstructionModel *instructionModel = [PrismLongPressGestureInstructionGenerator getInstructionModelOfLongPressGesture:longPressGesture];
+        NSString *instruction = [instructionModel toString];
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:longPressGesture.view];
             [self addInstruction:instruction withEventParams:eventParams];
@@ -98,7 +103,8 @@
     else if (event == PrismDispatchEventUIViewTouchesEnded_End) {
         UIView *view = (UIView*)sender;
         if ([view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionViewCell class]]) {
-            NSString *instruction = [PrismCellInstructionGenerator getInstructionOfCell:view];
+            PrismInstructionModel *instructionModel = [PrismCellInstructionGenerator getInstructionModelOfCell:view];
+            NSString *instruction = [instructionModel toString];
             if (instruction.length) {
                 NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:view];
                 [self addInstruction:instruction withEventParams:eventParams];
@@ -107,13 +113,14 @@
     }
     else if (event == PrismDispatchEventUIViewControllerViewDidAppear) {
         UIViewController *viewController = (UIViewController*)sender;
-        NSString *instruction = [PrismViewControllerInstructionGenerator getInstructionOfViewController:viewController];
+        PrismInstructionModel *instructionModel = [PrismViewControllerInstructionGenerator getInstructionModelOfViewController:viewController];
+        NSString *instruction = [instructionModel toString];
         [self addInstruction:instruction];
     }
     else if (event == PrismDispatchEventWKWebViewInitWithFrame) {
         WKWebView *webView = (WKWebView*)sender;
         WKWebViewConfiguration *configuration = [params objectForKey:@"configuration"];
-        NSString *recordScript = @"!function(){\"use strict\";var e=new(function(){function e(){}return e.prototype.record=function(e){for(var t=this.getContent(e),r=[];e&&\"body\"!==e.nodeName.toLowerCase();){var n=e.nodeName.toLowerCase();if(e.id)n+=\"#\"+e.id;else{for(var i=e,o=1;i.previousElementSibling;)i=i.previousElementSibling,o+=1;o>1&&(n+=\":nth-child(\"+o+\")\")}r.unshift(n),e=e.parentElement}return r.unshift(\"body\"),{instruct:r.join(\">\"),content:t}},e.prototype.getContent=function(e){return e.innerText?this.getText(e):e.getAttribute(\"src\")?e.getAttribute(\"src\"):e.querySelectorAll(\"img\")&&e.querySelectorAll(\"img\").length>0?this.getImgSrc(e):\"\"},e.prototype.getText=function(e){if(!(e.childNodes&&e.childNodes.length>0))return e.innerText||e.nodeValue;for(var t=0;t<e.childNodes.length;t++)if(e.childNodes[t].childNodes){var r=this.getText(e.childNodes[t]);if(r)return r}},e.prototype.getImgSrc=function(e){var t=e.querySelectorAll(\"img\");return t&&t[0]&&t[0].src},e}());var moved=false;document.addEventListener(\"touchmove\",(function(t){moved=true;}));document.addEventListener(\"touchend\",(function(t){if(moved===true){moved=false;return;}if(t.target)try{window.webkit.messageHandlers.prism_record_instruct&&window.webkit.messageHandlers.prism_record_instruct.postMessage(e.record(t.target))}catch(e){}}))}();";
+        NSString *recordScript = @"!function(){\"use strict\";var e=new(function(){function e(){}return e.prototype.record=function(e){for(var t=this.getContent(e),n=[];e&&\"body\"!==e.nodeName.toLowerCase();){var r=e.nodeName.toLowerCase();if(e.id)r+=\"#\"+e.id;else{for(var i=e.className.split(\" \").join(\".\"),o=!0,s=e,c=1;s.previousElementSibling;)s=s.previousElementSibling,o&&s.className.split(\" \").join(\".\")===i&&(o=!1),c+=1;if(o)for(s=e;s.nextElementSibling;)if(s=s.nextElementSibling,o&&s.className.split(\" \").join(\".\")===i){o=!1;break}o?r+=\".\"+i:c>1&&(r+=\":nth-child(\"+c+\")\")}n.unshift(r),e=e.parentElement}return n.unshift(\"body\"),{instruct:n.join(\">\"),content:t}},e.prototype.getContent=function(e){return e.innerText?this.getText(e):e.getAttribute(\"src\")?e.getAttribute(\"src\"):e.querySelectorAll(\"img\")&&e.querySelectorAll(\"img\").length>0?this.getImgSrc(e):\"\"},e.prototype.getText=function(e){if(!(e.childNodes&&e.childNodes.length>0))return e.innerText||e.nodeValue;for(var t=0;t<e.childNodes.length;t++)if(e.childNodes[t].childNodes){var n=this.getText(e.childNodes[t]);if(n)return n}},e.prototype.getImgSrc=function(e){var t=e.querySelectorAll(\"img\");return t&&t[0]&&t[0].src},e}()),t=!1;document.addEventListener(\"touchmove\",(function(){!0!==t&&(t=!0)})),document.addEventListener(\"touchend\",(function(n){if(!0!==t){if(n.target)try{window.webkit.messageHandlers.prism_record_instruct&&window.webkit.messageHandlers.prism_record_instruct.postMessage(e.record(n.target))}catch(e){}}else t=!1}))}();";
         
         [webView prism_autoDot_addCustomScript:recordScript withConfiguration:configuration];
         NSString *scriptName = @"prism_record_instruct";

@@ -8,6 +8,7 @@
 #import "PrismBehaviorReplayManager.h"
 #import <DiDiPrism/PrismEventDispatcher.h>
 #import <DiDiPrism/PrismBaseInstructionParser.h>
+#import <DiDiPrism/PrismBaseElementTrigger.h>
 #import <DiDiPrism/PrismInstructionDefines.h>
 #import "PrismBehaviorReplayOperation.h"
 // Category
@@ -162,20 +163,24 @@
                 });
             }
             
-            PrismInstructionParseResult parseResult = PrismInstructionParseResultFail;
+            // 解析器
             PrismBaseInstructionParser *instructionParser = [PrismBaseInstructionParser instructionParserWithFormatter:theOne.instructionFormatter];
             instructionParser.isCompatibleMode = isCompatibleMode;
+            // 触发器
+            PrismBaseElementTrigger *elementTrigger = [PrismBaseElementTrigger elementTriggerWithFormatter:theOne.instructionFormatter];
             if (index == behaviorArray.count - 1) {
-                instructionParser.needExecute = NO;
+                elementTrigger.needExecute = NO;
             }
-            parseResult = [instructionParser parseWithFormatter:theOne.instructionFormatter];
+            NSObject *parseResult = [instructionParser parseWithFormatter:theOne.instructionFormatter];
+            [elementTrigger triggerWithElement:parseResult withDelay:(instructionParser.didScroll ? 0.5 : 0)];
+            instructionParser.didScroll = NO;
             
             weakSelf.currentReplayIndex = weakSelf.model.startIndex + index;
             if (weakSelf.progressBlock) {
                 weakSelf.progressBlock(index, executedBehaviorInstruction);
             }
             
-            if (parseResult == PrismInstructionParseResultFail) {
+            if (!parseResult) {
                 NSLog(@"Prism Fail: %@", executedBehaviorInstruction);
                 if (!weakSelf.isLastInstructionParseFail) {
                     weakSelf.model.replayFailIndex = index;
@@ -184,11 +189,6 @@
                 NSString *stateText = dotCount == 0 ? @"重试中" : (dotCount == 1 ? @"重试中." : @"重试中..");
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"prism_behaviorreplay_statechanged_notification" object:nil userInfo:@{@"state":stateText}];
                 return NO;
-            }
-            else if (parseResult == PrismInstructionParseResultError) {
-                NSLog(@"Prism Error: %@", executedBehaviorInstruction);
-                weakSelf.model.replayFailIndex = -1;
-                return YES;
             }
             else {
                 NSLog(@"Prism Success: %@", executedBehaviorInstruction);

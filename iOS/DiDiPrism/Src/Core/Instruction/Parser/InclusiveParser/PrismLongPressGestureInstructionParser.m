@@ -1,34 +1,29 @@
 //
-//  PrismGestureInstructionParser.m
+//  PrismLongPressGestureInstructionParser.m
 //  DiDiPrism
 //
-//  Created by hulk on 2019/7/25.
+//  Created by hulk on 2021/6/25.
 //
 
-#import "PrismTapGestureInstructionParser.h"
+#import "PrismLongPressGestureInstructionParser.h"
 #import "PrismBaseInstructionParser+Protected.h"
-#import "PrismTapGestureInstructionGenerator.h"
+#import "PrismLongPressGestureInstructionGenerator.h"
 // Category
-#import "UITapGestureRecognizer+PrismIntercept.h"
 #import "NSArray+PrismExtends.h"
 // Util
 #import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
 
-@interface PrismTapGestureInstructionParser()
-
-@end
-
-@implementation PrismTapGestureInstructionParser
+@implementation PrismLongPressGestureInstructionParser
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject *)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     // 解析响应链信息
     NSArray<NSString*> *viewPathArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     
     NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
@@ -44,7 +39,7 @@
         allPossibleResponder = result;
     }
     
-    UITapGestureRecognizer *tapGesture = nil;
+    UILongPressGestureRecognizer *longPressGesture = nil;
     UIView *lastScrollView = nil;
     
     for (UIResponder *possibleResponder in allPossibleResponder) {
@@ -67,7 +62,7 @@
                                                                               cellRowOrOriginY:cellRowOrOriginY
                                                                                  fromSuperView:targetView];
                     if (!scrollViewCell) {
-                        return PrismInstructionParseResultFail;
+                        return nil;
                     }
                     targetView = scrollViewCell;
                     lastScrollView = scrollViewCell.superview;
@@ -104,63 +99,59 @@
             [functionName appendString:[viewFunctionArray prism_stringWithIndex:index]];
         }
         
-        tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:[representativeContent copy] withFunctionName:functionName];
-        if (!tapGesture) {
+        longPressGesture = [self searchLongPressGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:[representativeContent copy] withFunctionName:functionName];
+        if (!longPressGesture) {
             // 有列表的场景，考虑到列表中的元素index可能会变化，可以做一定的兼容。
             if (representativeContent.length && lastScrollView) {
                 for (UIView *subview in lastScrollView.subviews) {
-                    UITapGestureRecognizer *resultGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:[representativeContent copy] withFunctionName:functionName];
+                    UITapGestureRecognizer *resultGesture = [self searchLongPressGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:[representativeContent copy] withFunctionName:functionName];
                     if (resultGesture) {
-                        tapGesture = resultGesture;
+                        longPressGesture = resultGesture;
                         break;
                     }
                 }
             }
         }
-        if (!tapGesture) {
+        if (!longPressGesture) {
             // 兜底处理
-            tapGesture = [self searchTapGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:functionName];
+            longPressGesture = [self searchLongPressGestureFromSuperView:targetView withAreaInfo:areaInfo withRepresentativeContent:nil withFunctionName:functionName];
         }
         
-        if (tapGesture) {
+        if (longPressGesture) {
             break;
         }
     }
     
-    if (tapGesture) {
-        [self scrollToIdealOffsetWithScrollView:(UIScrollView*)lastScrollView targetElement:tapGesture.view];
-        [self highlightTheElement:tapGesture.view withCompletion:^{
-            [tapGesture setState:UIGestureRecognizerStateRecognized];
-        }];
-        return PrismInstructionParseResultSuccess;
+    if (longPressGesture) {
+        [self scrollToIdealOffsetWithScrollView:(UIScrollView*)lastScrollView targetElement:longPressGesture.view];
     }
-    return PrismInstructionParseResultFail;
+    return longPressGesture;
 }
 
 #pragma mark - private method
-- (UITapGestureRecognizer*)searchTapGestureFromSuperView:(UIView*)superView
-                                            withAreaInfo:(NSString*)areaInfo
-                               withRepresentativeContent:(NSString*)representativeContent
-                                        withFunctionName:(NSString*)functionName {
+- (UILongPressGestureRecognizer*)searchLongPressGestureFromSuperView:(UIView*)superView
+                                                        withAreaInfo:(NSString*)areaInfo
+                                           withRepresentativeContent:(NSString*)representativeContent
+                                                    withFunctionName:(NSString*)functionName {
     for (UIGestureRecognizer *gesture in superView.gestureRecognizers) {
-        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
-            UITapGestureRecognizer *tapGesture = (UITapGestureRecognizer*)gesture;
-            NSString *gestureViewAreaInfo = [[PrismInstructionAreaInfoUtil getAreaInfoWithElement:tapGesture.view] prism_stringWithIndex:1];
-            NSString *gestureFunctionName = [PrismTapGestureInstructionGenerator getFunctionNameOfTapGesture:tapGesture];
+        if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+            UILongPressGestureRecognizer *longPressGesture = (UILongPressGestureRecognizer*)gesture;
+            NSString *gestureViewAreaInfo = [[PrismInstructionAreaInfoUtil getAreaInfoWithElement:longPressGesture.view] prism_stringWithIndex:1];
+            NSString *gestureFunctionName = [PrismLongPressGestureInstructionGenerator getFunctionNameOfLongPressGesture:longPressGesture];
             NSString *gestureRepresentativeContent = [PrismInstructionContentUtil getRepresentativeContentOfView:superView needRecursive:YES];
             
             BOOL isAreaInfoEqual = [self isAreaInfoEqualBetween:gestureViewAreaInfo withAnother:areaInfo allowCompatibleMode:self.isCompatibleMode];
             if (isAreaInfoEqual
                 && (!functionName.length || [functionName isEqualToString:gestureFunctionName])
                 && (!representativeContent.length || [representativeContent isEqualToString:gestureRepresentativeContent])) {
-                return (UITapGestureRecognizer*)gesture;
+                return (UILongPressGestureRecognizer*)gesture;
             }
         }
     }
     for (UIView *subview in superView.subviews) {
-        UITapGestureRecognizer *tapGesture = [self searchTapGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName];
-        if (tapGesture) {
-            return tapGesture;
+        UILongPressGestureRecognizer *longPressGesture = [self searchLongPressGestureFromSuperView:subview withAreaInfo:areaInfo withRepresentativeContent:representativeContent withFunctionName:functionName];
+        if (longPressGesture) {
+            return longPressGesture;
         }
     }
     return nil;

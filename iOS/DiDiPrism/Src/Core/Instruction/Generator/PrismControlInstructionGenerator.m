@@ -25,19 +25,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString *)getInstructionOfControl:(UIControl *)control
-                withTargetAndSelector:(NSString *)targetAndSelector
-                    withControlEvents:(NSString*)controlEvents {
-    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
-    NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
-    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
-    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
-    NSString *viewContent = [self getViewContentOfControl:control];
-    NSString *functionName = [NSString stringWithFormat:@"%@%@%@", targetAndSelector ?: @"", kConnectorFlag, controlEvents ?: @""];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionControlFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
-    return instruction;
-}
-
 + (PrismInstructionModel *)getInstructionModelOfControl:(UIControl *)control
                                   withTargetAndSelector:(NSString *)targetAndSelector
                                       withControlEvents:(NSString*)controlEvents {

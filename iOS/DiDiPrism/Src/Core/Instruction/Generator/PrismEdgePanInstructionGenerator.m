@@ -21,20 +21,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGesture {
-    UIView *view = edgePanGesture.view;
-    if (!view) {
-        return nil;
-    }
-    if (view.prismAutoDotFinalMark.length) {
-        return view.prismAutoDotFinalMark;
-    }
-    
-    NSString *responseChainInfo = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:view];
-    view.prismAutoDotFinalMark = [NSString stringWithFormat:@"%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionEdgePanGestureFlag, kBeginOfViewPathFlag, responseChainInfo];
-    return view.prismAutoDotFinalMark;
-}
-
 + (PrismInstructionModel *)getInstructionModelOfEdgePanGesture:(UIScreenEdgePanGestureRecognizer *)edgePanGesture {
     UIView *view = edgePanGesture.view;
     if (!view) {

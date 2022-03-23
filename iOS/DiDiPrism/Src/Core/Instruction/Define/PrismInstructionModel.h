@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PrismInstructionModel : NSObject
 @property (nonatomic, copy) NSString *vm;
 @property (nonatomic, copy) NSString *vp;
+@property (nonatomic, copy) NSString *vt;
 @property (nonatomic, copy) NSString *vl;
 @property (nonatomic, copy) NSString *vq;
 @property (nonatomic, copy) NSString *vr;
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *h5;
 
 - (NSDictionary*)toDictionary;
+- (NSString*)toString;
 @end
 
 NS_ASSUME_NONNULL_END

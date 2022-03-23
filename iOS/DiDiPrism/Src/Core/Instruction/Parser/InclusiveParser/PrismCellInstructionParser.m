@@ -21,12 +21,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (PrismInstructionParseResult)parseWithFormatter:(PrismInstructionFormatter *)formatter {
+- (NSObject*)parseWithFormatter:(PrismInstructionFormatter *)formatter {
     // 解析响应链信息
     NSArray<NSString*> *viewPathArray = [formatter instructionFragmentWithType:PrismInstructionFragmentTypeViewPath];
     UIResponder *responder = [self searchRootResponderWithClassName:[viewPathArray prism_stringWithIndex:1]];
     if (!responder) {
-        return PrismInstructionParseResultFail;
+        return nil;
     }
     
     NSArray<UIResponder*> *allPossibleResponder = [NSArray arrayWithObject:responder];
@@ -89,13 +89,7 @@
                     }
                 }
             }
-            NSIndexPath *cellIndexPath = [tableView indexPathForCell:targetCell];
-            [self highlightTheElement:targetCell withCompletion:^{
-                if ([tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
-                    [tableView.delegate tableView:tableView didSelectRowAtIndexPath:cellIndexPath];
-                }
-            }];
-            return PrismInstructionParseResultSuccess;
+            return targetCell;
         }
         else if ([targetView isKindOfClass:[UICollectionViewCell class]]) {
             UICollectionView *collectionView = [targetView prism_UICollectionViewBelow];
@@ -110,16 +104,10 @@
                     }
                 }
             }
-            NSIndexPath *cellIndexPath = [collectionView indexPathForCell:targetCell];
-            [self highlightTheElement:targetCell withCompletion:^{
-                if ([collectionView.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
-                    [collectionView.delegate collectionView:collectionView didSelectItemAtIndexPath:cellIndexPath];
-                }
-            }];
-            return PrismInstructionParseResultSuccess;
+            return targetCell;
         }
     }
-    return PrismInstructionParseResultFail;
+    return nil;
 }
 
 #pragma mark - private method

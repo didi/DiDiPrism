@@ -21,32 +21,6 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (NSString*)getInstructionOfLongPressGesture:(UILongPressGestureRecognizer*)longPressGesture {
-    UIView *view = longPressGesture.view;
-    if (!view) {
-        return nil;
-    }
-    if (view.prismAutoDotFinalMark.length) {
-        return view.prismAutoDotFinalMark;
-    }
-    
-    NSString *responseChainInfo = [longPressGesture prismAutoDotResponseChainInfo];
-    NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
-    NSString *listInfo = [areaInfo prism_stringWithIndex:0];
-    NSString *quadrantInfo = [areaInfo prism_stringWithIndex:1];
-    NSString *viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
-    NSString *functionName = [self getFunctionNameOfLongPressGesture:longPressGesture];
-    NSString *instruction = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@", kBeginOfViewMotionFlag, kViewMotionLongPressGestureFlag, kBeginOfViewPathFlag , responseChainInfo ?: @"", kBeginOfViewListFlag, listInfo ?: @"", kBeginOfViewQuadrantFlag, quadrantInfo ?: @"", kBeginOfViewRepresentativeContentFlag, viewContent ?: @"", kBeginOfViewFunctionFlag, functionName ?: @""];
-    // 注：列表中的cell存在复用机制，cell复用时指令不可复用。
-    if (listInfo.length) {
-        return instruction;
-    }
-    else {
-        view.prismAutoDotFinalMark = instruction;
-        return view.prismAutoDotFinalMark;
-    }
-}
-
 + (PrismInstructionModel *)getInstructionModelOfLongPressGesture:(UILongPressGestureRecognizer *)longPressGesture {
     UIView *view = longPressGesture.view;
     if (!view) {
@@ -57,6 +31,10 @@
     model.vp = [longPressGesture prismAutoDotResponseChainInfo];
     NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
+    // 屏蔽Native侧的H5页面点击指令
+    if (([model.vl containsString:@"WKScrollView"] || [model.vl containsString:@"WKContentView"])) {
+        return nil;
+    }
     model.vq = [areaInfo prism_stringWithIndex:1];
     model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
     model.vf = [self getFunctionNameOfLongPressGesture:longPressGesture];

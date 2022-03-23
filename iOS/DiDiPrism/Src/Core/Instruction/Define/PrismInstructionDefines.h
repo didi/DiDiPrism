@@ -14,6 +14,7 @@
 #define kDictionaryKeyPrefix @"prism-"
 #define kViewMotionFlag @"vm"
 #define kViewPathFlag @"vp"
+#define kViewTreeFlag @"vt"
 #define kViewListFlag @"vl"
 #define kViewQuadrantFlag @"vq"
 #define kViewRepresentativeContentFlag @"vr"
@@ -24,6 +25,7 @@
 // 片段类型标识
 #define kBeginOfViewMotionFlag [NSString stringWithFormat:@"%@%@", kViewMotionFlag, kConnectorFlag]
 #define kBeginOfViewPathFlag [NSString stringWithFormat:@"%@%@%@", kFragmentFlag, kViewPathFlag, kConnectorFlag]
+#define kBeginOfViewTreeFlag [NSString stringWithFormat:@"%@%@%@", kFragmentFlag, kViewTreeFlag, kConnectorFlag]
 #define kBeginOfViewListFlag [NSString stringWithFormat:@"%@%@%@", kFragmentFlag, kViewListFlag, kConnectorFlag]
 #define kBeginOfViewQuadrantFlag [NSString stringWithFormat:@"%@%@%@", kFragmentFlag, kViewQuadrantFlag, kConnectorFlag]
 #define kBeginOfViewRepresentativeContentFlag [NSString stringWithFormat:@"%@%@%@", kFragmentFlag, kViewRepresentativeContentFlag, kConnectorFlag]

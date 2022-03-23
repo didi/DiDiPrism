@@ -11,8 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismTapGestureInstructionGenerator : NSObject
-
-+ (NSString*)getInstructionOfTapGesture:(UITapGestureRecognizer*)tapGesture;
 + (PrismInstructionModel*)getInstructionModelOfTapGesture:(UITapGestureRecognizer*)tapGesture;
 + (NSString*)getFunctionNameOfTapGesture:(UITapGestureRecognizer*)tapGesture;
 @end

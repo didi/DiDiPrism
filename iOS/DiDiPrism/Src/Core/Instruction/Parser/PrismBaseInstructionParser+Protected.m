@@ -237,31 +237,6 @@
     }
 }
 
-- (void)highlightTheElement:(UIView*)element withCompletion:(void(^)(void))block {
-    NSTimeInterval delaySeconds = self.didScroll ? 0.5 : 0;
-    self.didScroll = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delaySeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
-        CGRect elementFrame = [element.superview convertRect:element.frame toView:mainWindow];
-        UIBezierPath *redPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(elementFrame.origin.x - 4, elementFrame.origin.y - 4, elementFrame.size.width + 8, elementFrame.size.height + 8) cornerRadius:5];
-        CAShapeLayer *redLayer = [CAShapeLayer layer];
-        redLayer.path = redPath.CGPath;
-        redLayer.fillColor = [UIColor redColor].CGColor;
-        redLayer.opacity = 0.3;
-        [mainWindow.layer addSublayer:redLayer];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.needExecute && block) {
-                block();
-            }
-        });
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [redLayer removeFromSuperlayer];
-        });
-    });
-}
-
 - (BOOL)isAreaInfoEqualBetween:(NSString*)one withAnother:(NSString*)another allowCompatibleMode:(BOOL)allowCompatibleMode {
     if (!self.isCompatibleMode || !allowCompatibleMode) {
         return [one isEqualToString:another];

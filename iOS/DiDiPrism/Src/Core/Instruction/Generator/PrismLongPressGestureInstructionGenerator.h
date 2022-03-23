@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismLongPressGestureInstructionGenerator : NSObject
-+ (NSString*)getInstructionOfLongPressGesture:(UILongPressGestureRecognizer*)longPressGesture;
 + (PrismInstructionModel *)getInstructionModelOfLongPressGesture:(UILongPressGestureRecognizer *)longPressGesture;
 + (NSString*)getFunctionNameOfLongPressGesture:(UILongPressGestureRecognizer*)longPressGesture;
 @end
