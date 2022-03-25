@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
 
   spec.author             = { "Hulk" => "ronghao@didichuxing.com" }
 
-  spec.ios.deployment_target = "9.0"
+  spec.ios.deployment_target = "8.0"
 
   spec.source       = { :git => "https://github.com/didi/DiDiPrism.git", :tag => "#{spec.version}" }
 
