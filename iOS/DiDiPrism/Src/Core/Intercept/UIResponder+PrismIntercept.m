@@ -25,11 +25,4 @@
 - (void)setPrismAutoDotSpecialMark:(NSString *)prismAutoDotSpecialMark {
     objc_setAssociatedObject(self, @selector(prismAutoDotSpecialMark), prismAutoDotSpecialMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
-
-- (NSString *)prismAutoDotFinalMark {
-    return objc_getAssociatedObject(self, _cmd);
-}
-- (void)setPrismAutoDotFinalMark:(NSString *)prismAutoDotFinalMark {
-    objc_setAssociatedObject(self, @selector(prismAutoDotFinalMark), prismAutoDotFinalMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
 @end
