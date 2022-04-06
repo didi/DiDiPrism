@@ -7,6 +7,8 @@
 
 #import "PrismViewControllerInstructionGenerator.h"
 #import "PrismInstructionDefines.h"
+// Util
+#import "PrismInstructionInputUtil.h"
 
 @interface PrismViewControllerInstructionGenerator()
 
@@ -17,7 +19,8 @@
 
 #pragma mark - public method
 + (PrismInstructionModel *)getInstructionModelOfViewController:(UIViewController *)viewController {
-    if ([self isSystemKeyboardOfViewController:viewController]) {
+    // 屏蔽键盘
+    if ([PrismInstructionInputUtil isSystemKeyboardOfViewController:viewController]) {
         return nil;
     }
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
@@ -27,14 +30,6 @@
 }
 
 #pragma mark - private method
-+ (BOOL)isSystemKeyboardOfViewController:(UIViewController*)viewController {
-    return [viewController isKindOfClass:NSClassFromString(@"UICompatibilityInputViewController")] ||
-    [viewController isKindOfClass:NSClassFromString(@"UISystemInputAssistantViewController")] ||
-    [viewController isKindOfClass:NSClassFromString(@"UIPredictionViewController")] ||
-    [viewController isKindOfClass:NSClassFromString(@"UIInputWindowController")] ||
-    [viewController isKindOfClass:NSClassFromString(@"UISystemKeyboardDockController")];
-}
-
 + (NSString*)getViewContentOfViewController:(UIViewController*)viewController {
     NSMutableString *vrContent = [NSMutableString stringWithString:NSStringFromClass([viewController class])];
     NSString *url = nil;

@@ -16,6 +16,7 @@
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
+#import "PrismInstructionInputUtil.h"
 
 @interface PrismControlInstructionGenerator()
 
@@ -31,6 +32,10 @@
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionControlFlag;
     model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:control];
+    // 屏蔽键盘点击事件
+    if ([PrismInstructionInputUtil isSystemKeyboardTouchEventWithModel:model]) {
+        return nil;
+    }
     NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];

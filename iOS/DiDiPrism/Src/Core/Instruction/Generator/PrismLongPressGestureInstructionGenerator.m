@@ -10,6 +10,7 @@
 // Util
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
+#import "PrismInstructionInputUtil.h"
 // Category
 #import "UIResponder+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
@@ -29,6 +30,10 @@
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionLongPressGestureFlag;
     model.vp = [longPressGesture prismAutoDotResponseChainInfo];
+    // 屏蔽键盘点击事件
+    if ([PrismInstructionInputUtil isSystemKeyboardTouchEventWithModel:model]) {
+        return nil;
+    }
     NSArray *areaInfo = [longPressGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
     // 屏蔽Native侧的H5页面点击指令
