@@ -22,6 +22,7 @@
 #import <DiDiPrism/PrismLongPressGestureInstructionGenerator.h>
 #import <DiDiPrism/PrismCellInstructionGenerator.h>
 #import <DiDiPrism/PrismViewControllerInstructionGenerator.h>
+#import <DiDiPrism/PrismTextFieldInstructionGenerator.h>
 
 @implementation PrismBehaviorRecordManager (PrismDispatchListenerProtocol)
 #pragma mark -delegate
@@ -137,6 +138,18 @@
     }
     else if (event == PrismDispatchEventUIApplicationWillResignActive) {
         [self addInstruction:kUIApplicationResignActive];
+    }
+    else if (event == PrismDispatchEventUITextFieldBecomeFirstResponder) {
+        UITextField *textField = (UITextField*)sender;
+        PrismInstructionModel *instructionModel = [PrismTextFieldInstructionGenerator getInstructionModelOfTextField:textField withEvent:event];
+        NSString *instruction = [instructionModel toString];
+        [self addInstruction:instruction];
+    }
+    else if (event == PrismDispatchEventUITextFieldResignFirstResponder) {
+        UITextField *textField = (UITextField*)sender;
+        PrismInstructionModel *instructionModel = [PrismTextFieldInstructionGenerator getInstructionModelOfTextField:textField withEvent:event];
+        NSString *instruction = [instructionModel toString];
+        [self addInstruction:instruction];
     }
 }
 @end

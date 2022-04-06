@@ -17,12 +17,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     if ([element isKindOfClass:[UITableViewCell class]]) {
         UITableViewCell *targetCell = (UITableViewCell*)element;
         UITableView *tableView = [targetCell prism_UITableViewBelow];
         NSIndexPath *cellIndexPath = [tableView indexPathForCell:targetCell];
-        [self highlightTheElement:targetCell withDelay:delaySeconds withCompletion:^{
+        [self highlightTheElement:targetCell withNewColor:newValue withDelay:delaySeconds withCompletion:^{
             if ([tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
                 [tableView.delegate tableView:tableView didSelectRowAtIndexPath:cellIndexPath];
             }
@@ -32,7 +32,7 @@
         UICollectionViewCell *targetCell = (UICollectionViewCell*)element;
         UICollectionView *collectionView = [targetCell prism_UICollectionViewBelow];
         NSIndexPath *cellIndexPath = [collectionView indexPathForCell:targetCell];
-        [self highlightTheElement:targetCell withDelay:delaySeconds withCompletion:^{
+        [self highlightTheElement:targetCell withNewColor:newValue withDelay:delaySeconds withCompletion:^{
             if ([collectionView.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
                 [collectionView.delegate collectionView:collectionView didSelectItemAtIndexPath:cellIndexPath];
             }

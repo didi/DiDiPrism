@@ -15,12 +15,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     if (!element) {
         return;
     }
     UIControl *targetControl = element;
-    [self highlightTheElement:targetControl withDelay:delaySeconds withCompletion:^{
+    [self highlightTheElement:targetControl withNewColor:newValue withDelay:delaySeconds withCompletion:^{
         [targetControl sendActionsForControlEvents:UIControlEventAllTouchEvents];
     }];
 }

@@ -15,7 +15,7 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     NSString *text = (NSString*)element;
     UILabel *promptLabel = [[UILabel alloc] init];
     [self showPromptView:promptLabel withText:text];

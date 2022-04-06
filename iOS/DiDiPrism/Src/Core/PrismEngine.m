@@ -18,6 +18,7 @@
 #import "NSURLSessionConfiguration+PrismIntercept.h"
 #import "UIScreenEdgePanGestureRecognizer+PrismIntercept.h"
 #import "UIScrollView+PrismIntercept.h"
+#import "UITextField+PrismIntercept.h"
 
 @implementation PrismEngine
 #pragma mark public method
@@ -47,6 +48,10 @@
     
     if (eventCategorys & PrismEventCategorySystem) {
         [PrismInterceptSystemEventAssist prism_addObserver];
+    }
+    
+    if (eventCategorys & PrismEventCategoryInput) {
+        [UITextField prism_swizzleMethodIMP];
     }
 }
 @end
