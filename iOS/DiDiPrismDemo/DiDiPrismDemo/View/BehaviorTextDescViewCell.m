@@ -40,7 +40,7 @@
         CGFloat height = _textModel.descType == PrismBehaviorDescTypeNetworkImage ? 100 : 30;
         [self.contentLabel removeConstraints:self.contentLabel.constraints];
         [self.contentImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
+            make.left.equalTo(self.contentView).offset(140);
             make.right.equalTo(self.timeLabel.mas_left).offset(-20);
             make.top.equalTo(self.contentView).offset(13);
             make.bottom.equalTo(self.contentView).offset(-13);
@@ -50,7 +50,7 @@
     else if (_textModel.descType == PrismBehaviorDescTypeNone) {
         [self.contentImageView removeConstraints:self.contentImageView.constraints];
         [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
+            make.left.equalTo(self.contentView).offset(140);
             make.right.equalTo(self.timeLabel.mas_left).offset(-20);
             make.top.equalTo(self.contentView).offset(13);
             make.bottom.equalTo(self.contentView).offset(-13);
@@ -60,7 +60,7 @@
     else {
         [self.contentImageView removeConstraints:self.contentImageView.constraints];
         [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
+            make.left.equalTo(self.contentView).offset(140);
             make.right.equalTo(self.timeLabel.mas_left).offset(-20);
             make.top.equalTo(self.contentView).offset(13);
             make.bottom.equalTo(self.contentView).offset(-13);
@@ -94,18 +94,18 @@
         make.centerY.equalTo(self.contentView);
     }];
     [self.operationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.indexLabel).offset(37);
+        make.left.equalTo(self.contentView).offset(55);
         make.centerY.equalTo(self.contentView);
     }];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.contentView).offset(-20);
+        make.right.equalTo(self.contentView).offset(-15);
         make.centerY.equalTo(self.contentView);
     }];
     [self.failFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.contentView).offset(1);
     }];
     [self.phoneView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.operationLabel.mas_right).offset(23);
+        make.left.equalTo(self.contentView).offset(120);
         make.centerY.equalTo(self.contentView);
         make.width.mas_equalTo(kPhoneWidth);
         make.height.mas_equalTo(kPhoneHeight);

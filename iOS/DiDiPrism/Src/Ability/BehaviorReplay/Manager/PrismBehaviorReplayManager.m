@@ -128,10 +128,38 @@
     NSInteger index = 0;
     for (PrismBehaviorVideoModel *theOne in behaviorArray) {
         NSString *behaviorInstruction = theOne.instruction;
+        PrismInstructionFormatter *instructionFormatter = theOne.instructionFormatter;
+        id newValue = [UIColor redColor];
         NSString *behaviorTime = theOne.descTime.length ? theOne.descTime : @"";
         if ([behaviorInstruction containsString:kUIViewControllerDidAppear]) {
             index++;
             continue;
+        }
+        NSString *instructionViewMotion = [instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewMotion];
+        if ([instructionViewMotion isEqualToString:kViewMotionTextFieldRFRFlag]) {
+            index++;
+            continue;
+        }
+        else if ([instructionViewMotion isEqualToString:kViewMotionTextFieldBFRFlag]) {
+            BOOL valueCaught = NO;
+            for (NSInteger nextIndex = index + 1; nextIndex < behaviorArray.count; nextIndex++) {
+                PrismBehaviorVideoModel *nextOne = behaviorArray[nextIndex];
+                PrismInstructionFormatter *nextInstructionFormatter = nextOne.instructionFormatter;
+                NSString *nextInstructionViewMotion = [nextInstructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewMotion];
+                if ([nextInstructionViewMotion isEqualToString:kViewMotionTextFieldBFRFlag]) {
+                    break;
+                }
+                else if ([nextInstructionViewMotion isEqualToString:kViewMotionTextFieldRFRFlag]) {
+                    newValue = [nextInstructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewRepresentativeContent];
+                    newValue = [newValue stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""];
+                    valueCaught = YES;
+                    break;
+                }
+            }
+            if (!valueCaught) {
+                index++;
+                continue;
+            }
         }
         PrismBehaviorReplayOperation *behaviorOperation = [[PrismBehaviorReplayOperation alloc] init];
         behaviorOperation.index = index;
@@ -164,15 +192,15 @@
             }
             
             // 解析器
-            PrismBaseInstructionParser *instructionParser = [PrismBaseInstructionParser instructionParserWithFormatter:theOne.instructionFormatter];
+            PrismBaseInstructionParser *instructionParser = [PrismBaseInstructionParser instructionParserWithFormatter:instructionFormatter];
             instructionParser.isCompatibleMode = isCompatibleMode;
             // 触发器
-            PrismBaseElementTrigger *elementTrigger = [PrismBaseElementTrigger elementTriggerWithFormatter:theOne.instructionFormatter];
+            PrismBaseElementTrigger *elementTrigger = [PrismBaseElementTrigger elementTriggerWithFormatter:instructionFormatter];
             if (index == behaviorArray.count - 1) {
                 elementTrigger.needExecute = NO;
             }
-            NSObject *parseResult = [instructionParser parseWithFormatter:theOne.instructionFormatter];
-            [elementTrigger triggerWithElement:parseResult withDelay:(instructionParser.didScroll ? 0.5 : 0)];
+            NSObject *parseResult = [instructionParser parseWithFormatter:instructionFormatter];
+            [elementTrigger triggerWithElement:parseResult withNewValue:newValue withDelay:(instructionParser.didScroll ? 0.5 : 0)];
             instructionParser.didScroll = NO;
             
             weakSelf.currentReplayIndex = weakSelf.model.startIndex + index;

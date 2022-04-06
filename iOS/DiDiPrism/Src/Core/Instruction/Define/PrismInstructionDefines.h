@@ -48,6 +48,8 @@
 #define kViewMotionTapGestureFlag @"tapGesture"
 #define kViewMotionLongPressGestureFlag @"longPressGesture"
 #define kViewMotionCellFlag @"cell"
+#define kViewMotionTextFieldBFRFlag @"textFieldBFR"
+#define kViewMotionTextFieldRFRFlag @"textFieldRFR"
 
 
 // View RepresentativeContent

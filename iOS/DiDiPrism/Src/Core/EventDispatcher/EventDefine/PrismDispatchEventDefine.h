@@ -14,6 +14,7 @@ typedef NS_ENUM(NSUInteger, PrismEventCategory) {
     PrismEventCategoryPageSwitch = 1 << 2, //页面切换事件
     PrismEventCategoryNetwork = 1 << 3, //网络事件
     PrismEventCategorySystem = 1 << 4, //系统事件
+    PrismEventCategoryInput = 1 << 5, //输入事件
     
     PrismEventCategoryAll = 0xFFFFFFFF
 };
@@ -79,6 +80,11 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
      UIScrollView
      */
     PrismDispatchEventUIScrollViewSetContentOffset,
+    /*
+     UITextField
+     */
+    PrismDispatchEventUITextFieldBecomeFirstResponder,
+    PrismDispatchEventUITextFieldResignFirstResponder,
 };
 
 #endif /* PrismDispatchEventDefine_h */
