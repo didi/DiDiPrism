@@ -76,6 +76,14 @@
     else if ([viewMotionType isEqualToString:kViewMotionLongPressGestureFlag]) {
         textModel.operationName = @"长按";
     }
+    else if ([viewMotionType isEqualToString:kViewMotionTextFieldBFRFlag]) {
+        textModel.operationName = @"开始输入";
+        textModel.descType = PrismBehaviorDescTypeText;
+    }
+    else if ([viewMotionType isEqualToString:kViewMotionTextFieldRFRFlag]) {
+        textModel.operationName = @"结束输入";
+        textModel.descType = PrismBehaviorDescTypeText;
+    }
     // 翻译参考信息
     NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
     [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
