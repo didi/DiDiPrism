@@ -17,9 +17,13 @@
 #pragma mark - public method
 - (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     UITextField *textField = (UITextField*)element;
+    NSString *newText = newValue;
     [self highlightTheElement:textField withNewColor:[UIColor redColor] withDelay:delaySeconds withCompletion:^{
-        textField.text = newValue;
-        [textField endEditing:YES];
+        textField.text = newText;
+        [textField sendActionsForControlEvents:UIControlEventEditingChanged];
+        if ([textField.delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
+            [textField.delegate textField:textField shouldChangeCharactersInRange:NSMakeRange(0, newText.length) replacementString:newText];
+        }
     }];
 }
 
