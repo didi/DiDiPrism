@@ -11,8 +11,14 @@ public class PrismConstants {
         public final static int DIALOG_SHOW = 4;
         public final static int DIALOG_CLOSE = 5;
         public final static int ACTIVITY_START = 6;
-        public final static int ACTIVITY_RESUME = 7;
-        public final static int ACTIVITY_PAUSE = 8;
+        public final static int SCREEN_ON = 7;
+        public final static int SCREEN_OFF = 8;
+        public final static int SCHEME_OPEN = 9;
+		public final static int ACTIVITY_RESUME = 10;
+        public final static int ACTIVITY_PAUSE = 11;
+        public final static int ACTIVITY_INIT = 12;
+        public final static int ACTIVITY_URL_JUMP = 13;
+        public final static int H5_TOUCH = 14;
     }
 
     public class Symbol {
@@ -36,6 +42,8 @@ public class PrismConstants {
         public static final String VIEW_TAG = "vf";
 
         public static final String ACTIVITY_NAME = "an";
+
+        public static final String SCHEME = "scheme";
 
     }
 

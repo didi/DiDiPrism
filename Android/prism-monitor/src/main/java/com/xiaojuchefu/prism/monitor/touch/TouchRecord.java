@@ -1,6 +1,7 @@
 package com.xiaojuchefu.prism.monitor.touch;
 
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,10 @@ public class TouchRecord {
         mUpY = ev.getY(pointIndex);
 
         isClick = Math.abs(mDownX - mUpX) < sTouchSlop && Math.abs(mDownY - mUpY) < sTouchSlop;
+    }
+
+    public boolean isLongPress() {
+        return isClick && (mUpTime - mDownTime) > ViewConfiguration.getLongPressTimeout();
     }
 
     public class MoveTouch {

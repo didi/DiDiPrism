@@ -40,6 +40,11 @@ public class EventData {
     public String vf;
     @SerializedName("an")
     public String an;
+    @SerializedName("h5")
+    public String h5;
+
+    public long fvd;
+    public long avd;
 
     public Activity activity;
     public View view;
