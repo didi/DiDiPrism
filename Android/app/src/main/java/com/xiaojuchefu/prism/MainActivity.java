@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_playback_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, TestActivity.class));
+//                startActivity(new Intent(MainActivity.this, TestActivity.class));
                 playbackLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
