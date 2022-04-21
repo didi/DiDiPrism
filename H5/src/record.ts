@@ -44,11 +44,17 @@ class PlayBackRecord {
     paths.unshift('body');
     // console.log(paths.join(">"))
     // console.log('content', content)
+    /************ ios */
     let result = {
       "instruct": paths.join(">"),
       "content": content
     }
     return result;
+    /*************/
+
+    /************ android */
+    return paths.join(">") + ">" + content;
+    /*************/
   }
 
   getContent(el: HTMLElement) {
