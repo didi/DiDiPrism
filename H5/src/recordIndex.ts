@@ -23,10 +23,12 @@ document.addEventListener('touchend', function (e) {
 	}
 	if (e.target) {
 		try {
-			// play.record(e.target as Element)
+			// iOS
 			if (window.webkit.messageHandlers.prism_record_instruct) { 
 				window.webkit.messageHandlers.prism_record_instruct.postMessage(play.record(e.target as Element))
 			}
+			// Android
+			
 		} catch (error) {
 		}
 	}
