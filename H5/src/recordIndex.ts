@@ -27,8 +27,9 @@ document.addEventListener('touchend', function (e) {
 			if (window.webkit.messageHandlers.prism_record_instruct) { 
 				window.webkit.messageHandlers.prism_record_instruct.postMessage(play.record(e.target as Element))
 			}
-			// Android myObj注入的桥接对象
-            myObj.onClick(play.record(e.target))
+			// Android
+			// myObj为注入的桥接对象，onClick为桥接对象的方法。对象名myObj和方法名onClick可按需要更改。
+            // myObj.onClick(play.record(e.target as Element))
 		} catch (error) {
 		}
 	}

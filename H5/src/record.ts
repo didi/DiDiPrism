@@ -44,6 +44,7 @@ class PlayBackRecord {
     paths.unshift('body');
     // console.log(paths.join(">"))
     // console.log('content', content)
+    
     /************ ios */
     let result = {
       "instruct": paths.join(">"),
@@ -53,7 +54,7 @@ class PlayBackRecord {
     /*************/
 
     /************ android */
-    return paths.join(">") + ">" + content;
+    // return paths.join(">") + ">" + content;
     /*************/
   }
 
