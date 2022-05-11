@@ -19,6 +19,10 @@
 
 #pragma mark - public method
 + (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model {
+    return [self translateWithModel:model withCustomTranslater:nil];
+}
+
++ (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model withCustomTranslater:(void(^)(PrismBehaviorVideoModel*,PrismBehaviorTextModel*))customTranslater {
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     NSArray<NSString*> *viewMotionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
@@ -48,8 +52,10 @@
         textModel.descType = ((NSNumber*)[descInfo prism_objectAtIndex:0]).integerValue;
         textModel.descContent = [descInfo prism_stringWithIndex:1];
     }
-    
-    
+    // 支持定制翻译逻辑
+    if (customTranslater) {
+        customTranslater(model,textModel);
+    }
     return textModel;
 }
 
