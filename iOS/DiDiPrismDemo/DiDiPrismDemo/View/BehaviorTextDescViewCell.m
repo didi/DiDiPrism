@@ -208,17 +208,17 @@
     switch (_textModel.areaInfo) {
         case PrismInstructionAreaUp:
         {
-            width = 6;
+            width = kPhoneWidth;
             height = kPhoneHeight / 2;
-            left = kPhoneWidth / 2 - 3;
+            left = 0;
             top = 0;
         }
             break;
         case PrismInstructionAreaBottom:
         {
-            width = 6;
+            width = kPhoneWidth;
             height = kPhoneHeight / 2;
-            left = kPhoneWidth / 2 - 3;
+            left = 0;
             top = kPhoneHeight / 2;
         }
             break;
