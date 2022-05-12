@@ -128,7 +128,7 @@ static void(^retainCustomTranslater)(PrismBehaviorVideoModel*,PrismBehaviorTextM
     if ([vf_1_lower containsString:@"tabbar"]) {
         moduleText = @"导航栏";
     }
-    else if ([vf_1_lower containsString:@"alert"] || [self isWindowWith:vp_1]) {
+    else if ([self isWindowWith:vp_1]) {
         moduleText = @"悬浮窗";
     }
     return moduleText;
