@@ -33,7 +33,7 @@
     NSInteger areaInfo = [model.instructionFormatter instructionFragmentContentWithType:PrismInstructionFragmentTypeViewQuadrant].integerValue;
     
     PrismBehaviorTextModel *textModel = [[PrismBehaviorTextModel alloc] init];
-    textModel.operationName = [self getOperationNameWithViewMotionType:[viewMotionArray prism_stringWithIndex:1] withInstruction:model.instruction];
+    textModel.operationName = [self getOperationNameWithInstruction:model.instruction withViewMotionType:[viewMotionArray prism_stringWithIndex:1] withViewFunctionArray:viewFunctionArray];
     textModel.areaInfo = areaInfo;
     textModel.areaText = [PrismInstructionAreaInfoUtil getAreaTextWithInfo:areaInfo];
     textModel.moduleText = [self getModuleTextWithViewListArray:viewListArray
@@ -60,7 +60,9 @@
 }
 
 #pragma mark - private method
-+ (NSString*)getOperationNameWithViewMotionType:(NSString*)viewMotionType withInstruction:(NSString*)instruction {
++ (NSString*)getOperationNameWithInstruction:(NSString*)instruction
+                          withViewMotionType:(NSString*)viewMotionType
+                       withViewFunctionArray:(NSArray<NSString*> *)viewFunctionArray {
     NSString *operationName = @"点击";
     if ([viewMotionType isEqualToString:kViewMotionEdgePanGestureFlag]) {
         operationName = @"侧滑";
@@ -83,6 +85,19 @@
     }
     else if ([instruction rangeOfString:kBeginOfEventFlag].length > 0 && [instruction rangeOfString:kBeginOfEventFlag].location == 0) {
         operationName = @"标记";
+    }
+    
+    if ([operationName isEqualToString:@"点击"]) {
+        if (viewFunctionArray.count > 3) {
+            UIControlEvents events = [viewFunctionArray prism_stringWithIndex:3].integerValue;
+            if (events == UIControlEventTouchDown) {
+                operationName = @"点击按下";
+            }
+            else if (events == 1 << 13) {
+                //UIControlEventPrimaryActionTriggered
+                operationName = @"点击完成";
+            }
+        }
     }
     return operationName;
 }
