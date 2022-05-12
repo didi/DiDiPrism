@@ -10,6 +10,8 @@
 #import <DiDiPrism/NSString+PrismExtends.h>
 #import <DiDiPrism/NSArray+PrismExtends.h>
 
+static void(^retainCustomTranslater)(PrismBehaviorVideoModel*,PrismBehaviorTextModel*);
+
 @interface PrismBehaviorTranslater()
 
 @end
@@ -18,11 +20,11 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-+ (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model {
-    return [self translateWithModel:model withCustomTranslater:nil];
++ (void)setCustomTranslater:(void (^)(PrismBehaviorVideoModel * _Nonnull, PrismBehaviorTextModel * _Nonnull))customTranslater {
+    retainCustomTranslater = customTranslater;
 }
 
-+ (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model withCustomTranslater:(void(^)(PrismBehaviorVideoModel*,PrismBehaviorTextModel*))customTranslater {
++ (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model {
     NSArray<NSString*> *eventArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeEvent];
     NSArray<NSString*> *h5ViewArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeH5View];
     NSArray<NSString*> *viewMotionArray = [model.instructionFormatter instructionFragmentWithType:PrismInstructionFragmentTypeViewMotion];
@@ -52,9 +54,9 @@
         textModel.descType = ((NSNumber*)[descInfo prism_objectAtIndex:0]).integerValue;
         textModel.descContent = [descInfo prism_stringWithIndex:1];
     }
-    // 支持定制翻译逻辑
-    if (customTranslater) {
-        customTranslater(model,textModel);
+    // 定制翻译逻辑
+    if (retainCustomTranslater) {
+        retainCustomTranslater(model,textModel);
     }
     return textModel;
 }

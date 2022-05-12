@@ -12,9 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PrismBehaviorTranslater : NSObject
-
++ (void)setCustomTranslater:(void(^)(PrismBehaviorVideoModel*,PrismBehaviorTextModel*))customTranslater;
 + (PrismBehaviorTextModel*)translateWithModel:(PrismBehaviorVideoModel*)model;
-+ (PrismBehaviorTextModel *)translateWithModel:(PrismBehaviorVideoModel *)model withCustomTranslater:(void(^)(PrismBehaviorVideoModel*,PrismBehaviorTextModel*))customTranslater;
 @end
 
 NS_ASSUME_NONNULL_END
