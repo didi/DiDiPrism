@@ -179,29 +179,36 @@ static void(^retainCustomTranslater)(PrismBehaviorVideoModel*,PrismBehaviorTextM
     }
     else if ([viewMotionType isEqualToString:kViewMotionTextFieldBFRFlag]) {
         descType = PrismBehaviorDescTypeText;
+        descContent = [[viewFunctionArray prism_stringWithIndex:1] stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""] ?: @"";
+        return @[[NSNumber numberWithInteger:descType],descContent];
     }
     else if ([viewMotionType isEqualToString:kViewMotionTextFieldRFRFlag]) {
         descType = PrismBehaviorDescTypeText;
+        descContent = [NSString stringWithFormat:@"输入内容：%@", [[viewRepresentativeContentArray prism_stringWithIndex:1] stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""] ?: @""];
+        return @[[NSNumber numberWithInteger:descType],descContent];
     }
-    // 翻译参考信息
-    NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
-    [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj containsString:kViewRepresentativeContentTypeText]) {
-            descType = PrismBehaviorDescTypeText;
-            descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""];
-            *stop = YES;
-        }
-        else if ([obj containsString:kViewRepresentativeContentTypeLocalImage]) {
-            descType = PrismBehaviorDescTypeLocalImage;
-            descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeLocalImage withString:@""];
-            *stop = YES;
-        }
-        else if ([obj containsString:kViewRepresentativeContentTypeNetworkImage]) {
-            descType = PrismBehaviorDescTypeNetworkImage;
-            descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeNetworkImage withString:@""];
-            *stop = YES;
-        }
-    }];
+    else {
+        // 翻译参考信息
+        NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
+        [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj containsString:kViewRepresentativeContentTypeText]) {
+                descType = PrismBehaviorDescTypeText;
+                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""];
+                *stop = YES;
+            }
+            else if ([obj containsString:kViewRepresentativeContentTypeLocalImage]) {
+                descType = PrismBehaviorDescTypeLocalImage;
+                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeLocalImage withString:@""];
+                *stop = YES;
+            }
+            else if ([obj containsString:kViewRepresentativeContentTypeNetworkImage]) {
+                descType = PrismBehaviorDescTypeNetworkImage;
+                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeNetworkImage withString:@""];
+                *stop = YES;
+            }
+        }];
+    }
+    
     if (descType != PrismBehaviorDescTypeNone) {
         return @[[NSNumber numberWithInteger:descType],descContent];
     }
