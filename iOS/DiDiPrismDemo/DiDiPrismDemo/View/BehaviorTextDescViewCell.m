@@ -134,7 +134,14 @@
     switch (_textModel.descType) {
         case PrismBehaviorDescTypeNone:
             {
-                self.contentLabel.text = @"[无法翻译]";
+                NSString *moduleText = _textModel.moduleText.length ? [NSString stringWithFormat:@"%@ - ", _textModel.moduleText] : @"";
+                NSString *elementName = _textModel.elementName.length ? [NSString stringWithFormat:@"（%@）", _textModel.elementName] : @"";
+                if (moduleText.length || elementName.length) {
+                    self.contentLabel.text = [NSString stringWithFormat:@"%@%@%@", moduleText, _textModel.descContent ?: @"", elementName];
+                }
+                else {
+                    self.contentLabel.text = @"[无法翻译]";
+                }
                 self.contentLabel.hidden = NO;
                 self.contentImageView.hidden = YES;
             }
