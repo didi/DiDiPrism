@@ -189,24 +189,27 @@ static void(^retainCustomTranslater)(PrismBehaviorVideoModel*,PrismBehaviorTextM
     }
     else {
         // 翻译参考信息
-        NSArray<NSString*> *contentArray = [[NSArray array] arrayByAddingObjectsFromArray:viewRepresentativeContentArray];
-        [contentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableString *vrResult = [NSMutableString string];
+        [viewRepresentativeContentArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj containsString:kViewRepresentativeContentTypeText]) {
                 descType = PrismBehaviorDescTypeText;
-                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""];
-                *stop = YES;
+                if (vrResult.length) {
+                    [vrResult appendString:@" - "];
+                }
+                [vrResult appendString:[obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeText withString:@""]];
             }
             else if ([obj containsString:kViewRepresentativeContentTypeLocalImage]) {
                 descType = PrismBehaviorDescTypeLocalImage;
-                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeLocalImage withString:@""];
+                [vrResult appendString:[obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeLocalImage withString:@""]];
                 *stop = YES;
             }
             else if ([obj containsString:kViewRepresentativeContentTypeNetworkImage]) {
                 descType = PrismBehaviorDescTypeNetworkImage;
-                descContent = [obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeNetworkImage withString:@""];
+                [vrResult appendString:[obj stringByReplacingOccurrencesOfString:kViewRepresentativeContentTypeNetworkImage withString:@""]];
                 *stop = YES;
             }
         }];
+        descContent = [vrResult copy];
     }
     
     if (descType != PrismBehaviorDescTypeNone) {
