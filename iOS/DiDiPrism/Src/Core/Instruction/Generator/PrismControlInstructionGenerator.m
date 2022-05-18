@@ -59,6 +59,16 @@
         // 获取有代表性的内容便于更好的定位view
         viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:control needRecursive:YES];
     }
+    // 兜底考虑把UIButton仅作为给父View添加触控能力的工具控件的场景（此时UIButton通常就是个空白按钮），此时向上遍历真正有意义的父级View。
+    if (!viewContent.length && [control isKindOfClass:[UIButton class]]) {
+        UIView *superView = control.superview;
+        if (superView && !CGRectIsEmpty(superView.bounds)) {
+            if (CGRectEqualToRect(control.frame, superView.bounds)
+                || ((control.frame.size.width * control.frame.size.height) / (superView.bounds.size.width * superView.bounds.size.height) > 0.99)) {
+                viewContent = [PrismInstructionContentUtil getRepresentativeContentOfView:superView needRecursive:YES];
+            }
+        }
+    }
     return viewContent;
 }
 
@@ -70,7 +80,7 @@
     else if (button.titleLabel.attributedText.length) {
         return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.attributedText.string];
     }
-    else if (button.imageView.image) {
+    else if (button.imageView.image && button.imageView.image.prismAutoDotImageName.length) {
         return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, button.imageView.image.prismAutoDotImageName];
     }
     return nil;

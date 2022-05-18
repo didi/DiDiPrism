@@ -40,8 +40,15 @@
     }
     if ([view isKindOfClass:[UIImageView class]]) {
         UIImageView *imageView = (UIImageView*)view;
+        SEL sd_selector = NSSelectorFromString(@"sd_imageURL");
         if (imageView.image.prismAutoDotImageName.length) {
             return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, imageView.image.prismAutoDotImageName];
+        }
+        else if ([imageView respondsToSelector:sd_selector]) {
+            NSURL *imageUrl = [imageView performSelector:sd_selector];
+            if ([imageUrl isKindOfClass:[NSURL class]] && imageUrl.absoluteString.length) {
+                return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, imageUrl.absoluteString];
+            }
         }
     }
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")]) {
