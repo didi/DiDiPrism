@@ -62,6 +62,10 @@
                                   cellSectionOrOriginX:(CGFloat)cellSectionOrOriginX
                                       cellRowOrOriginY:(CGFloat)cellRowOrOriginY
                                          fromSuperView:(UIView*)superView {
+    // 类似于Window弹窗，此处的superView已经遍历到具体的cell了，需要回溯到父view。
+    if ([superView isKindOfClass:NSClassFromString(cellClassName)]) {
+        superView = [[superView prism_UIScrollViewBelow] superview] ?: superView;
+    }
     if (!superView.subviews.count) {
         return nil;
     }

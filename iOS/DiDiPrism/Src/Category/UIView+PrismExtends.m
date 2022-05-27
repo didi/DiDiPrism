@@ -10,6 +10,17 @@
 
 @implementation UIView (PrismExtends)
 #pragma mark - public method
+- (UIScrollView*)prism_UIScrollViewBelow {
+    UIView *touchView = self;
+    do {
+        if ([touchView isKindOfClass:[UIScrollView class]]) {
+            return (UIScrollView*)touchView;
+        }
+        touchView = (UIView*)touchView.nextResponder;
+    } while (touchView && [touchView isKindOfClass:[UIView class]]);
+    return nil;
+}
+
 - (UITableView*)prism_UITableViewBelow {
     UIView *touchView = self;
     do {
