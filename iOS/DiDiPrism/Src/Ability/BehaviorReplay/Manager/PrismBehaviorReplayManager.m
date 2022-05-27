@@ -165,7 +165,7 @@
         behaviorOperation.index = index;
         behaviorOperation.retryTimes = 2;
         behaviorOperation.retryWaitSeconds = 1;
-        behaviorOperation.delaySeconds = 3;
+        behaviorOperation.delaySeconds = 3.5;
         behaviorOperation.excuteQueue = behaviorOperationQueue;
         __weak typeof(self) weakSelf = self;
         behaviorOperation.block = ^BOOL(BOOL isCompatibleMode, NSInteger index) {
