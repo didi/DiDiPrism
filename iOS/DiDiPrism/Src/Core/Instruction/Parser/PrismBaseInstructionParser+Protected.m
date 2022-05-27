@@ -65,6 +65,9 @@
     if (!superView.subviews.count) {
         return nil;
     }
+    NSArray *allSubTableView = [superView.subviews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [evaluatedObject isKindOfClass:[UITableView class]];
+    }]];
     for (UIView *view in superView.subviews) {
         if ([view isKindOfClass:NSClassFromString(scrollViewClassName)]) {
             UIScrollView *scrollView = (UIScrollView*)view;
@@ -88,6 +91,14 @@
                         }
                     }
                     if (cell && [cell isKindOfClass:NSClassFromString(cellClassName)]) {
+                        // 针对两个tableView重合的场景，要验证下当前找到的cell是否是用户真正能触控到的。
+                        if (allSubTableView.count > 1) {
+                            UIView *hitTestView = [superView hitTest:[cell center] withEvent:nil];
+                            UIView *hitTestTableView = [hitTestView prism_UITableViewBelow];
+                            if (hitTestTableView && hitTestTableView != tableView) {
+                                continue;
+                            }
+                        }
                         return cell;
                     }
                 }
