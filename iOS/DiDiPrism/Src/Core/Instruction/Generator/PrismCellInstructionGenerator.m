@@ -28,7 +28,7 @@
     return [self getInstructionModelOfCell:cell withMode:PrismInstructionModeInclusive];
 }
 
-+ (PrismInstructionModel *) getInstructionModelOfCell:(UIView *)cell withMode:(PrismInstructionMode)mode {
++ (PrismInstructionModel *)getInstructionModelOfCell:(UIView *)cell withMode:(PrismInstructionMode)mode {
     if (mode == PrismInstructionModeInclusive) {
         PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
         model.vm = kViewMotionCellFlag;
