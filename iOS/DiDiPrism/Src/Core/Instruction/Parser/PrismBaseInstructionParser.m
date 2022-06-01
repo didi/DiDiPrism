@@ -17,6 +17,7 @@
 #import "PrismEdgePanGestureInstructionParser.h"
 #import "PrismH5InstructionParser.h"
 #import "PrismLongPressGestureInstructionParser.h"
+#import "PrismCellInstructionStrictParser.h"
 
 @interface PrismBaseInstructionParser()
 
@@ -56,7 +57,7 @@
         }
     }
     else if (mode == PrismInstructionModeStrict) {
-        //TODO:补齐
+        return [[PrismCellInstructionStrictParser alloc] init];
     }
     return [[PrismBaseInstructionParser alloc] init];
 }
