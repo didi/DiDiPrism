@@ -8,6 +8,7 @@
 #import "PrismCellInstructionGenerator.h"
 #import "PrismInstructionDefines.h"
 // Util
+#import "PrismInstructionViewTreeChainInfoUtil.h"
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
@@ -47,8 +48,7 @@
         PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
         model.vm = kViewMotionCellFlag;
         model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:cell];
-        // TODO: 补齐vt
-//        model.vt = 
+        model.vt = [PrismInstructionViewTreeChainInfoUtil getViewTreeChainInfoWithElement:cell];
         return model;
     }
     return nil;
