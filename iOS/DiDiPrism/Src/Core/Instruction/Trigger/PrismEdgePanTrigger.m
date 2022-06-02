@@ -15,9 +15,7 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
-    
-}
+
 
 #pragma mark - private method
 

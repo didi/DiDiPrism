@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UILabel *phoneView;
 @property (nonatomic, strong) UIView *phoneBarView;
 @property (nonatomic, strong) UIView *locationView;
+@property (nonatomic, strong) UILabel *locationLabel;
 
 @end
 
@@ -40,30 +41,30 @@
         CGFloat height = _textModel.descType == PrismBehaviorDescTypeNetworkImage ? 100 : 30;
         [self.contentLabel removeConstraints:self.contentLabel.constraints];
         [self.contentImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
-            make.right.equalTo(self.timeLabel.mas_left).offset(-20);
-            make.top.equalTo(self.contentView).offset(13);
-            make.bottom.equalTo(self.contentView).offset(-13);
+            make.left.equalTo(self.contentView).offset(125);
+            make.right.equalTo(self.timeLabel.mas_left).offset(-15);
+            make.top.equalTo(self.contentView).offset(20);
+            make.bottom.equalTo(self.contentView).offset(-20);
             make.height.mas_equalTo(height);
         }];
     }
     else if (_textModel.descType == PrismBehaviorDescTypeNone) {
         [self.contentImageView removeConstraints:self.contentImageView.constraints];
         [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
-            make.right.equalTo(self.timeLabel.mas_left).offset(-20);
-            make.top.equalTo(self.contentView).offset(13);
-            make.bottom.equalTo(self.contentView).offset(-13);
+            make.left.equalTo(self.contentView).offset(125);
+            make.right.equalTo(self.timeLabel.mas_left).offset(-15);
+            make.top.equalTo(self.contentView).offset(20);
+            make.bottom.equalTo(self.contentView).offset(-20);
             make.height.mas_equalTo(20);
         }];
     }
     else {
         [self.contentImageView removeConstraints:self.contentImageView.constraints];
         [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.operationLabel.mas_right).offset(50);
-            make.right.equalTo(self.timeLabel.mas_left).offset(-20);
-            make.top.equalTo(self.contentView).offset(13);
-            make.bottom.equalTo(self.contentView).offset(-13);
+            make.left.equalTo(self.contentView).offset(125);
+            make.right.equalTo(self.timeLabel.mas_left).offset(-15);
+            make.top.equalTo(self.contentView).offset(20);
+            make.bottom.equalTo(self.contentView).offset(-20);
             make.height.mas_equalTo(30);
         }];
     }
@@ -88,25 +89,26 @@
     [self.contentView addSubview:self.phoneView];
     [self.contentView addSubview:self.phoneBarView];
     [self.contentView addSubview:self.locationView];
+    [self.contentView addSubview:self.locationLabel];
     
     [self.indexLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(18);
+        make.left.equalTo(self.contentView).offset(15);
         make.centerY.equalTo(self.contentView);
     }];
     [self.operationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.indexLabel).offset(37);
+        make.left.equalTo(self.contentView).offset(37);
         make.centerY.equalTo(self.contentView);
     }];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.contentView).offset(-20);
+        make.right.equalTo(self.contentView).offset(-15);
         make.centerY.equalTo(self.contentView);
     }];
     [self.failFlagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.contentView).offset(1);
     }];
     [self.phoneView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.operationLabel.mas_right).offset(23);
-        make.centerY.equalTo(self.contentView);
+        make.left.equalTo(self.contentView).offset(95);
+        make.top.equalTo(self.contentView).offset(7);
         make.width.mas_equalTo(kPhoneWidth);
         make.height.mas_equalTo(kPhoneHeight);
     }];
@@ -116,6 +118,10 @@
         make.width.mas_equalTo(10);
         make.height.mas_equalTo(4);
     }];
+    [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.phoneView);
+        make.top.equalTo(self.phoneView.mas_bottom).offset(2);
+    }];
 }
 
 #pragma mark - setters
@@ -124,17 +130,27 @@
     
     self.operationLabel.text = _textModel.operationName;
     self.timeLabel.text = _textModel.descTime;
+    self.locationLabel.text = _textModel.areaText;
     switch (_textModel.descType) {
         case PrismBehaviorDescTypeNone:
             {
-                self.contentLabel.text = @"[无法翻译]";
+                NSString *moduleText = _textModel.moduleText.length ? [NSString stringWithFormat:@"%@ - ", _textModel.moduleText] : @"";
+                NSString *elementName = _textModel.elementName.length ? [NSString stringWithFormat:@"（%@）", _textModel.elementName] : @"";
+                if (moduleText.length || elementName.length) {
+                    self.contentLabel.text = [NSString stringWithFormat:@"%@%@%@", moduleText, _textModel.descContent ?: @"", elementName];
+                }
+                else {
+                    self.contentLabel.text = @"[无法翻译]";
+                }
                 self.contentLabel.hidden = NO;
                 self.contentImageView.hidden = YES;
             }
             break;
         case PrismBehaviorDescTypeText:
             {
-                self.contentLabel.text = _textModel.descContent;
+                NSString *moduleText = _textModel.moduleText.length ? [NSString stringWithFormat:@"%@ - ", _textModel.moduleText] : @"";
+                NSString *elementName = _textModel.elementName.length ? [NSString stringWithFormat:@"（%@）", _textModel.elementName] : @"";
+                self.contentLabel.text = [NSString stringWithFormat:@"%@%@%@", moduleText, _textModel.descContent, elementName];
                 self.contentLabel.hidden = NO;
                 self.contentImageView.hidden = YES;
             }
@@ -171,6 +187,15 @@
                 self.contentLabel.hidden = YES;
             }
             break;
+        case PrismBehaviorDescTypeCode:
+            {
+                NSString *moduleText = _textModel.moduleText.length ? [NSString stringWithFormat:@"%@ - ", _textModel.moduleText] : @"";
+                NSString *elementName = _textModel.elementName.length ? [NSString stringWithFormat:@"（%@）", _textModel.elementName] : @"";
+                self.contentLabel.text = [NSString stringWithFormat:@"%@[函数名]%@%@", moduleText, _textModel.descContent, elementName];
+                self.contentLabel.hidden = NO;
+                self.contentImageView.hidden = YES;
+            }
+            break;
         default:
             break;
     }
@@ -185,21 +210,22 @@
     self.phoneView.text = nil;
     self.phoneBarView.hidden = NO;
     self.locationView.hidden = NO;
+    self.locationLabel.hidden = NO;
     
     switch (_textModel.areaInfo) {
         case PrismInstructionAreaUp:
         {
-            width = 6;
+            width = kPhoneWidth;
             height = kPhoneHeight / 2;
-            left = kPhoneWidth / 2 - 3;
+            left = 0;
             top = 0;
         }
             break;
         case PrismInstructionAreaBottom:
         {
-            width = 6;
+            width = kPhoneWidth;
             height = kPhoneHeight / 2;
-            left = kPhoneWidth / 2 - 3;
+            left = 0;
             top = kPhoneHeight / 2;
         }
             break;
@@ -261,7 +287,7 @@
             break;
         case PrismInstructionAreaCanScroll:
         {
-            self.phoneView.text = @"列表";
+            self.phoneView.text = @"---\r\n---\r\n---";
         }
             break;
         default:
@@ -269,6 +295,7 @@
             self.phoneView.hidden = YES;
             self.phoneBarView.hidden = YES;
             self.locationView.hidden = YES;
+            self.locationLabel.hidden = YES;
         }
             break;
     }
@@ -289,7 +316,7 @@
 - (UILabel *)indexLabel {
     if (!_indexLabel) {
         _indexLabel = [[UILabel alloc] init];
-        _indexLabel.font = [UIFont systemFontOfSize:14];
+        _indexLabel.font = [UIFont systemFontOfSize:12];
         _indexLabel.textColor = [UIColor prism_colorWithHexString:@"#666666"];
         _indexLabel.textAlignment = NSTextAlignmentCenter;
     }
@@ -299,7 +326,7 @@
 - (UILabel *)operationLabel {
     if (!_operationLabel) {
         _operationLabel = [[UILabel alloc] init];
-        _operationLabel.font = [UIFont systemFontOfSize:14];
+        _operationLabel.font = [UIFont systemFontOfSize:12];
         _operationLabel.textColor = [UIColor prism_colorWithHexString:@"#666666"];
         _operationLabel.textAlignment = NSTextAlignmentCenter;
     }
@@ -309,9 +336,10 @@
 - (UILabel *)contentLabel {
     if (!_contentLabel) {
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.font = [UIFont boldSystemFontOfSize:14];
+        _contentLabel.font = [UIFont boldSystemFontOfSize:12];
         _contentLabel.textColor = [UIColor prism_colorWithHexString:@"#333333"];
         _contentLabel.textAlignment = NSTextAlignmentCenter;
+        _contentLabel.numberOfLines = 0;
     }
     return _contentLabel;
 }
@@ -327,7 +355,7 @@
 - (UILabel *)timeLabel {
     if (!_timeLabel) {
         _timeLabel = [[UILabel alloc] init];
-        _timeLabel.font = [UIFont boldSystemFontOfSize:14];
+        _timeLabel.font = [UIFont boldSystemFontOfSize:12];
         _timeLabel.textColor = [UIColor prism_colorWithHexString:@"#333333"];
         _timeLabel.textAlignment = NSTextAlignmentRight;
     }
@@ -355,6 +383,7 @@
         _phoneView.textColor = [UIColor prism_colorWithHexString:@"#666666"];
         _phoneView.font = [UIFont systemFontOfSize:8];
         _phoneView.textAlignment = NSTextAlignmentCenter;
+        _phoneView.numberOfLines = 0;
     }
     return _phoneView;
 }
@@ -374,5 +403,15 @@
         _locationView.backgroundColor = [[UIColor prism_colorWithHexString:@"#666666"] colorWithAlphaComponent:0.6];
     }
     return _locationView;
+}
+
+- (UILabel *)locationLabel {
+    if (!_locationLabel) {
+        _locationLabel = [[UILabel alloc] init];
+        _locationLabel.font = [UIFont systemFontOfSize:10];
+        _locationLabel.textColor = [UIColor prism_colorWithHexString:@"#666666"];
+        _locationLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _locationLabel;
 }
 @end

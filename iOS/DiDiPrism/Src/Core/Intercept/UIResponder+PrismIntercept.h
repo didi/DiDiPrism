@@ -11,8 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIResponder (PrismIntercept)
 @property (nonatomic, copy) NSString *prismAutoDotItemName; //辅助参数，用来存储通用ID
-@property (nonatomic, copy) NSString *prismAutoDotSpecialMark; //特殊节点标识
-@property (nonatomic, copy) NSString *prismAutoDotFinalMark; //支持自定义节点标识
+@property (nonatomic, copy) NSString *prismAutoDotSpecialMark; //支持为节点自定义标识
 @end
 
 NS_ASSUME_NONNULL_END

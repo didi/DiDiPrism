@@ -91,12 +91,9 @@
 
 **内部核心成员**
 [Hulk(荣浩)](https://github.com/ronghaopger)、
+[梅平](https://github.com/mpmpmp3332003)、
 [EastWoodYang](https://github.com/EastWoodYang)、
-[pengpeng(赵磊鹏)](https://github.com/zhaoleipeng)、
-[Kain(孙冬冬)](https://github.com/SunDDong)、
 [张华](https://github.com/zollero)、
-[朱少颖](https://github.com/zsynuting)、
-[苍老师(张熠萌)](https://github.com/zymxxxs)、
 [戴立慧](https://github.com/blankdlh)
 
 ## 协议

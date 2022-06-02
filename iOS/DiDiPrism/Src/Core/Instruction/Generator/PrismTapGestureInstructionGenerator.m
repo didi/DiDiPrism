@@ -10,6 +10,7 @@
 // Util
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
+#import "PrismInstructionInputUtil.h"
 // Category
 #import "UITapGestureRecognizer+PrismIntercept.h"
 #import "UIResponder+PrismIntercept.h"
@@ -34,6 +35,10 @@
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.vm = kViewMotionTapGestureFlag;
     model.vp = [tapGesture prismAutoDotResponseChainInfo];
+    // 屏蔽键盘点击事件
+    if ([PrismInstructionInputUtil isSystemKeyboardTouchEventWithModel:model]) {
+        return nil;
+    }
     NSArray *areaInfo = [tapGesture prismAutoDotAreaInfo];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];

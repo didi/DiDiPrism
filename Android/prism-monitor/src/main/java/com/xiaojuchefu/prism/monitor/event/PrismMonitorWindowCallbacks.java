@@ -13,9 +13,9 @@ import com.xiaojuchefu.prism.monitor.touch.TouchEventHelper;
 import com.xiaojuchefu.prism.monitor.touch.TouchRecord;
 import com.xiaojuchefu.prism.monitor.touch.TouchRecordManager;
 import com.xiaojuchefu.prism.monitor.touch.TouchTracker;
+import com.xiaojuchefu.prism.monitor.touch.WebviewEventHelper;
 
 public class PrismMonitorWindowCallbacks extends WindowCallbacks {
-
     PrismMonitor mPrismMonitor;
     private Window window;
 
@@ -32,14 +32,21 @@ public class PrismMonitorWindowCallbacks extends WindowCallbacks {
             int action = event.getActionMasked();
             if (action == MotionEvent.ACTION_UP) {
                 TouchRecord touchRecord = TouchRecordManager.getInstance().getTouchRecord();
-                if (touchRecord != null && touchRecord.isClick) {
+                if (touchRecord != null && (touchRecord.isClick || mPrismMonitor.isTest())) {
                     int[] location = new int[]{(int) touchRecord.mDownX, (int) touchRecord.mDownY};
+                    long findTargetStartTime = System.currentTimeMillis();
                     View targetView = TouchTracker.findTargetView((ViewGroup) window.getDecorView(), touchRecord.isClick ? location : null);
+                    WebviewEventHelper.collectWebView(targetView);
+                    long fvd = System.currentTimeMillis() - findTargetStartTime;
                     if (targetView != null) {
+                        long createEventStartTime = System.currentTimeMillis();
                         EventData eventData = TouchEventHelper.createEventData(window, targetView, touchRecord);
+                        long avd = System.currentTimeMillis() - createEventStartTime;
                         if (eventData != null) {
                             eventData.mDownX = touchRecord.mDownX;
                             eventData.mDownY = touchRecord.mDownY;
+                            eventData.fvd = fvd;
+                            eventData.avd = avd;
                             mPrismMonitor.post(eventData);
                         }
                     }
@@ -72,5 +79,4 @@ public class PrismMonitorWindowCallbacks extends WindowCallbacks {
             mPrismMonitor.post(PrismConstants.Event.DIALOG_CLOSE);
         }
     }
-
 }

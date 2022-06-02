@@ -15,12 +15,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     if (!element) {
         return;
     }
     UILongPressGestureRecognizer *longPressGesture = (UILongPressGestureRecognizer*)element;
-    [self highlightTheElement:longPressGesture.view withDelay:delaySeconds withCompletion:^{
+    [self highlightTheElement:longPressGesture.view withNewColor:newValue withDelay:delaySeconds withCompletion:^{
         [longPressGesture setState:UIGestureRecognizerStateRecognized];
     }];
 }

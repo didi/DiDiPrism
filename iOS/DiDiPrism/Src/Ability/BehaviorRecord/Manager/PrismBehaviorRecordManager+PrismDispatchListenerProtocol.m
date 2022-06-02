@@ -22,6 +22,7 @@
 #import <DiDiPrism/PrismLongPressGestureInstructionGenerator.h>
 #import <DiDiPrism/PrismCellInstructionGenerator.h>
 #import <DiDiPrism/PrismViewControllerInstructionGenerator.h>
+#import <DiDiPrism/PrismTextFieldInstructionGenerator.h>
 
 @implementation PrismBehaviorRecordManager (PrismDispatchListenerProtocol)
 #pragma mark -delegate
@@ -120,7 +121,7 @@
     else if (event == PrismDispatchEventWKWebViewInitWithFrame) {
         WKWebView *webView = (WKWebView*)sender;
         WKWebViewConfiguration *configuration = [params objectForKey:@"configuration"];
-        NSString *recordScript = @"!function(){\"use strict\";var e=new(function(){function e(){}return e.prototype.record=function(e){for(var t=this.getContent(e),r=[];e&&\"body\"!==e.nodeName.toLowerCase();){var n=e.nodeName.toLowerCase();if(e.id)n+=\"#\"+e.id;else{for(var i=e,o=1;i.previousElementSibling;)i=i.previousElementSibling,o+=1;o>1&&(n+=\":nth-child(\"+o+\")\")}r.unshift(n),e=e.parentElement}return r.unshift(\"body\"),{instruct:r.join(\">\"),content:t}},e.prototype.getContent=function(e){return e.innerText?this.getText(e):e.getAttribute(\"src\")?e.getAttribute(\"src\"):e.querySelectorAll(\"img\")&&e.querySelectorAll(\"img\").length>0?this.getImgSrc(e):\"\"},e.prototype.getText=function(e){if(!(e.childNodes&&e.childNodes.length>0))return e.innerText||e.nodeValue;for(var t=0;t<e.childNodes.length;t++)if(e.childNodes[t].childNodes){var r=this.getText(e.childNodes[t]);if(r)return r}},e.prototype.getImgSrc=function(e){var t=e.querySelectorAll(\"img\");return t&&t[0]&&t[0].src},e}());var moved=false;document.addEventListener(\"touchmove\",(function(t){moved=true;}));document.addEventListener(\"touchend\",(function(t){if(moved===true){moved=false;return;}if(t.target)try{window.webkit.messageHandlers.prism_record_instruct&&window.webkit.messageHandlers.prism_record_instruct.postMessage(e.record(t.target))}catch(e){}}))}();";
+        NSString *recordScript = @"!function(){\"use strict\";var e=new(function(){function e(){}return e.prototype.record=function(e){for(var t=this.getContent(e),n=[];e&&\"body\"!==e.nodeName.toLowerCase();){var r=e.nodeName.toLowerCase();if(e.id)r+=\"#\"+e.id;else{for(var i=e.className.split(\" \").filter((function(e){return\"\"!==e.trim()})).join(\".\"),o=!(null===i||\"\"===i),s=e,c=1;s.previousElementSibling;)s=s.previousElementSibling,o&&s.className.split(\" \").filter((function(e){return\"\"!==e.trim()})).join(\".\")===i&&(o=!1),c+=1;if(o)for(s=e;s.nextElementSibling;)if(s=s.nextElementSibling,o&&s.className.split(\" \").filter((function(e){return\"\"!==e.trim()})).join(\".\")===i){o=!1;break}o?r+=\".\"+i:c>1&&(r+=\":nth-child(\"+c+\")\")}n.unshift(r),e=e.parentElement}return n.unshift(\"body\"),{instruct:n.join(\">\"),content:t}},e.prototype.getContent=function(e){return e.innerText?this.getText(e):e.getAttribute(\"src\")?e.getAttribute(\"src\"):e.querySelectorAll(\"img\")&&e.querySelectorAll(\"img\").length>0?this.getImgSrc(e):\"\"},e.prototype.getText=function(e){if(!(e.childNodes&&e.childNodes.length>0))return e.innerText||e.nodeValue;for(var t=0;t<e.childNodes.length;t++)if(e.childNodes[t].childNodes){var n=this.getText(e.childNodes[t]);if(n)return n}},e.prototype.getImgSrc=function(e){var t=e.querySelectorAll(\"img\");return t&&t[0]&&t[0].src},e}()),t=!1;document.addEventListener(\"touchmove\",(function(){!0!==t&&(t=!0)})),document.addEventListener(\"touchend\",(function(n){if(!0!==t){if(n.target)try{window.webkit.messageHandlers.prism_record_instruct&&window.webkit.messageHandlers.prism_record_instruct.postMessage(e.record(n.target))}catch(e){}}else t=!1}))}();";
         
         [webView prism_autoDot_addCustomScript:recordScript withConfiguration:configuration];
         NSString *scriptName = @"prism_record_instruct";
@@ -137,6 +138,18 @@
     }
     else if (event == PrismDispatchEventUIApplicationWillResignActive) {
         [self addInstruction:kUIApplicationResignActive];
+    }
+    else if (event == PrismDispatchEventUITextFieldBecomeFirstResponder) {
+        UITextField *textField = (UITextField*)sender;
+        PrismInstructionModel *instructionModel = [PrismTextFieldInstructionGenerator getInstructionModelOfTextField:textField withEvent:event];
+        NSString *instruction = [instructionModel toString];
+        [self addInstruction:instruction];
+    }
+    else if (event == PrismDispatchEventUITextFieldResignFirstResponder) {
+        UITextField *textField = (UITextField*)sender;
+        PrismInstructionModel *instructionModel = [PrismTextFieldInstructionGenerator getInstructionModelOfTextField:textField withEvent:event];
+        NSString *instruction = [instructionModel toString];
+        [self addInstruction:instruction];
     }
 }
 @end

@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *instruction;
 
 - (instancetype)initWithInstruction:(NSString*)instruction;
+/*
+ getter
+ */
 - (NSArray<NSString*>*)instructionFragmentWithType:(PrismInstructionFragmentType)type;
 - (NSString*)instructionFragmentContentWithType:(PrismInstructionFragmentType)type;
 

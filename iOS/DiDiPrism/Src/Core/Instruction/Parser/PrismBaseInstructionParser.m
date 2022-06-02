@@ -18,6 +18,7 @@
 #import "PrismH5InstructionParser.h"
 #import "PrismLongPressGestureInstructionParser.h"
 #import "PrismCellInstructionStrictParser.h"
+#import "PrismTextFieldInstructionParser.h"
 
 @interface PrismBaseInstructionParser()
 
@@ -54,6 +55,9 @@
         }
         else if ([viewMotion isEqualToString:kViewMotionLongPressGestureFlag]) {
             return [[PrismLongPressGestureInstructionParser alloc] init];
+        }
+        else if ([viewMotion isEqualToString:kViewMotionTextFieldBFRFlag]) {
+            return [[PrismTextFieldInstructionParser alloc] init];
         }
     }
     else if (mode == PrismInstructionModeStrict) {

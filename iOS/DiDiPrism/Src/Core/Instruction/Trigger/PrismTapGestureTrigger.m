@@ -15,12 +15,12 @@
 #pragma mark - life cycle
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     if (!element) {
         return;
     }
     UITapGestureRecognizer *tapGesture = (UITapGestureRecognizer*)element;
-    [self highlightTheElement:tapGesture.view withDelay:delaySeconds withCompletion:^{
+    [self highlightTheElement:tapGesture.view withNewColor:newValue withDelay:delaySeconds withCompletion:^{
         [tapGesture setState:UIGestureRecognizerStateRecognized];
     }];
 }

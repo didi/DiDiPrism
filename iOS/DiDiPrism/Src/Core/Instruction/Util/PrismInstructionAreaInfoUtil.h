@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, PrismInstructionArea) {
  */
 + (NSArray<NSString*>*)getAreaInfoWithElement:(UIView *)element;
 + (NSInteger)getIndexOf:(UIView*)element fromScrollView:(UIScrollView*)scrollView;
++ (NSString*)getAreaTextWithInfo:(PrismInstructionArea)areaInfo;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -16,6 +16,7 @@
 #import "PrismTapGestureTrigger.h"
 #import "PrismH5Trigger.h"
 #import "PrismTagTrigger.h"
+#import "PrismTextFieldTrigger.h"
 
 @interface PrismBaseElementTrigger()
 
@@ -48,6 +49,9 @@
     else if ([viewMotion isEqualToString:kViewMotionLongPressGestureFlag]) {
         return [[PrismLongPressTrigger alloc] init];
     }
+    else if ([viewMotion isEqualToString:kViewMotionTextFieldBFRFlag]) {
+        return [[PrismTextFieldTrigger alloc] init];
+    }
     
     return [[PrismBaseElementTrigger alloc] init];
 }
@@ -61,18 +65,18 @@
 }
 
 #pragma mark - public method
-- (void)triggerWithElement:(NSObject *)element withDelay:(NSTimeInterval)delaySeconds {
+- (void)triggerWithElement:(NSObject *)element withNewValue:(id)newValue withDelay:(NSTimeInterval)delaySeconds {
     
 }
 
-- (void)highlightTheElement:(UIView *)element withDelay:(NSTimeInterval)delaySeconds withCompletion:(void (^)(void))block {
+- (void)highlightTheElement:(UIView *)element withNewColor:(UIColor *)color withDelay:(NSTimeInterval)delaySeconds withCompletion:(void (^)(void))block {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delaySeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
         CGRect elementFrame = [element.superview convertRect:element.frame toView:mainWindow];
         UIBezierPath *redPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(elementFrame.origin.x - 4, elementFrame.origin.y - 4, elementFrame.size.width + 8, elementFrame.size.height + 8) cornerRadius:5];
         CAShapeLayer *redLayer = [CAShapeLayer layer];
         redLayer.path = redPath.CGPath;
-        redLayer.fillColor = [UIColor redColor].CGColor;
+        redLayer.fillColor = color.CGColor;
         redLayer.opacity = 0.3;
         [mainWindow.layer addSublayer:redLayer];
         

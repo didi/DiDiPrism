@@ -2,6 +2,8 @@ package com.xiaojuchefu.prism.monitor;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
@@ -11,6 +13,10 @@ import com.xiaojuchefu.prism.monitor.core.WindowCallbacks;
 import com.xiaojuchefu.prism.monitor.core.WindowObserver;
 import com.xiaojuchefu.prism.monitor.event.ActivityLifecycleCallbacks;
 import com.xiaojuchefu.prism.monitor.event.PrismMonitorWindowCallbacks;
+import com.xiaojuchefu.prism.monitor.event.ScreenObserver;
+import com.xiaojuchefu.prism.monitor.handler.IViewContainerHandler;
+import com.xiaojuchefu.prism.monitor.handler.IViewContentHandler;
+import com.xiaojuchefu.prism.monitor.handler.IViewTagHandler;
 import com.xiaojuchefu.prism.monitor.model.EventData;
 
 import java.util.ArrayList;
@@ -20,18 +26,26 @@ public class PrismMonitor {
 
     private static PrismMonitor sPrismMonitor;
 
+
     public static int sTouchSlop = -1;
 
     public Application mApplication;
 
     private boolean isInitialized;
     private boolean isMonitoring;
+    private boolean isTest;
+    private boolean keepMonitoring;
 
     private List<OnPrismMonitorListener> mListeners;
 
     private ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
 
     private WindowObserver.WindowObserverListener mWindowObserverListener;
+
+    private IViewContainerHandler mViewContainerHandler;
+    private IViewContentHandler mViewContentHandler;
+    private IViewTagHandler mViewTagHandler;
+
 
     private PrismMonitor() {
     }
@@ -51,6 +65,18 @@ public class PrismMonitor {
         return isMonitoring;
     }
 
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
+    }
+
+    public void setKeepMonitoring(boolean keep) {
+        keepMonitoring = keep;
+    }
+
     public void init(Application application) {
         if (isInitialized) {
             return;
@@ -65,6 +91,13 @@ public class PrismMonitor {
 
         ViewConfiguration vc = ViewConfiguration.get(context);
         sTouchSlop = vc.getScaledTouchSlop();
+
+        ScreenObserver screenObserver = new ScreenObserver();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        context.registerReceiver(screenObserver, intentFilter);
 
         GlobalWindowManager.getInstance().init(context);
 
@@ -104,7 +137,7 @@ public class PrismMonitor {
     }
 
     public void stop() {
-        if (!isInitialized || !isMonitoring) return;
+        if (!isInitialized || !isMonitoring || keepMonitoring) return;
 
         isMonitoring = false;
         mApplication.unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
@@ -143,6 +176,30 @@ public class PrismMonitor {
                 listener.onEvent(eventData);
             }
         }
+    }
+
+    public IViewContainerHandler getViewContainerHandler() {
+        return this.mViewContainerHandler;
+    }
+
+    public void setViewContainerHandler(IViewContainerHandler viewContainerHandler) {
+        this.mViewContainerHandler = viewContainerHandler;
+    }
+
+    public IViewContentHandler getViewContentHandler() {
+        return this.mViewContentHandler;
+    }
+
+    public void setViewContentHandler(IViewContentHandler viewContentHandler) {
+        this.mViewContentHandler = viewContentHandler;
+    }
+
+    public IViewTagHandler getViewTagHandler() {
+        return this.mViewTagHandler;
+    }
+
+    public void setViewTagHandler(IViewTagHandler viewTagHandler) {
+        this.mViewTagHandler = viewTagHandler;
     }
 
     public void addOnPrismMonitorListener(OnPrismMonitorListener listener) {

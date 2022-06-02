@@ -10,6 +10,7 @@
 
 @interface UIView (PrismExtends)
 
+- (UIScrollView*)prism_UIScrollViewBelow;
 - (UITableView*)prism_UITableViewBelow;
 - (UICollectionView*)prism_UICollectionViewBelow;
 - (UIViewController *)prism_viewController;

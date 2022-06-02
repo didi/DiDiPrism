@@ -118,5 +118,44 @@
     return [sortedSubviews indexOfObject:element];
 }
 
++ (NSString *)getAreaTextWithInfo:(PrismInstructionArea)areaInfo {
+    NSString *text = nil;
+    switch (areaInfo) {
+        case PrismInstructionAreaCenter:
+            text = @"[屏幕中央]";
+            break;
+        case PrismInstructionAreaUp:
+            text = @"[屏幕上方]";
+            break;
+        case PrismInstructionAreaBottom:
+            text = @"[屏幕下方]";
+            break;
+        case PrismInstructionAreaLeft:
+            text = @"[屏幕左方]";
+            break;
+        case PrismInstructionAreaRight:
+            text = @"[屏幕右方]";
+            break;
+        case PrismInstructionAreaUpLeft:
+            text = @"[屏幕左上]";
+            break;
+        case PrismInstructionAreaUpRight:
+            text = @"[屏幕右上]";
+            break;
+        case PrismInstructionAreaBottomLeft:
+            text = @"[屏幕左下]";
+            break;
+        case PrismInstructionAreaBottomRight:
+            text = @"[屏幕右下]";
+            break;
+        case PrismInstructionAreaCanScroll:
+            text = @"[列表]";
+            break;
+        default:
+            break;
+    }
+    return text;
+}
+
 #pragma mark - private method
 @end

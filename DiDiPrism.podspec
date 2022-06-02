@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "DiDiPrism"
-  spec.version      = "0.2.4"
+  spec.version      = "0.2.8"
   spec.summary      = "一款专注移动端操作行为的工具"
   spec.description  = <<-DESC
                         移动端用户行为分析工具
@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
 
   spec.author             = { "Hulk" => "ronghao@didichuxing.com" }
 
-  spec.ios.deployment_target = "9.0"
+  spec.ios.deployment_target = "8.0"
 
   spec.source       = { :git => "https://github.com/didi/DiDiPrism.git", :tag => "#{spec.version}" }
 

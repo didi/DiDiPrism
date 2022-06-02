@@ -12,6 +12,7 @@
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionContentUtil.h"
+#import "PrismInstructionInputUtil.h"
 // Category
 #import "UIResponder+PrismIntercept.h"
 #import "NSArray+PrismExtends.h"
@@ -33,6 +34,10 @@
         PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
         model.vm = kViewMotionCellFlag;
         model.vp = [PrismInstructionResponseChainInfoUtil getResponseChainInfoWithElement:cell];
+        // 屏蔽键盘点击事件
+        if ([PrismInstructionInputUtil isSystemKeyboardTouchEventWithModel:model]) {
+            return nil;
+        }
         NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:cell];
         model.vl = [areaInfo prism_stringWithIndex:0];
         model.vq = [areaInfo prism_stringWithIndex:1];
