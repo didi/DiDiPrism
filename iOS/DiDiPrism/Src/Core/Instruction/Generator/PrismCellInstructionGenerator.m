@@ -41,7 +41,12 @@
         NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:cell];
         model.vl = [areaInfo prism_stringWithIndex:0];
         model.vq = [areaInfo prism_stringWithIndex:1];
-        model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
+        if (cell.prismAutoDotContentCollectOff) {
+            model.vr = kViewRepresentativeContentTypeHide;
+        }
+        else {
+            model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:cell needRecursive:YES];
+        }
         return model;
     }
     else if (mode == PrismInstructionModeStrict) {

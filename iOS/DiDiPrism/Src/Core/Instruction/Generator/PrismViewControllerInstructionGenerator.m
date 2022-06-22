@@ -9,6 +9,8 @@
 #import "PrismInstructionDefines.h"
 // Util
 #import "PrismInstructionInputUtil.h"
+// Category
+#import "UIResponder+PrismIntercept.h"
 
 @interface PrismViewControllerInstructionGenerator()
 
@@ -25,7 +27,12 @@
     }
     PrismInstructionModel *model = [[PrismInstructionModel alloc] init];
     model.e = kUIViewControllerDidAppear;
-    model.vr = [self getViewContentOfViewController:viewController];
+    if (viewController.prismAutoDotContentCollectOff) {
+        model.vr = kViewRepresentativeContentTypeHide;
+    }
+    else {
+        model.vr = [self getViewContentOfViewController:viewController];
+    }
     return model;
 }
 

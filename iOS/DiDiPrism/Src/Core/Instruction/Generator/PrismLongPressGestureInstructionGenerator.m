@@ -41,7 +41,12 @@
         return nil;
     }
     model.vq = [areaInfo prism_stringWithIndex:1];
-    model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
+    if (view.prismAutoDotContentCollectOff) {
+        model.vr = kViewRepresentativeContentTypeHide;
+    }
+    else {
+        model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
+    }
     model.vf = [self getFunctionNameOfLongPressGesture:longPressGesture];
     return model;
 }

@@ -9,6 +9,7 @@
 #import "PrismInstructionDefines.h"
 // Category
 #import "NSArray+PrismExtends.h"
+#import "UIResponder+PrismIntercept.h"
 // Util
 #import "PrismInstructionResponseChainInfoUtil.h"
 #import "PrismInstructionAreaInfoUtil.h"
@@ -32,7 +33,12 @@
     NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:textField];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];
-    model.vr = textField.text.length ? [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, textField.text] : nil;
+    if (textField.prismAutoDotContentCollectOff) {
+        model.vr = kViewRepresentativeContentTypeHide;
+    }
+    else {
+        model.vr = textField.text.length ? [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, textField.text] : nil;
+    }
     model.vf = textField.placeholder.length ? [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, textField.placeholder] : nil;
     return model;
 }

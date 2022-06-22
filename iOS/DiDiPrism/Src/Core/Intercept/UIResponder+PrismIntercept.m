@@ -25,4 +25,13 @@
 - (void)setPrismAutoDotSpecialMark:(NSString *)prismAutoDotSpecialMark {
     objc_setAssociatedObject(self, @selector(prismAutoDotSpecialMark), prismAutoDotSpecialMark, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
+
+- (BOOL)prismAutoDotContentCollectOff {
+    NSNumber *collectOff = objc_getAssociatedObject(self, _cmd);
+    return [collectOff boolValue];
+}
+
+- (void)setPrismAutoDotContentCollectOff:(BOOL)prismAutoDotContentCollectOff {
+    objc_setAssociatedObject(self, @selector(prismAutoDotContentCollectOff), [NSNumber numberWithBool:prismAutoDotContentCollectOff], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 @end

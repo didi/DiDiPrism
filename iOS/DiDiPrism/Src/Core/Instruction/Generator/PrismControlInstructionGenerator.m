@@ -39,7 +39,12 @@
     NSArray *areaInfo = [PrismInstructionAreaInfoUtil getAreaInfoWithElement:control];
     model.vl = [areaInfo prism_stringWithIndex:0];
     model.vq = [areaInfo prism_stringWithIndex:1];
-    model.vr = [self getViewContentOfControl:control];
+    if (control.prismAutoDotContentCollectOff) {
+        model.vr = kViewRepresentativeContentTypeHide;
+    }
+    else {
+        model.vr = [self getViewContentOfControl:control];
+    }
     model.vf = [NSString stringWithFormat:@"%@%@%@", targetAndSelector ?: @"", kConnectorFlag, controlEvents ?: @""];
     return model;
 }

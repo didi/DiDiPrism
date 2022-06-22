@@ -54,6 +54,7 @@
 
 // View RepresentativeContent
 #define kViewRepresentativeContentTypeText @"[_text]"
+#define kViewRepresentativeContentTypeHide @"[_hide]"
 #define kViewRepresentativeContentTypeLocalImage @"[_l_image]"
 #define kViewRepresentativeContentTypeNetworkImage @"[_n_image]"
 #endif /* PrismInstructionDefines_h */

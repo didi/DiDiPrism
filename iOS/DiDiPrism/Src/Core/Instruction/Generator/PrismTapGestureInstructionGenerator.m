@@ -46,7 +46,12 @@
     if (([model.vl containsString:@"WKScrollView"] || [model.vl containsString:@"WKContentView"])) {
         return nil;
     }
-    model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
+    if (view.prismAutoDotContentCollectOff) {
+        model.vr = kViewRepresentativeContentTypeHide;
+    }
+    else {
+        model.vr = [PrismInstructionContentUtil getRepresentativeContentOfView:view needRecursive:YES];
+    }
     model.vf = [self getFunctionNameOfTapGesture:tapGesture];
     return model;
 }
