@@ -44,6 +44,9 @@
         if (imageView.image.prismAutoDotImageName.length) {
             return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, imageView.image.prismAutoDotImageName];
         }
+        else if (imageView.image.prismAutoDotImageUrl.length) {
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, imageView.image.prismAutoDotImageUrl];
+        }
         else if ([imageView respondsToSelector:sd_selector]) {
             NSURL *imageUrl = [imageView performSelector:sd_selector];
             if ([imageUrl isKindOfClass:[NSURL class]] && imageUrl.absoluteString.length) {

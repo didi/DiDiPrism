@@ -79,6 +79,7 @@
 
 #pragma mark - private method
 + (NSString*)getViewContentOfButton:(UIButton*)button {
+    SEL sd_selector = NSSelectorFromString(@"sd_imageURL");
     if (button.titleLabel.text.length) {
         return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, button.titleLabel.text];
     }
@@ -87,6 +88,15 @@
     }
     else if (button.imageView.image && button.imageView.image.prismAutoDotImageName.length) {
         return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeLocalImage, button.imageView.image.prismAutoDotImageName];
+    }
+    else if (button.imageView.image && button.imageView.image.prismAutoDotImageUrl.length) {
+        return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, button.imageView.image.prismAutoDotImageUrl];
+    }
+    else if (button.imageView && [button.imageView respondsToSelector:sd_selector]) {
+        NSURL *imageUrl = [button.imageView performSelector:sd_selector];
+        if ([imageUrl isKindOfClass:[NSURL class]] && imageUrl.absoluteString.length) {
+            return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeNetworkImage, imageUrl.absoluteString];
+        }
     }
     return nil;
 }

@@ -76,4 +76,12 @@
     objc_setAssociatedObject(self, @selector(prismAutoDotImageName), prismAutoDotImageName, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (NSString *)prismAutoDotImageUrl {
+    NSString *name = objc_getAssociatedObject(self, _cmd);
+    return name;
+}
+- (void)setPrismAutoDotImageUrl:(NSString *)prismAutoDotImageUrl {
+    objc_setAssociatedObject(self, @selector(prismAutoDotImageUrl), prismAutoDotImageUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 @end

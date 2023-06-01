@@ -10,6 +10,7 @@
 // Category
 #import "UIControl+PrismIntercept.h"
 #import "UIImage+PrismIntercept.h"
+#import "SDImageCache+PrismIntercept.h"
 #import "UILongPressGestureRecognizer+PrismIntercept.h"
 #import "UITapGestureRecognizer+PrismIntercept.h"
 #import "UIView+PrismIntercept.h"
@@ -24,6 +25,9 @@
 #pragma mark public method
 + (void)startEngineWithEventCategorys:(PrismEventCategory)eventCategorys {
     [UIImage prism_swizzleMethodIMP];
+#if __has_include(<SDWebImage/SDImageCache.h>)
+    [SDImageCache prism_swizzleMethodIMP];
+#endif
     
     if (eventCategorys & PrismEventCategoryTouch) {
         [UIControl prism_swizzleMethodIMP];
