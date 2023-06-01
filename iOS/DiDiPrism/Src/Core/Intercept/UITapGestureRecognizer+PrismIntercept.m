@@ -71,7 +71,13 @@
     UITapGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
     
     [gesture addTarget:self action:@selector(prism_autoDot_tapAction:)];
-    gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
+    // 通过[[xxx alloc] init]初始化时，target和action为nil，影响生成结果，故作此判断。
+    if (target && action) {
+        gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
+    }
+    else {
+        gesture.prismAutoDotTargetAndSelector = @"";
+    }
     
     return gesture;
 }
