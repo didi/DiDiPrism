@@ -58,7 +58,7 @@
     __block NSDictionary *mockResult = nil;
     NSString *httpMethod = request.HTTPMethod;
     NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSURLProtocol propertyForKey:PRISM_REQUEST_INFOS inRequest:request];
-    NSString *urlFlag = [NSString stringWithFormat:@"%@", request.URL.path];
+    NSString *urlFlag = [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock ? [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock(request) : nil;
     [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.originUrl containsString:urlFlag]) {
             /*
