@@ -54,9 +54,9 @@
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
+    NSMutableURLRequest *mutableReqeust = request.mutableCopy;
     __block NSString *mockUrl = nil;
     __block NSDictionary *mockResult = nil;
-    NSString *httpMethod = request.HTTPMethod;
     NSArray<PrismBehaviorItemRequestInfoModel*> *requestInfos = [NSURLProtocol propertyForKey:PRISM_REQUEST_INFOS inRequest:request];
     NSString *urlFlag = [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock ? [PrismBehaviorReplayManager sharedManager].urlFlagPickBlock(request) : nil;
     [requestInfos enumerateObjectsUsingBlock:^(PrismBehaviorItemRequestInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -72,14 +72,11 @@
             }
             else {
                 // 方式一
-                mockUrl = obj.mockUrl;
+                mutableReqeust.URL = [NSURL URLWithString:obj.mockUrl];
             }
             *stop = YES;
         }
     }];
-    
-    NSMutableURLRequest *mutableReqeust = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:mockUrl]];
-    mutableReqeust.HTTPMethod = httpMethod;
     [NSURLProtocol setProperty:@(YES) forKey:PRISM_REQUEST_HAS_INIT inRequest:mutableReqeust];
     [NSURLProtocol setProperty:mockResult forKey:PRISM_REQUEST_MOCK_RESULT inRequest:mutableReqeust];
     request = [mutableReqeust copy];
