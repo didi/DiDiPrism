@@ -6,17 +6,17 @@
 //
 
 #import "UITextField+PrismIntercept.h"
+#import <objc/runtime.h>
 #import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
-// Util
-#import "PrismRuntimeUtil.h"
 
 @implementation UITextField (PrismIntercept)
 #pragma mark - public method
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        // Swizzle becomeFirstResponder
         RSSwizzleInstanceMethod(UITextField, @selector(becomeFirstResponder),
                                 RSSWReturnType(BOOL),
                                 RSSWArguments(),
@@ -31,6 +31,7 @@
                                 RSSwizzleModeAlways,
                                 NULL);
         
+        // Swizzle resignFirstResponder
         RSSwizzleInstanceMethod(UITextField, @selector(resignFirstResponder),
                                 RSSWReturnType(BOOL),
                                 RSSWArguments(),

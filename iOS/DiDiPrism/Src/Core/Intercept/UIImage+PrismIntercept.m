@@ -6,56 +6,64 @@
 //
 
 #import "UIImage+PrismIntercept.h"
-// Util
-#import "PrismRuntimeUtil.h"
+#import <objc/runtime.h>
+#import <RSSwizzle/RSSwizzle.h>
 
 @implementation UIImage (PrismIntercept)
 #pragma mark - public method
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:) swizzledSelector:@selector(prism_autoDot_imageNamed:) isClassMethod:YES];
-        #if __has_include(<UIKit/UITraitCollection.h>)
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:) swizzledSelector:@selector(prism_autoDot_imageNamed:inBundle:compatibleWithTraitCollection:) isClassMethod:YES];
-        #endif
-        [PrismRuntimeUtil hookClass:object_getClass(self) originalSelector:@selector(imageWithContentsOfFile:) swizzledSelector:@selector(prism_autoDot_imageWithContentsOfFile:) isClassMethod:YES];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithContentsOfFile:) swizzledSelector:@selector(prism_autoDot_initWithContentsOfFile:)];
+        // Swizzle imageNamed:
+        RSSwizzleClassMethod(UIImage, @selector(imageNamed:),
+                                RSSWReturnType(UIImage *),
+                                RSSWArguments(NSString *name),
+                                RSSWReplacement({
+            UIImage *image = RSSWCallOriginal(name);
+            image.prismAutoDotImageName = [self getImageNameFromPath:name];
+            return image;
+        })
+                            );
+        
+#if __has_include(<UIKit/UITraitCollection.h>)
+        // Swizzle imageNamed:inBundle:compatibleWithTraitCollection:
+        RSSwizzleClassMethod(UIImage, @selector(imageNamed:inBundle:compatibleWithTraitCollection:),
+                                RSSWReturnType(UIImage *),
+                                RSSWArguments(NSString *name, NSBundle *bundle, UITraitCollection *traitCollection),
+                                RSSWReplacement({
+            UIImage *image = RSSWCallOriginal(name, bundle, traitCollection);
+            image.prismAutoDotImageName = [self getImageNameFromPath:name];
+            return image;
+        })
+                            );
+#endif
+        
+        // Swizzle imageWithContentsOfFile:
+        RSSwizzleClassMethod(UIImage, @selector(imageWithContentsOfFile:),
+                                RSSWReturnType(UIImage *),
+                                RSSWArguments(NSString *path),
+                                RSSWReplacement({
+            UIImage *image = RSSWCallOriginal(path);
+            image.prismAutoDotImageName = [self getImageNameFromPath:path];
+            return image;
+        })
+                            );
+        
+        // Swizzle initWithContentsOfFile:
+        RSSwizzleInstanceMethod(UIImage, @selector(initWithContentsOfFile:),
+                                RSSWReturnType(UIImage *),
+                                RSSWArguments(NSString *path),
+                                RSSWReplacement({
+            UIImage *image = RSSWCallOriginal(path);
+            image.prismAutoDotImageName = [UIImage getImageNameFromPath:path];
+            return image;
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
 #pragma mark - private method
-+ (UIImage *)prism_autoDot_imageNamed:(NSString *)name {
-    UIImage *image = [self prism_autoDot_imageNamed:name];
-    
-    image.prismAutoDotImageName = [self getImageNameFromPath:name];
-    
-    return image;
-}
-
-+ (UIImage *)prism_autoDot_imageNamed:(NSString *)name inBundle:(NSBundle *)bundle compatibleWithTraitCollection:(UITraitCollection *)traitCollection {
-    UIImage *image = [self prism_autoDot_imageNamed:name inBundle:bundle compatibleWithTraitCollection:traitCollection];
-    
-    image.prismAutoDotImageName = [self getImageNameFromPath:name];
-    
-    return image;
-}
-
-+ (UIImage *)prism_autoDot_imageWithContentsOfFile:(NSString *)path {
-    UIImage *image = [self prism_autoDot_imageWithContentsOfFile:path];
-    
-    image.prismAutoDotImageName = [self getImageNameFromPath:path];
-    
-    return image;
-}
-
-- (instancetype)prism_autoDot_initWithContentsOfFile:(NSString *)path {
-    UIImage *image = [self prism_autoDot_initWithContentsOfFile:path];
-    
-    image.prismAutoDotImageName = [UIImage getImageNameFromPath:path];
-    
-    return image;
-}
-
 + (NSString*)getImageNameFromPath:(NSString*)path {
     static NSString *separator = @"/";
     if ([path containsString:separator]) {

@@ -6,8 +6,7 @@
 //
 
 #import "UIResponder+PrismIntercept.h"
-// Util
-#import "PrismRuntimeUtil.h"
+#import <objc/runtime.h>
 
 @implementation UIResponder (PrismIntercept)
 

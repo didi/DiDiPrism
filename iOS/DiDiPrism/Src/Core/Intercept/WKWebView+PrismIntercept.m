@@ -6,17 +6,33 @@
 //
 
 #import "WKWebView+PrismIntercept.h"
+#import <objc/runtime.h>
+#import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
-// Util
-#import "PrismRuntimeUtil.h"
 
 @implementation WKWebView (PrismIntercept)
 #pragma mark - public method
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithFrame:configuration:) swizzledSelector:@selector(prism_autoDot_initWithFrame:configuration:)];
+        // Swizzle initWithFrame:configuration:
+        RSSwizzleInstanceMethod(WKWebView, @selector(initWithFrame:configuration:),
+                                RSSWReturnType(WKWebView*),
+                                RSSWArguments(CGRect frame, WKWebViewConfiguration *configuration),
+                                RSSWReplacement({
+            WKWebView *webView = RSSWCallOriginal(frame, configuration);
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            if (configuration) {
+                params[@"configuration"] = configuration;
+            }
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventWKWebViewInitWithFrame withSender:self params:[params copy]];
+            
+            return webView;
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
@@ -34,15 +50,5 @@
 }
 
 #pragma mark - private method
-- (instancetype)prism_autoDot_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    WKWebView *webView = [self prism_autoDot_initWithFrame:frame configuration:configuration];
-    
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if (configuration) {
-        params[@"configuration"] = configuration;
-    }
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventWKWebViewInitWithFrame withSender:self params:[params copy]];
-    
-    return webView;
-}
+
 @end

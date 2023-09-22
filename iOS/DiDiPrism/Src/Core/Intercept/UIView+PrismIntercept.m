@@ -6,21 +6,87 @@
 //
 
 #import "UIView+PrismIntercept.h"
+#import <objc/runtime.h>
+#import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
-// Util
-#import "PrismRuntimeUtil.h"
 
 @implementation UIView (PrismIntercept)
 #pragma mark - public method
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(touchesEnded:withEvent:) swizzledSelector:@selector(prism_autoDot_touchesEnded:withEvent:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToSuperview) swizzledSelector:@selector(prism_autoDot_didMoveToSuperview)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(didMoveToWindow) swizzledSelector:@selector(prism_autoDot_didMoveToWindow)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setFrame:) swizzledSelector:@selector(prism_autoDot_setFrame:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(setHidden:) swizzledSelector:@selector(prism_autoDot_setHidden:)];
+        // Swizzle touchesEnded:withEvent:
+        // 考虑到可能的手势影响，选择hook touchesEnded:withEvent:更合理。
+        RSSwizzleInstanceMethod(UIView, @selector(touchesEnded:withEvent:),
+                                RSSWReturnType(void),
+                                RSSWArguments(NSSet<UITouch *> *touches, UIEvent *event),
+                                RSSWReplacement({
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            UITouch *touch = [touches anyObject];
+            if (touch) {
+                [params setObject:touch forKey:@"touch"];
+            }
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_Start withSender:self params:[params copy]];
+            
+            RSSWCallOriginal(touches, event);
+            
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_End withSender:self params:[params copy]];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle didMoveToSuperview
+        RSSwizzleInstanceMethod(UIView, @selector(didMoveToSuperview),
+                                RSSWReturnType(void),
+                                RSSWArguments(),
+                                RSSWReplacement({
+            RSSWCallOriginal();
+            
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToSuperview withSender:self params:nil];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle didMoveToWindow
+        RSSwizzleInstanceMethod(UIView, @selector(didMoveToWindow),
+                                RSSWReturnType(void),
+                                RSSWArguments(),
+                                RSSWReplacement({
+            RSSWCallOriginal();
+            
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToWindow withSender:self params:nil];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle setFrame:
+        RSSwizzleInstanceMethod(UIView, @selector(setFrame:),
+                                RSSWReturnType(void),
+                                RSSWArguments(CGRect frame),
+                                RSSWReplacement({
+            RSSWCallOriginal(frame);
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            params[@"frame"] = [NSValue valueWithCGRect:frame];
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewSetFrame withSender:self params:[params copy]];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle setHidden:
+        RSSwizzleInstanceMethod(UIView, @selector(setHidden:),
+                                RSSWReturnType(void),
+                                RSSWArguments(BOOL hidden),
+                                RSSWReplacement({
+            RSSWCallOriginal(hidden);
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            params[@"hidden"] = [NSNumber numberWithBool:hidden];
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewSetHidden withSender:self params:[params copy]];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
@@ -42,33 +108,5 @@
     
     
     [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewTouchesEnded_End withSender:self params:[params copy]];
-}
-
-- (void)prism_autoDot_didMoveToSuperview {
-    [self prism_autoDot_didMoveToSuperview];
-    
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToSuperview withSender:self params:nil];
-}
-
-- (void)prism_autoDot_didMoveToWindow {
-    [self prism_autoDot_didMoveToWindow];
-    
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewDidMoveToWindow withSender:self params:nil];
-}
-
-- (void)prism_autoDot_setFrame:(CGRect)frame {
-    [self prism_autoDot_setFrame:frame];
-    
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"frame"] = [NSValue valueWithCGRect:frame];
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewSetFrame withSender:self params:[params copy]];
-}
-
-- (void)prism_autoDot_setHidden:(BOOL)hidden {
-    [self prism_autoDot_setHidden:hidden];
-    
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"hidden"] = [NSNumber numberWithBool:hidden];
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewSetHidden withSender:self params:[params copy]];
 }
 @end

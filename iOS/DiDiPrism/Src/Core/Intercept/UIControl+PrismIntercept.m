@@ -6,10 +6,10 @@
 //
 
 #import "UIControl+PrismIntercept.h"
+#import <objc/runtime.h>
+#import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
-// Util
-#import "PrismRuntimeUtil.h"
 // Category
 #import "NSDictionary+PrismExtends.h"
 
@@ -19,27 +19,61 @@
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(sendAction:to:forEvent:) swizzledSelector:@selector(prism_autoDot_sendAction:to:forEvent:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_addTarget:action:forControlEvents:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:forControlEvents:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:forControlEvents:)];
+        // Swizzle sendAction:to:forEvent:
+        RSSwizzleInstanceMethod(UIControl, @selector(sendAction:to:forEvent:),
+                                RSSWReturnType(void),
+                                RSSWArguments(SEL action, id target, UIEvent *event),
+                                RSSWReplacement({
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            params[@"target"] = target;
+            params[@"action"] = NSStringFromSelector(action);
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendAction_Start withSender:self params:[params copy]];
+            
+            RSSWCallOriginal(action, target, event);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle addTarget:action:forControlEvents:
+        RSSwizzleInstanceMethod(UIControl, @selector(addTarget:action:forControlEvents:),
+                                RSSWReturnType(void),
+                                RSSWArguments(id target, SEL action, UIControlEvents controlEvents),
+                                RSSWReplacement({
+            RSSWCallOriginal(target, action, controlEvents);
+            
+            SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_addTarget:action:forControlEvents:");
+            Method swizzleMethod = class_getInstanceMethod([UIControl class], swizzleSelector);
+            IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
+            void (*functionPointer)(id, SEL, id, SEL, UIControlEvents) = (void (*)(id, SEL, id, SEL, UIControlEvents))swizzleMethodImp;
+            functionPointer(self, _cmd, target, action, controlEvents);
+            
+            RSSWCallOriginal(self, [self prism_autoDot_selectorForControlEvents:controlEvents], controlEvents);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle removeTarget:action:forControlEvents:
+        RSSwizzleInstanceMethod(UIControl, @selector(removeTarget:action:forControlEvents:),
+                                RSSWReturnType(void),
+                                RSSWArguments(id target, SEL action, UIControlEvents controlEvents),
+                                RSSWReplacement({
+            RSSWCallOriginal(target, action, controlEvents);
+            
+            SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_removeTarget:action:forControlEvents:");
+            Method swizzleMethod = class_getInstanceMethod([UIControl class], swizzleSelector);
+            IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
+            void (*functionPointer)(id, SEL, id, SEL, UIControlEvents) = (void (*)(id, SEL, id, SEL, UIControlEvents))swizzleMethodImp;
+            functionPointer(self, _cmd, target, action, controlEvents);
+            
+            RSSWCallOriginal(self, [self prism_autoDot_selectorForControlEvents:controlEvents], controlEvents);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
 #pragma mark - private method
-- (void)prism_autoDot_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"target"] = target;
-    params[@"action"] = NSStringFromSelector(action);
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIControlSendAction_Start withSender:self params:[params copy]];
-    
-    //原始逻辑
-    [self prism_autoDot_sendAction:action to:target forEvent:event];
-}
-
 - (void)prism_autoDot_addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
-    //原始逻辑
-    [self prism_autoDot_addTarget:target action:action forControlEvents:controlEvents];
-    
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     BOOL isTouchEvent = (controlEvents & UIControlEventAllTouchEvents) || (controlEvents & UIControlEventPrimaryActionTriggered);
     // 忽略用户输入过程
@@ -53,18 +87,11 @@
             self.prismAutoDotTargetAndSelector[controlEventsStr] = [NSString stringWithFormat:@"%@_&_%@", classString, actionString];
         }
     }
-    
-    [self prism_autoDot_addTarget:self action:[self prism_autoDot_selectorForControlEvents:controlEvents] forControlEvents:controlEvents];
 }
 
 - (void)prism_autoDot_removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
-    //原始逻辑
-    [self prism_autoDot_removeTarget:target action:action forControlEvents:controlEvents];
-    
     NSString *controlEventsStr = [NSString stringWithFormat:@"%ld", controlEvents];
     self.prismAutoDotTargetAndSelector[controlEventsStr] = @"";
-    
-    [self prism_autoDot_removeTarget:self action:[self prism_autoDot_selectorForControlEvents:controlEvents] forControlEvents:controlEvents];
 }
 
 #pragma mark - property

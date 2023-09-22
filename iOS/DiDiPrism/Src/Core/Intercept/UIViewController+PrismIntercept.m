@@ -6,25 +6,30 @@
 //
 
 #import "UIViewController+PrismIntercept.h"
+#import <objc/runtime.h>
+#import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
-// Util
-#import "PrismRuntimeUtil.h"
 
 @implementation UIViewController (PrismIntercept)
 #pragma mark - public method
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(viewDidAppear:) swizzledSelector:@selector(prism_autoDot_viewDidAppear:)];
+        // Swizzle viewDidAppear:
+        RSSwizzleInstanceMethod(UIViewController, @selector(viewDidAppear:),
+                                RSSWReturnType(void),
+                                RSSWArguments(BOOL animated),
+                                RSSWReplacement({
+            RSSWCallOriginal(animated);
+            
+            [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewControllerViewDidAppear withSender:self params:nil];
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
 #pragma mark - private method
-- (void)prism_autoDot_viewDidAppear:(BOOL)animated {
-    //原始逻辑
-    [self prism_autoDot_viewDidAppear:animated];
-    
-    [[PrismEventDispatcher sharedInstance] dispatchEvent:PrismDispatchEventUIViewControllerViewDidAppear withSender:self params:nil];
-}
+
 @end

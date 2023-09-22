@@ -6,11 +6,11 @@
 //
 
 #import "UITapGestureRecognizer+PrismIntercept.h"
+#import <objc/runtime.h>
 #import <RSSwizzle/RSSwizzle.h>
 // Dispatcher
 #import "PrismEventDispatcher.h"
 // Util
-#import "PrismRuntimeUtil.h"
 #import "PrismInstructionAreaInfoUtil.h"
 #import "PrismInstructionResponseChainInfoUtil.h"
 // Category
@@ -23,6 +23,7 @@
 + (void)prism_swizzleMethodIMP {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        // Swizzle setState:
         RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(setState:),
                                 RSSWReturnType(void),
                                 RSSWArguments(UIGestureRecognizerState state),
@@ -36,11 +37,61 @@
         }),
                                 RSSwizzleModeAlways,
                                 NULL);
-
         
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(initWithTarget:action:) swizzledSelector:@selector(prism_autoDot_initWithTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(addTarget:action:) swizzledSelector:@selector(prism_autoDot_addTarget:action:)];
-        [PrismRuntimeUtil hookClass:[self class] originalSelector:@selector(removeTarget:action:) swizzledSelector:@selector(prism_autoDot_removeTarget:action:)];
+        // Swizzle initWithTarget:action:
+        RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(initWithTarget:action:),
+                                RSSWReturnType(UITapGestureRecognizer *),
+                                RSSWArguments(id target, SEL action),
+                                RSSWReplacement({
+            UITapGestureRecognizer *gesture = RSSWCallOriginal(target, action);
+            
+            [gesture addTarget:self action:@selector(prism_autoDot_tapAction:)];
+            // 通过[[xxx alloc] init]初始化时，target和action为nil，影响生成结果，故作此判断。
+            if (target && action) {
+                gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
+            }
+            else {
+                gesture.prismAutoDotTargetAndSelector = @"";
+            }
+            
+            return gesture;
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+
+        // Swizzle addTarget:action:
+        RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(addTarget:action:),
+                                RSSWReturnType(void),
+                                RSSWArguments(id target, SEL action),
+                                RSSWReplacement({
+            RSSWCallOriginal(target, action);
+            
+            RSSWCallOriginal(self, @selector(prism_autoDot_tapAction:));
+            SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_addTarget:action:");
+            Method swizzleMethod = class_getInstanceMethod([UITapGestureRecognizer class], swizzleSelector);
+            IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
+            void (*functionPointer)(id, SEL, id, SEL) = (void (*)(id, SEL, id, SEL))swizzleMethodImp;
+            functionPointer(self, _cmd, target, action);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
+        
+        // Swizzle removeTarget:action:
+        RSSwizzleInstanceMethod(UITapGestureRecognizer, @selector(removeTarget:action:),
+                                RSSWReturnType(void),
+                                RSSWArguments(id target, SEL action),
+                                RSSWReplacement({
+            RSSWCallOriginal(target, action);
+            
+            RSSWCallOriginal(self, @selector(prism_autoDot_tapAction:));
+            SEL swizzleSelector = NSSelectorFromString(@"prism_autoDot_removeTarget:action:");
+            Method swizzleMethod = class_getInstanceMethod([UITapGestureRecognizer class], swizzleSelector);
+            IMP swizzleMethodImp =  method_getImplementation(swizzleMethod);
+            void (*functionPointer)(id, SEL, id, SEL) = (void (*)(id, SEL, id, SEL))swizzleMethodImp;
+            functionPointer(self, _cmd, target, action);
+        }),
+                                RSSwizzleModeAlways,
+                                NULL);
     });
 }
 
@@ -65,38 +116,13 @@
     }
 }
 
-
-- (instancetype)prism_autoDot_initWithTarget:(id)target action:(SEL)action {
-    //原始逻辑
-    UITapGestureRecognizer *gesture = [self prism_autoDot_initWithTarget:target action:action];
-    
-    [gesture addTarget:self action:@selector(prism_autoDot_tapAction:)];
-    // 通过[[xxx alloc] init]初始化时，target和action为nil，影响生成结果，故作此判断。
-    if (target && action) {
-        gesture.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
-    }
-    else {
-        gesture.prismAutoDotTargetAndSelector = @"";
-    }
-    
-    return gesture;
-}
-
 - (void)prism_autoDot_addTarget:(id)target action:(SEL)action {
-    //原始逻辑
-    [self prism_autoDot_addTarget:target action:action];
-    
-    [self prism_autoDot_addTarget:self action:@selector(prism_autoDot_tapAction:)];
     if (!self.prismAutoDotTargetAndSelector.length) {
         self.prismAutoDotTargetAndSelector = [NSString stringWithFormat:@"%@_&_%@", NSStringFromClass([target class]), NSStringFromSelector(action)];
     }
 }
 
 - (void)prism_autoDot_removeTarget:(id)target action:(SEL)action {
-    //原始逻辑
-    [self prism_autoDot_removeTarget:target action:action];
-    
-    [self prism_autoDot_removeTarget:self action:@selector(prism_autoDot_tapAction:)];
     self.prismAutoDotTargetAndSelector = @"";
 }
 

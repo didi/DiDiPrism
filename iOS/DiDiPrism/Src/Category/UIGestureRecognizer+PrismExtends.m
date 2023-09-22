@@ -6,8 +6,7 @@
 //
 
 #import "UIGestureRecognizer+PrismExtends.h"
-// Util
-#import "PrismRuntimeUtil.h"
+#import <objc/runtime.h>
 
 @implementation UIGestureRecognizer (PrismExtends)
 #pragma mark - property
