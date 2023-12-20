@@ -45,7 +45,7 @@
             return;
     }
     
-    WKUserScript *script = [[WKUserScript alloc] initWithSource:customScript injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    WKUserScript *script = [[WKUserScript alloc] initWithSource:customScript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
     [configuration.userContentController addUserScript:script];
 }
 
