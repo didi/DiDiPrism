@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "DiDiPrism_Ability"
-  spec.version      = "0.2.10"
+  spec.version      = "0.2.11"
   spec.summary      = "一款专注移动端操作行为的工具"
   spec.description  = <<-DESC
                         移动端用户行为分析工具
