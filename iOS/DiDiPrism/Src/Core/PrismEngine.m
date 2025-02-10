@@ -13,6 +13,7 @@
 #import "SDImageCache+PrismIntercept.h"
 #import "UILongPressGestureRecognizer+PrismIntercept.h"
 #import "UITapGestureRecognizer+PrismIntercept.h"
+#import "UIGestureRecognizer+PrismIntercept.h"
 #import "UIView+PrismIntercept.h"
 #import "UIViewController+PrismIntercept.h"
 #import "WKWebView+PrismIntercept.h"
@@ -31,6 +32,7 @@
     
     if (eventCategorys & PrismEventCategoryTouch) {
         [UIControl prism_swizzleMethodIMP];
+        [UIGestureRecognizer prism_swizzleMethodIMP];
         [UITapGestureRecognizer prism_swizzleMethodIMP];
         [UILongPressGestureRecognizer prism_swizzleMethodIMP];
         [UIView prism_swizzleMethodIMP];

@@ -25,12 +25,23 @@
     if (!needRecursive && (view.alpha == 0 || view.hidden == YES)) {
         return nil;
     }
+    // 原生实现
     if ([view isKindOfClass:[UILabel class]]) {
         UILabel *label = (UILabel*)view;
         if (label.text.length) {
             return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, label.text];
         }
     }
+    // ReactNative实现
+    if ([view isKindOfClass:NSClassFromString(@"RCTParagraphComponentView")]) {
+        if ([view respondsToSelector:@selector(attributedText)]) {
+            NSAttributedString *attributedString = [view performSelector:@selector(attributedText)];
+            if ([attributedString isKindOfClass:[NSAttributedString class]] && attributedString.length) {
+                return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, [attributedString string]];
+            }
+        }
+    }
+    // WEEX实现
     id wxComponent = [view prism_wxComponent];
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
         NSString *text = [wxComponent valueForKey:@"text"];
@@ -38,6 +49,7 @@
             return [NSString stringWithFormat:@"%@%@", kViewRepresentativeContentTypeText, text];
         }
     }
+    // 原生实现 及 ReactNative实现
     if ([view isKindOfClass:[UIImageView class]]) {
         UIImageView *imageView = (UIImageView*)view;
         SEL sd_selector = NSSelectorFromString(@"sd_imageURL");
@@ -54,6 +66,7 @@
             }
         }
     }
+    // WEEX实现
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXImageComponent")]) {
         NSString *src = [[wxComponent valueForKey:@"attributes"] valueForKey:@"src"];
         if ([src isKindOfClass:[NSString class]] && src.length) {
@@ -128,7 +141,9 @@
         }
         
         id wxComponent = [view prism_wxComponent];
-        if ([view isKindOfClass:[UILabel class]] || [wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
+        if ([view isKindOfClass:[UILabel class]] ||
+            [view isKindOfClass:NSClassFromString(@"RCTParagraphComponentView")] ||
+            [wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
             if (!*firstTextView) {
                 *firstTextView = view;
             }
@@ -165,6 +180,7 @@
 
 + (CGFloat)getFontSizeOfView:(UIView*)view {
     CGFloat fontSize = 0;
+    // WEEX实现
     id wxComponent = [view prism_wxComponent];
     if ([wxComponent isKindOfClass:NSClassFromString(@"WXTextComponent")]) {
         NSString *fontSizeString = [[wxComponent valueForKey:@"styles"] valueForKey:@"fontSize"];
@@ -172,8 +188,19 @@
             fontSize = fontSizeString.floatValue;
         }
     }
+    // 原生实现
     else if ([view isKindOfClass:[UILabel class]]) {
         fontSize = ((UILabel*)view).font.pointSize;
+    }
+    // ReactNative实现
+    else if ([view isKindOfClass:NSClassFromString(@"RCTParagraphComponentView")]) {
+        if ([view respondsToSelector:@selector(attributedText)]) {
+            NSAttributedString *attributedString = [view performSelector:@selector(attributedText)];
+            if ([attributedString isKindOfClass:[NSAttributedString class]] && attributedString.length) {
+                UIFont *font = [[attributedString attributesAtIndex:0 effectiveRange:nil] prism_objectForKey:NSFontAttributeName];
+                return font.pointSize;
+            }
+        }
     }
     return fontSize;
 }

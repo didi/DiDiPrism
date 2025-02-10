@@ -50,6 +50,7 @@
 #define kViewMotionCellFlag @"cell"
 #define kViewMotionTextFieldBFRFlag @"textFieldBFR"
 #define kViewMotionTextFieldRFRFlag @"textFieldRFR"
+#define kViewMotionRNViewFlag @"rnView"
 
 
 // View RepresentativeContent

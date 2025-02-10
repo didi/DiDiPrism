@@ -60,6 +60,27 @@
         }),
                                 RSSwizzleModeAlways,
                                 NULL);
+        
+        
+        // Swizzle ReactNative框架的图片相关方法
+        Class reactNativeHiddenClass = objc_getClass("RCTImageCache");
+        SEL reactNativeHiddenSelector = @selector(addImageToCache:URL:size:scale:resizeMode:response:);
+        if (reactNativeHiddenClass && class_getInstanceMethod(reactNativeHiddenClass, reactNativeHiddenSelector)) {
+            
+            RSSwizzleInstanceMethod(reactNativeHiddenClass, reactNativeHiddenSelector,
+                                    RSSWReturnType(void),
+                                    RSSWArguments(UIImage *image, NSURL *URL, CGSize size, CGFloat scale, NSInteger resizeMode, NSURLResponse *response),
+                                    RSSWReplacement({
+                if (image && [image isKindOfClass:[UIImage class]] && URL) {
+                    image.prismAutoDotImageUrl = URL;
+                }
+                RSSWCallOriginal(image, URL, size, scale, resizeMode, response);
+            }),
+                                    RSSwizzleModeAlways,
+                                    NULL);
+            
+        }
+        
     });
 }
 
