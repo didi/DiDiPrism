@@ -85,6 +85,10 @@ typedef NS_ENUM(NSUInteger, PrismDispatchEvent) {
      */
     PrismDispatchEventUITextFieldBecomeFirstResponder,
     PrismDispatchEventUITextFieldResignFirstResponder,
+    /*
+     ReactNative框架的RCTSurfaceTouchHandler（继承自UIGestureRecognizer）
+     */
+    PrismDispatchEventRCTSurfaceTouchHandlerSetState,
 };
 
 #endif /* PrismDispatchEventDefine_h */
