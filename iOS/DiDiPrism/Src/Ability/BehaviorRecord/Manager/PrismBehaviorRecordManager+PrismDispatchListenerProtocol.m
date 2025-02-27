@@ -23,6 +23,7 @@
 #import <DiDiPrism/PrismCellInstructionGenerator.h>
 #import <DiDiPrism/PrismViewControllerInstructionGenerator.h>
 #import <DiDiPrism/PrismTextFieldInstructionGenerator.h>
+#import <DiDiPrism/PrismRNViewInstructionGenerator.h>
 
 @implementation PrismBehaviorRecordManager (PrismDispatchListenerProtocol)
 #pragma mark -delegate
@@ -90,6 +91,51 @@
         if (instruction.length) {
             NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:tapGestureRecognizer.view];
             [self addInstruction:instruction withEventParams:eventParams];
+        }
+    }
+    else if (event == PrismDispatchEventRCTSurfaceTouchHandlerSetState) {
+        UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
+        if ([gestureRecognizer isKindOfClass:NSClassFromString(@"RCTSurfaceTouchHandler")]) {
+            UIView *view = gestureRecognizer.view;
+            NSObject *surface = nil;
+            if ([view respondsToSelector:@selector(surface)]) {
+                surface = [view performSelector:@selector(surface)];
+            }
+            NSObject *properties = nil;
+            if (surface && [surface respondsToSelector:@selector(properties)]) {
+                properties = [surface performSelector:@selector(properties)];
+            }
+            NSString *pageInfo = nil;
+            if (properties && [properties isKindOfClass:[NSDictionary class]]) {
+                pageInfo = [(NSDictionary*)properties prism_stringForKey:@"drnPage"];
+            }
+            
+            CGPoint viewPoint = [gestureRecognizer locationInView:view];
+            // 背景是曾经遇到过研发自行重写了hitTest:withEvent:方法，并且存在不符合官方建议的定制逻辑。
+            // 导致我们在主动调用hitTest:withEvent:方法时，触发了不必要的业务逻辑，导致非预期的问题。（官方是允许主动调用这个方法的）
+            // RN支撑的前端代码不会对hitTest:withEvent:有特殊业务定制，所以可放心调用。
+            UIView *hitView = [view hitTest:viewPoint withEvent:nil];
+            
+            // hitView为RCTImageComponentView大概率获取不到有效信息
+            // 两种情况：
+            // 一种是确实是有效按钮，比如后退按钮，需要交换RN框架已有实现来取得图片信息。
+            // 一种是可能为一个占位符，非有效图片，需要遍历其superview找有效内容。
+            if ([hitView isKindOfClass:NSClassFromString(@"RCTImageComponentView")]) {
+                while ([hitView superview] &&
+                       [[hitView superview] isKindOfClass:NSClassFromString(@"RCTViewComponentView")]) {
+                    hitView = [hitView superview];
+                    if ([hitView isMemberOfClass:NSClassFromString(@"RCTViewComponentView")]) {
+                        break;
+                    }
+                }
+            }
+            
+            PrismInstructionModel *instructionModel = [PrismRNViewInstructionGenerator getInstructionModelOfView:hitView withPageInfo:pageInfo];
+            NSString *instruction = [instructionModel toString];
+            if (instruction.length) {
+                NSDictionary *eventParams = [PrismInstructionParamUtil getEventParamsWithElement:hitView];
+                [self addInstruction:instruction withEventParams:eventParams];
+            }
         }
     }
     else if (event == PrismDispatchEventUILongPressGestureRecognizerAction) {
