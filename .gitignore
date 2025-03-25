@@ -36,3 +36,5 @@ Carthage/Build
 #
 iOS/DiDiPrismDemo/Pods/
 iOS/DiDiPrismDemo/Podfile.lock
+iOS/DiDiPrismDemo/Gemfile.lock
+iOS/DiDiPrismDemo/Gemfile

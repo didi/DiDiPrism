@@ -122,6 +122,12 @@
                                 },
                                 "vf": {
                                     "value": [
+                                        "DetailBannerBTableViewCell_&_tapAction:"
+                                    ],
+                                    "operator": "%"
+                                },
+                                "vr": {
+                                    "value": [
                                         "展示位"
                                     ],
                                     "operator": "%"

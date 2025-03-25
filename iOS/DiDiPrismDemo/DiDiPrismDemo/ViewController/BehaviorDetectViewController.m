@@ -14,6 +14,7 @@
 #import "DetailViewController.h"
 // Manager
 #import "PrismBehaviorDetectManager.h"
+#import "PrismBehaviorRecordManager.h"
 
 @interface BehaviorDetectViewController ()
 @property (nonatomic, strong) UIButton *operationButton;
@@ -23,8 +24,15 @@
 
 @implementation BehaviorDetectViewController
 #pragma mark - life cycle
+- (void)dealloc {
+    [[PrismBehaviorRecordManager sharedManager] uninstall];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [[PrismBehaviorRecordManager sharedManager] install];
+    
     [self _addNotification];
     [self _initView];
     
