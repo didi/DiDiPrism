@@ -59,7 +59,11 @@ public class PrismMonitorWindowCallbacks extends WindowCallbacks {
     @Override
     public boolean dispatchBackKeyEvent() {
         if (mPrismMonitor.isMonitoring()) {
-            mPrismMonitor.post(PrismConstants.Event.BACK);
+            EventData eventData = new EventData(PrismConstants.Event.BACK);
+            eventData.vr = "[text]返回键";
+            eventData.mDownX = -1;
+            eventData.mDownY = -1;
+            mPrismMonitor.post(eventData);
         }
         return false;
     }

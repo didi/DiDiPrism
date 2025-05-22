@@ -12,12 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -60,8 +60,8 @@ public class TouchEventHelper {
         }
 
         EventData eventData = new EventData(PrismConstants.Event.TOUCH);
-		eventData.view = touchView;
-		
+        eventData.view = touchView;
+
         StringBuilder eventId = new StringBuilder();
         getWindowInfo(window, eventData, eventId);
         ViewPath viewPath = getViewPathInfo(touchView, touchRecord, eventData);
@@ -70,7 +70,7 @@ public class TouchEventHelper {
             eventId.append(PrismConstants.Symbol.DIVIDER).append(viewContainer.symbol).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewContainer.url);
         } else if (!TextUtils.isEmpty(viewPath.webUrl)) { // webview
             eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.WEB_URL).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.webUrl);
-			eventData.wu = viewPath.webUrl;
+            eventData.wu = viewPath.webUrl;
         } else { // native
             getViewId(touchView, eventId, eventData);
         }
@@ -78,10 +78,10 @@ public class TouchEventHelper {
         getViewTag(touchView, eventData, eventId);
 
         eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_PATH).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.path);
-		eventData.vp = viewPath.path;
+        eventData.vp = viewPath.path;
         if (!TextUtils.isEmpty(viewPath.listInfo)) { // in list container view
             eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_LIST).append(PrismConstants.Symbol.DIVIDER_INNER).append(viewPath.listInfo);
-			eventData.vl = viewPath.listInfo;
+            eventData.vl = viewPath.listInfo;
         }
 
         // view content
@@ -164,6 +164,23 @@ public class TouchEventHelper {
                     eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_TAG).append(tagInfo);
                     eventData.vf = tagInfo.toString();
                 }
+            }
+        } else {
+            StringBuilder vfBuilder = new StringBuilder(touchView.getClass().getSimpleName());
+            do {
+                ViewParent viewParent = touchView.getParent();
+                if (viewParent instanceof ViewGroup) {
+                    ViewGroup viewGroup = (ViewGroup) viewParent;
+                    vfBuilder.insert(0,PrismConstants.Symbol.DIVIDER_INNER);
+                    vfBuilder.insert(0,viewGroup.getClass().getSimpleName());
+                    touchView = viewGroup;
+                } else {
+                    break;
+                }
+            } while (true);
+            if (vfBuilder.length() > 0) {
+                eventId.append(PrismConstants.Symbol.DIVIDER).append(PrismConstants.Symbol.VIEW_TAG).append(PrismConstants.Symbol.DIVIDER_INNER).append(vfBuilder);
+                eventData.vf = vfBuilder.toString();
             }
         }
     }
@@ -275,6 +292,7 @@ public class TouchEventHelper {
                         viewPathBuilder.append(resourceName).append("/");
                         hasLastViewId = true;
                     } else if (isList) {
+                        viewPathBuilder.append(index).append("/");
                         viewPathBuilder.append("*").append("/"); // 替换符，保持vp一致，去vl取
                     } else {
                         if (!hasLastViewId) {
@@ -377,75 +395,45 @@ public class TouchEventHelper {
         } else {
             if (view instanceof TextView) {
                 TextView textView = (TextView) view;
-                if (textView.getText() != null) {
-                    String content = textView.getText().toString().trim();
-                    if (!TextUtils.isEmpty(content)) {
-                        ViewContent contentInfo = new ViewContent();
-                        contentInfo.type = 1;
-                        contentInfo.content = content;
-                        contentInfo.fontSize = textView.getTextSize();
-                        int[] location = new int[2];
-                        textView.getLocationOnScreen(location);
-                        contentInfo.location = location;
-                        contentList.add(contentInfo);
-                        count--;
+                String content = "";
+
+                if(view instanceof EditText) {
+                    EditText editText = (EditText) view;
+                    if (editText.getHint() != null) {
+                        content = editText.getHint().toString().trim();
                     }
+                } else {
+                    if (textView.getText() != null) {
+                        content = textView.getText().toString().trim();
+                    } else if (textView.getHint() != null) {
+                        content = textView.getHint().toString().trim();
+                    }
+                }
+
+                if (!TextUtils.isEmpty(content)) {
+                    ViewContent contentInfo = new ViewContent();
+                    contentInfo.type = 1;
+                    contentInfo.content = content;
+                    contentInfo.fontSize = textView.getTextSize();
+                    int[] location = new int[2];
+                    textView.getLocationOnScreen(location);
+                    contentInfo.location = location;
+                    contentList.add(contentInfo);
+                    count--;
                 }
             } else if (view instanceof ImageView) {
-                String resourceName = null;
                 ImageView imageView = (ImageView) view;
-
-                Object mResourceValue = getImageViewFieldValue(imageView,"mResource");
-                if(null != mResourceValue) {
-                    if(mResourceValue instanceof Integer) {
-                        try {
-                            resourceName = imageView.getContext().getResources().getResourceName(((Integer)mResourceValue));
-                        } catch (Exception e) {
-
-                        }
-                    }
+                String content = parseImageView(imageView);
+                if (!TextUtils.isEmpty(content)) {
+                    ViewContent contentInfo = new ViewContent();
+                    contentInfo.type = 2;
+                    contentInfo.content = content;
+                    int[] location = new int[2];
+                    imageView.getLocationOnScreen(location);
+                    contentInfo.location = location;
+                    contentList.add(contentInfo);
+                    count--;
                 }
-
-                if(TextUtils.isEmpty(resourceName)) {
-                    Object mUriValue = getImageViewFieldValue(imageView,"mUri");
-                    if(null != mUriValue) {
-                        if(mUriValue instanceof Uri) {
-                            resourceName = ((Uri)mUriValue).toString();
-                        }
-                    }
-                }
-
-                if(TextUtils.isEmpty(resourceName)) {
-                    Object mDrawableValue = getImageViewFieldValue(imageView,"mDrawable");
-                    if(null != mDrawableValue) {
-                        if(mDrawableValue instanceof Drawable) {
-                            Drawable drawable = (Drawable)mDrawableValue;
-                        }
-                    }
-                }
-
-//                imageView.setImageBitmap();
-//                imageView.setImageResource();
-//                imageView.setImageDrawable();
-//                imageView.setImageIcon();
-//                imageView.setImageURI();
-//                Context m1;
-//                BitmapDrawable aa;
-//
-//                Drawable image = m1.getResources().getDrawable(resID);
-//                Drawable m;
-//                R.drawable.class.
-//                        //获取drawable文件名列表，不包含扩展名
-//                        Field[] fields = R.drawable.class.getDeclaredFields();
-//                for(Field field:fields){
-//        	/*获取文件名对应的系统生成的id
-//        	需指定包路径 getClass().getPackage().getName()
-//        	指定资源类型drawable*/
-//                    int resID = getResources().getIdentifier(field.getName(),
-//                            "drawable", getClass().getPackage().getName());
-//                    System.out.println("fileName = " + field.getName()
-//                            + "    resId = " + resID);
-//                }
             } else {
                 IViewContentHandler viewContentHandler = PrismMonitor.getInstance().getViewContentHandler();
                 if (viewContentHandler != null) {
@@ -458,6 +446,37 @@ public class TouchEventHelper {
             }
         }
         return count;
+    }
+
+    private static String parseImageView(ImageView imageView) {
+        StringBuilder content = new StringBuilder("[ly_image]");
+        // 无法通过getChangingConfigurations方式拿到资源id反而会因为catch异常降低性能，反射方案尝试失败，并没有相关的变量帮助缓存资源id
+        // todo 后续尝试插桩方案
+//        if (imageView.getDrawable() != null && imageView.getDrawable().getConstantState() != null) {
+//            try {
+//                // 资源id
+//                Drawable.ConstantState constantState = imageView.getDrawable().getConstantState();
+//                int resId = constantState.getChangingConfigurations();
+//                String resName = imageView.getResources().getResourceEntryName(resId);
+//                if (!TextUtils.isEmpty(resName)) {
+//                    content = content.append(resName);
+//                    return content.toString();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+        try {
+            // 控件id
+            int layoutId = imageView.getId();
+            String idName = imageView.getResources().getResourceEntryName(layoutId);
+            if (!TextUtils.isEmpty(idName)) {
+                content = content.append(idName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content.toString();
     }
 
     private static void getQuadrant(Context context,  View touchView, boolean inScrollableContainer,TouchRecord touchRecord, StringBuilder eventId, EventData eventData) {
